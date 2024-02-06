@@ -14,3 +14,6 @@ create table Usuarios (
     updateAt datetime DEFAULT CURRENT_TIMESTAMP
 )
 
+insert into usuarios (rol,nombre, apellido, telefono,correo, contasenia, fechaNacimiento) values 
+(1,"1","Eduar","Carranza","11111111","correo_admin@incarranza.com","principal","1992-09-22"), --Admin ya que su rol es 1
+(2,"2","Paco","Lopez","12514145","correo_cliente@incarranza.com","1234","1988-01-12"); -- Cliente ya que su rol es 2
