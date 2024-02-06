@@ -17,8 +17,11 @@ function Barra() {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-                    <Nav.Link href="#link" className="mx-3">Inicia Sesión</Nav.Link>
-                    <Nav.Link href="#link" className="mx-3">Registrarse</Nav.Link>
+                    <Nav.Link href="#link" className="mx-3">¿Quiénes somos?</Nav.Link>
+                    <Nav.Link href="#Servicios" className="mx-3">Servicios</Nav.Link>
+                    <Nav.Link href="#Proyectos" className="mx-3">Proyectos</Nav.Link>
+                    <Nav.Link href="#login" className="mx-3">Inicia Sesión</Nav.Link>
+                    <Nav.Link href="#signup" className="mx-3">Registrarse</Nav.Link>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
