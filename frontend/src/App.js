@@ -1,5 +1,6 @@
 import './App.css';
 import Barra  from "./Barra";
+import Cuerpo from './Cuerpo'
 
 function App() {
   return (
@@ -7,6 +8,9 @@ function App() {
       <header className="">
         {Barra()}
       </header>
+      <div>
+        {Cuerpo()}
+      </div>
     </div>
   );
 }
