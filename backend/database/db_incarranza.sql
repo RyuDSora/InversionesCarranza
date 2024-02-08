@@ -1,4 +1,4 @@
-create database DB_InCarranza;
+create database db_incarranza;
 use db_incarranza;
 
 create table Usuarios (
