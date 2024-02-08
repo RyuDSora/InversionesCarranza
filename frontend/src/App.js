@@ -1,6 +1,7 @@
 import './App.css';
 import Barra  from "./Barra";
 import Cuerpo from './Cuerpo'
+import PiePag from './PiePag'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <div>
         {Cuerpo()}
       </div>
+      {PiePag()}
     </div>
   );
 }

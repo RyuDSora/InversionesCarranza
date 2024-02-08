@@ -6,8 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Barra() {
     return (
-        <Navbar expand="lg" className="bg-ligth">
-            <Container >
+        <Navbar expand="lg" className="pt-0">
+            <Container className="bg-light border rounded-bottom-3 px-3 pb-3 pt-3">
                 <Navbar.Brand href="#home">
                     <img 
                         src={inversionesCarranza} 
