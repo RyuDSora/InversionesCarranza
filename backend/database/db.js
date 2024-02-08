@@ -18,3 +18,4 @@ try {
 }
 
 //nodemon db, este comando nos sirve para verificar si la base de datos tiene una conexion exitosa 
+//deben estar ubicados en el database
