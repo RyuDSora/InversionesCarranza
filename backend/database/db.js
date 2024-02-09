@@ -1,5 +1,5 @@
 import {Sequelize} from 'sequelize'
-    const db = new Sequelize('db_incarranza', 'root', '1234',{
+    const db = new Sequelize('db_incarranza', 'root', 'delfin1998',{
         host: 'localhost',                          //contraseña de mySQL
         dialect: 'mysql'
     })
