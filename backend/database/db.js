@@ -1,14 +1,12 @@
 import {Sequelize} from 'sequelize'
-    const db = new Sequelize('db_incarranza', 'root', 'delfin1998',{
-        host: 'localhost',                          //contraseña de mySQL
+    const db = new Sequelize('db_incarranza', 'root', '1234',{ // CAMBIAR CONTRASEñA XD
+        host: 'localhost',                 //usuario  //contraseña de mySQL
         dialect: 'mysql'
     })
-
 export default db
 
 //intalar las siguentes dependencia 
-/*npm install sequelize
-   */
+/*npm install sequelize*/
 
 try {
     await db.authenticate();
