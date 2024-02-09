@@ -1,4 +1,5 @@
 import "../styles/Signup.css";
+<<<<<<< HEAD
 export default function Signup({ setLogin, setPage, user, setUser }) {
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -51,6 +52,16 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
     setPage("landing");
   };
 
+=======
+export default function Signup({ setLogin, setPage }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLogin(true);
+    // Aquí puedes realizar la lógica para guardar los cambios en la base de datos
+    console.log("Usuario registrado");
+    setPage("landing");
+  };
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-title"><p>Registrarse</p></div>
@@ -63,8 +74,11 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             type="text"
             className="form-control"
             placeholder="Nombres del usuario"
+<<<<<<< HEAD
             name="nombre"
             onChange={handleChange}
+=======
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
             id="name-user"
           />
       </section>
@@ -76,9 +90,13 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             title="Ingrese sus apellidos"
             type="text"
             className="form-control"
+<<<<<<< HEAD
             placeholder="Apellidos del usuario"
             name="apellidos"
             onChange={handleChange}
+=======
+            placeholder="Nombres del usuario"
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
             id="name-user2"
           />
       </section>
@@ -91,8 +109,11 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             type="email"
             className="form-control"
             placeholder="Correo electrónico del usuario"
+<<<<<<< HEAD
             name="correo"
             onChange={handleChange}
+=======
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
             id="name-email"
           />
       </section>
@@ -105,13 +126,20 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             type="tel"
             className="form-control"
             placeholder="Número de teléfono del usuario"
+<<<<<<< HEAD
             name="phone"
             onChange={handleChange}
+=======
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
             id="name-phone"
           />
       </section>
       <section className="form-group">
+<<<<<<< HEAD
         <label htmlFor="name-pass">
+=======
+        <label htmlFor="name-password">
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
           Contraseña:
         </label>
           <input
@@ -119,6 +147,7 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             type="password"
             className="form-control"
             placeholder="Contraseña del usuario"
+<<<<<<< HEAD
             name="password"
             onChange={handleChange}
             id="name-pass"
@@ -135,6 +164,8 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             placeholder="Confirmar contraseña"
             name="confirmPass"
             onChange={handleChange}
+=======
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
             id="name-password"
           />
       </section>
@@ -147,8 +178,11 @@ export default function Signup({ setLogin, setPage, user, setUser }) {
             type="date"
             className="form-control"
             placeholder="Fecha de nacimiento del usuario"
+<<<<<<< HEAD
             name="date"
             onChange={handleChange}
+=======
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
             id="name-date"
           />
       </section>

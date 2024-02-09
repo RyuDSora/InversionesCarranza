@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import "../styles/Perfil.css";
 
 export default function Perfil({ setLogin, setPage, user, setUser }) {
@@ -24,11 +25,26 @@ export default function Perfil({ setLogin, setPage, user, setUser }) {
     setNewPass({
       ...newPass,
       [name]: value,
+=======
+
+export default function Perfil({ setLogin, setPage }) {
+  const [usuario, setUsuario] = useState({
+    nombre: "John Doe",
+    email: "johndoe@example.com",
+    contraseña: "********",
+  });
+
+  const handleChange = (e) => {
+    setUsuario({
+      ...usuario,
+      [e.target.name]: e.target.value,
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     if (newPass.password !== user.password) {
       alert("La contraseña actual no coincide");
       return;
@@ -125,6 +141,53 @@ export default function Perfil({ setLogin, setPage, user, setUser }) {
         {editando && <button onClick={handleSubmit}>Guardar cambios</button>}
         <button onClick={logout}>Cerrar sesión</button>
       </section>
+=======
+    // Aquí puedes realizar la lógica para guardar los cambios en la base de datos
+    console.log("Usuario actualizado:", usuario);
+  };
+
+	const logout = () => {
+		setLogin(false);
+	}
+
+  return (
+    <section className="perfil-user">
+      <h1>Perfil de Usuario</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Nombre:</label>
+          <input
+            type="text"
+            name="nombre"
+            value={usuario.nombre}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={usuario.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Contraseña:</label>
+          <input
+            type="password"
+            name="contraseña"
+            value={usuario.contraseña}
+            onChange={handleChange}
+          />
+        </div>
+        <button type="submit">Guardar Cambios</button>
+				<button onClick={() => { 
+						logout();
+						setPage("landing"); 
+				}} type="button">Cerrar Sesión</button>
+      </form>
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
     </section>
   );
 }

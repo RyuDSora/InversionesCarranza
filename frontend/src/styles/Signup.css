@@ -1,6 +1,7 @@
 form {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   background-color: rgb(189, 192, 230);
   align-items: center;
   justify-content: center;
@@ -9,6 +10,16 @@ form {
   min-width: 500px;
   border-radius: 20px;
   padding: 50px;
+=======
+  background-color: #6b6df3;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  max-width: 625px;
+  min-width: 400px;
+  border-radius: 10px;
+  padding: 20px;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   gap: 20px;
 }
 
@@ -26,11 +37,14 @@ input:focus {
   gap: 8px;
 }
 
+<<<<<<< HEAD
 form {
   margin-top: 20px; /* Ajusta este valor según sea necesario */
   margin-bottom: 20px; /* Ajusta este valor según sea necesario */
 }
 
+=======
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
 .form-group > label {
   font-size: 1.3rem;
   font-weight: 600;
@@ -39,40 +53,69 @@ form {
 
 .form-group > .input-group > input {
   border-radius: 0px 5px 5px 0px;
+<<<<<<< HEAD
   border: 2px rgb(189, 192, 230);
+=======
+  border: 2px rgb(119, 0, 255) solid;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   font-size: 1.1rem;
   font-weight: 500;
   text-align: center;
   border-left: none;
   padding: 5px;
+<<<<<<< HEAD
   color: #000000;
+=======
+  color: #000;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   width: 100%;
 }
 
 .form-title {
+<<<<<<< HEAD
   background-color: rgb(215, 220, 224);
   width: 80%;
   border-radius: 5px;
+=======
+  background-color: #1a75fe;
+  width: 100%;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   padding: 10px;
   text-align: center;
 }
 
 .form-title > p {
+<<<<<<< HEAD
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', Verdana,;
   font-weight: 600;
   font-size: 1.75rem;
   color: #383535;
+=======
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  font-size: 1.75rem;
+  color: #000;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   padding: 0;
   margin: 0;
 }
 
 .btn-submit {
+<<<<<<< HEAD
   background-color: rgb(0, 87, 255);
   border: 1px rgb(61, 60, 60) solid;
   font-weight: 500;
   font-size: 1.3rem;
   border-radius: 6px;
   font-family: Verdana, sans-serif;
+=======
+  background-color: #00dcbf;
+  border: 2px black solid;
+  font-weight: 500;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
 }
 label {
   font-size: 1.1rem !important;

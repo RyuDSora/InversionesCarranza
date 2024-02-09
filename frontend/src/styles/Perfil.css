@@ -1,4 +1,5 @@
 .perfil-user {
+<<<<<<< HEAD
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,4 +27,11 @@
 }
 .user-data p {
 	margin: 0 10px;
+=======
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
 }

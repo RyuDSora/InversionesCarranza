@@ -3,9 +3,14 @@ import Container from "react-bootstrap/Container";
 import LandingPage from "./componets/LandingPage";
 import Signup from "./componets/Signup.jsx";
 import Perfil from "./componets/Perfil.jsx";
+<<<<<<< HEAD
 import Login from "./componets/Login.jsx";
 import "./styles/Cuerpo.css";
 function Cuerpo({ page, setPage, setLogin, user, setUser }) {
+=======
+import "./styles/Cuerpo.css";
+function Cuerpo({ page, setPage, setLogin }) {
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   if (page === "landing") {
     return (
       <Container className="container-main">
@@ -16,13 +21,18 @@ function Cuerpo({ page, setPage, setLogin, user, setUser }) {
   if (page === "signup") {
     return (
       <Container className="container-main">
+<<<<<<< HEAD
         <Signup setLogin={setLogin} setPage={setPage} user={user} setUser={setUser} />
+=======
+        <Signup setLogin={setLogin} setPage={setPage} />
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
       </Container>
     );
   }
 	if (page === "perfil") {
 		return (
 			<Container className="container-main">
+<<<<<<< HEAD
 				<Perfil setLogin={setLogin} setPage={setPage} user={user} setUser={setUser} />
 			</Container>
 		);
@@ -34,6 +44,12 @@ function Cuerpo({ page, setPage, setLogin, user, setUser }) {
       </Container>
     );
   }
+=======
+				<Perfil setLogin={setLogin} setPage={setPage} />
+			</Container>
+		);
+	}
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
   return (
     <Container className="container-main">
       <LandingPage />
@@ -41,3 +57,7 @@ function Cuerpo({ page, setPage, setLogin, user, setUser }) {
   );
 }
 export default Cuerpo;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
