@@ -1,7 +1,14 @@
 import "../styles/Signup.css";
-export default function Signup() {
+export default function Signup({ setLogin, setPage }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLogin(true);
+    // Aquí puedes realizar la lógica para guardar los cambios en la base de datos
+    console.log("Usuario registrado");
+    setPage("landing");
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="form-title"><p>Registrarse</p></div>
       <section className="form-group">
         <label htmlFor="name-user">
@@ -74,6 +81,9 @@ export default function Signup() {
             placeholder="Fecha de nacimiento del usuario"
             id="name-date"
           />
+      </section>
+      <section className="form-group">
+        <button type="submit" className="btn-submit">Registrar</button>
       </section>
     </form>
   );
