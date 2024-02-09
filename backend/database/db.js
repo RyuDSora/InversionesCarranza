@@ -1,5 +1,5 @@
 import {Sequelize} from 'sequelize'
-    const db = new Sequelize('db_incarranza', 'root', '1234',{ // CAMBIAR CONTRASEñA XD
+    const db = new Sequelize('db_incarranza', 'InCarranza', 'admin',{ 
         host: 'localhost',                 //usuario  //contraseña de mySQL
         dialect: 'mysql'
     })
