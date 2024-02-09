@@ -1,6 +1,6 @@
 create database db_incarranza;
 
-/* creamos el usruario para la base de datos*/ 
+-- creamos el usuario para la base de datos
 CREATE USER 'InCarranza'@'localhost' IDENTIFIED BY 'admin';
 GRANT ALL PRIVILEGES ON * . * TO 'InCarranza'@'localhost';
 FLUSH PRIVILEGES;
@@ -21,6 +21,6 @@ create table Usuarios (
 )
 
 insert into usuarios (rol,nombre, apellido, telefono,correo, contasenia, fechaNacimiento) values 
-(1,"1","Eduar","Carranza","11111111","correo_admin@incarranza.com","principal","1992-09-22"), --Admin ya que su rol es 1
-(2,"2","Paco","Lopez","12514145","correo_cliente@incarranza.com","1234","1988-01-12"); -- Cliente ya que su rol es 2
+(1,"Eduar","Carranza","11111111","correo_admin@incarranza.com","principal","1992-09-22"), -- Admin ya que su rol es 1
+(2,"Paco","Lopez","12514145","correo_cliente@incarranza.com","1234","1988-01-12"); -- Cliente ya que su rol es 2
 
