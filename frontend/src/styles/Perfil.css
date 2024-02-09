@@ -1,0 +1,29 @@
+.perfil-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 390px;
+  padding: 20px;
+  border-radius: 8px;
+  gap: 10px;
+  background-color: rgb(189, 192, 235);
+}
+
+.perfil-user {
+	margin-top: 20px; /* Ajusta este valor según sea necesario */
+	margin-bottom: 20px; /* Ajusta este valor según sea necesario */
+  }
+
+.user-data {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	width: fit-content;
+	padding: 10px 0;
+}
+.user-data p {
+	margin: 0 10px;
+}

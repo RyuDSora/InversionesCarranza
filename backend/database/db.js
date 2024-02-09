@@ -1,5 +1,5 @@
 import {Sequelize} from 'sequelize'
-    const db = new Sequelize('db_incarranza', 'root', '1234',{
+    const db = new Sequelize('db_incarranza', 'InCarranza', 'admin',{
         host: 'localhost',                          //contraseña de mySQL
         dialect: 'mysql'
     })
@@ -18,3 +18,5 @@ try {
 }
 
 //nodemon db, este comando nos sirve para verificar si la base de datos tiene una conexion exitosa 
+
+

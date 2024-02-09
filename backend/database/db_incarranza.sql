@@ -1,4 +1,9 @@
 create database DB_InCarranza;
+
+CREATE USER 'InCarranza'@'localhost' IDENTIFIED BY 'admin';
+GRANT ALL PRIVILEGES ON * . * TO 'InCarranza'@'localhost';
+FLUSH PRIVILEGES;
+
 use db_incarranza;
 
 create table Usuarios (
