@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  min-height: 80vh;
 }
 
 .App-logo {
@@ -36,3 +37,4 @@
     transform: rotate(360deg);
   }
 }
+

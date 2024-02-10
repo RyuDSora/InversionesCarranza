@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./App.css";
-import Barra from "./componets/Barra";
-import Cuerpo from "./componets/Cuerpo";
-import PiePag from "./componets/PiePag";
-
+import FooterIC from "./componets/FooterIC.jsx";
 import CompRegistro from "./componets/Signup.jsx";
+import Login from './componets/Login.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LandingPage from "./componets/LandingPage.jsx";
+import NavBarIC from "./componets/NavBariC.jsx";
+import RecuperarLanding from './componets/RecuperarLanding.jsx'
 
 
 // aqui es mejor utilizar etiquetas de react para llamar a los componentes
@@ -30,16 +30,17 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <header>
-          <Barra setPage={setPage} login={login} />
+          <NavBarIC setPage={setPage} login={login} />
         </header>
-        <div id="Cuerpo_app">
-          <Cuerpo page={page} setPage={setPage} setLogin={setLogin} />
+        <div>
+          <Routes>
+            <Route path='/' element={<LandingPage />} />
+            <Route path="/Signup" element={<CompRegistro />}/>
+            <Route path="/login" element={<Login />} />
+            <Route path="/Recuperar" element={<RecuperarLanding />} />
+          </Routes>
         </div>
-        <Routes>
-          <Route path='/' element={<LandingPage />} />
-          <Route path="/create" element={<CompRegistro />} />
-        </Routes>
-        {PiePag()}
+        {FooterIC()}
       </BrowserRouter>
     </div>
   );

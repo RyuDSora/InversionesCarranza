@@ -1,11 +1,10 @@
-import "../styles/Signup.css";
+//import "../styles/Signup.css";
 import axios from "axios";
 import { useState } from "react";
 
-
 //npm install axios react-router-dom, instalar esa dependecia
-import { useNavigate } from "react-router-dom";
-import LandingPage from "./LandingPage";
+//import { useNavigate } from "react-router-dom";
+import Container from "react-bootstrap/esm/Container";
 
 const URI = 'http://localhost:8000/usuarios/';
 
@@ -16,8 +15,9 @@ const CompRegistro = () => {
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
     const [contasenia, setContasenia] = useState('');
+    const [Ccontasenia, setCcontasenia] = useState('');
     const [fechaNacimiento, setFechaNacimiento] = useState('');
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
 
     // Procedimiento guardar
@@ -29,7 +29,7 @@ const CompRegistro = () => {
           alert('Por favor, complete todos los campos.');
           return;
        }
-
+       
 
         // Validar formato de correo electrónico
         const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.(com|es|net)$/;
@@ -39,7 +39,7 @@ const CompRegistro = () => {
         }
 
         // Validar que el teléfono contenga solo números
-        const phoneRegex = /^[0-9]+$/;
+        const phoneRegex = /^\d{8}$/;
         if (!phoneRegex.test(telefono)) {
             alert('Por favor, ingrese solo números en el campo de teléfono.');
             return
@@ -49,6 +49,11 @@ const CompRegistro = () => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
         if (!passwordRegex.test(contasenia)) {
             alert('La contraseña debe tener al menos una letra mayúscula y un número, y debe tener al menos 6 caracteres.');
+            return
+        }
+
+        if (Ccontasenia!=contasenia){
+            alert('error de pass');
             return
         }
 
@@ -90,74 +95,87 @@ const CompRegistro = () => {
     
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="form-title"><p>Crea una Cuenta</p></div>
-            {/* El campo "rol" estará oculto, pero se enviará con el valor por defecto */}
-            <input type="hidden" value={rol} onChange={(e) => setRol(e.target.value)} />
-            <div className="form-group">
-                <label htmlFor="name-user">Nombre:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Ingresar nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="name-user2">Apellido:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Ingresar apellido"
-                    value={apellido}
-                    onChange={(e) => setApellido(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="name-email">Correo:</label>
-                <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Ingrese un correo electrónico"
-                    value={correo}
-                    onChange={(e) => setCorreo(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="name-phone">Teléfono:</label>
-                <input
-                    type="tel"
-                    className="form-control"
-                    placeholder="Ingrese un número de teléfono"
-                    value={telefono}
-                    onChange={(e) => setTelefono(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="name-password">Contraseña:</label>
-                <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Ingrese una contraseña"
-                    value={contasenia}
-                    onChange={(e) => setContasenia(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="name-date">Fecha de Nacimiento:</label>
-                <input
-                    type="date"
-                    className="form-control"
-                    placeholder="Ingrese su fecha de nacimiento"
-                    value={fechaNacimiento}
-                    onChange={(e) => setFechaNacimiento(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <button type="submit" className="btn-submit">Registrar</button>
+        <Container>
+        <form className="border rounded-3 bg-light mx-auto mb-3 pb-3" style={{width:'340px'}} onSubmit={handleSubmit}>
+            <div className="form-title py-3"><span className="h4">Crea una Cuenta</span></div>            {/* El campo "rol" estará oculto, pero se enviará con el valor por defecto */}
+            <div className="px-3">
+                <input type="hidden" value={rol} onChange={(e) => setRol(e.target.value)} />
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Ingresar nombre"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                    />
+                    <label htmlFor="name-user">Nombre</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Ingresar apellido"
+                        value={apellido}
+                        onChange={(e) => setApellido(e.target.value)}
+                    />
+                    <label htmlFor="name-user2">Apellido</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="email"
+                        className="form-control"
+                        placeholder="Ingrese un correo electrónico"
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
+                    />
+                    <label htmlFor="name-email">Correo</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="tel"
+                        className="form-control"
+                        placeholder="Ingrese un número de teléfono"
+                        value={telefono}
+                        onChange={(e) => setTelefono(e.target.value)}
+                    />
+                    <label htmlFor="name-phone">Teléfono</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Ingrese una contraseña"
+                        value={contasenia}
+                        onChange={(e) => setContasenia(e.target.value)}
+                    />
+                    <label htmlFor="name-password">Contraseña</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Confirme contraseña"
+                        value={Ccontasenia}
+                        onChange={(e) => setCcontasenia(e.target.value)}
+                    />
+                    <label htmlFor="name-password">Confirmar Contraseña</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input
+                        type="date"
+                        className="form-control"
+                        placeholder="Ingrese su fecha de nacimiento"
+                        value={fechaNacimiento}
+                        onChange={(e) => setFechaNacimiento(e.target.value)}
+                    />
+                    <label htmlFor="name-date">Fecha de Nacimiento:</label>
+                </div>
+                <div className="form-floating mb-3 mt-3">
+                    <input type="submit" className="btn btn-primary" value='Registrarse'/>
+                </div>
             </div>
         </form>
+        </Container>
     );
 }
 export default CompRegistro;

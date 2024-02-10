@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Container from "react-bootstrap/esm/Container";
 export default function Login({ setPage, setLogin, user }) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -48,39 +49,49 @@ export default function Login({ setPage, setLogin, user }) {
 		}
 	}
   return (
-		<form onSubmit={handleSubmit}>
-      <div className="form-title"><p>Iniciar Sesión</p></div>
-      <section className="form-group">
-        <label htmlFor="name-email">
-          Correo:
-        </label>
-          <input
-            title="Ingrese un correo electrónico"
-            type="email"
-            className="form-control"
-            placeholder="Correo electrónico del usuario"
-            name="correo"
-            onChange={handleChange}
-            id="name-email"
-          />
-      </section>
-      <section className="form-group">
-        <label htmlFor="name-pass">
-          Contraseña:
-        </label>
-          <input
-            title="Ingrese una contraseña"
-            type="password"
-            className="form-control"
-            placeholder="Contraseña del usuario"
-            name="password"
-            onChange={handleChange}
-            id="name-pass"
-          />
-      </section>
-      <section className="form-group">
-        <button type="submit" className="btn-submit">Iniciar</button>
-      </section>
-    </form>
+		<Container>
+      <form className="border rounded-3 bg-light mx-auto mb-3 pb-3" style={{width:'340px'}} onSubmit={handleSubmit}>
+        <div className="form-title py-3"><span className="h4">Iniciar Sesión</span></div>
+          <div className="px-3">
+            <div className="form-floating mb-3 mt-3">
+              <input
+                  title="Ingrese un correo electrónico"
+                  type="email"
+                  className="form-control"
+                  placeholder="Correo electrónico del usuario"
+                  name="correo"
+                  onChange={handleChange}
+                  id="name-email"
+              />
+              <label htmlFor="name-email">Correo</label>
+            </div>
+            <div className="form-floating mb-3 mt-3">
+              <input
+                  title="Ingrese una contraseña"
+                  type="password"
+                  className="form-control"
+                  placeholder="Contraseña del usuario"
+                  name="password"
+                  onChange={handleChange}
+                  id="name-pass"
+              />
+              <label htmlFor="name-pass">Contraseña</label>
+            </div>
+            <div className="form-check">
+              <input type="checkbox" className="form-check-input" id="check2" name="Recordarme" value="something"/>
+              <label className="form-check-label float-start" htmlFor="check2">Recordarme</label>
+            </div>
+            <br />
+            <br />
+            <div className="form-floating mb-3 mt-3">
+              <input type="submit" className="btn btn-primary" value='Iniciar Sesiön'/>
+            </div>
+            <div className="form-floating mb-3 mt-3">
+              <a href="/Recuperar" style={{textDecoration:'none'}}><span>¿Olvidaste tu contraseña?</span></a>
+            </div>
+            <br />
+          </div>
+      </form>
+    </Container>
 	);
 }

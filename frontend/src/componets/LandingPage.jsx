@@ -1,11 +1,13 @@
 import imagenX from "../imgs/imagenX.png"
 import imagenM from "../imgs/imagenM.png"
 import imagenV from "../imgs/imagenV.png"
+import Container from "react-bootstrap/esm/Container";
 
 export default function LandingPage() {
 	
   return (
-    <section>
+    <Container>
+      <section>
       <br />
       <div className="border rounded-4 bg-light">
         <div className="row">
@@ -81,5 +83,6 @@ export default function LandingPage() {
       </div>
       <br />
     </section>
+    </Container>
   );
 }
