@@ -9,7 +9,7 @@ export default db
 /*npm install sequelize*/
 
 
-//nodemon app, lo movi todo a app que esta en el BACKEND
+//lo movi todo a app que esta en el BACKEND
 
 
 
