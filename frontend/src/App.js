@@ -3,6 +3,12 @@ import "./App.css";
 import Barra from "./componets/Barra";
 import Cuerpo from "./componets/Cuerpo";
 import PiePag from "./componets/PiePag";
+
+import CompRegistro from "./componets/Signup.jsx";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LandingPage from "./componets/LandingPage.jsx";
+
+
 // aqui es mejor utilizar etiquetas de react para llamar a los componentes
 function App() {
   const [page, setPage1] = useState("landing"); // [estado, funcion que modifica el estado]
@@ -22,13 +28,19 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        <Barra setPage={setPage} login={login} />
-      </header>
-      <div id="Cuerpo_app">
-        <Cuerpo page={page} setPage={setPage} setLogin={setLogin} />
-      </div>
-      {PiePag()}
+      <BrowserRouter>
+        <header>
+          <Barra setPage={setPage} login={login} />
+        </header>
+        <div id="Cuerpo_app">
+          <Cuerpo page={page} setPage={setPage} setLogin={setLogin} />
+        </div>
+        <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path="/create" element={<CompRegistro />} />
+        </Routes>
+        {PiePag()}
+      </BrowserRouter>
     </div>
   );
 }
