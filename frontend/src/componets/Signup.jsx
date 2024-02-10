@@ -3,8 +3,12 @@ import axios from "axios";
 import { useState } from "react";
 
 //npm install axios react-router-dom, instalar esa dependecia
+<<<<<<< HEAD
 //import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/esm/Container";
+=======
+import { useNavigate } from "react-router-dom";
+>>>>>>> be5538848391cc90492720cbc2498b6aa425b67a
 
 const URI = 'http://localhost:8000/usuarios/';
 
