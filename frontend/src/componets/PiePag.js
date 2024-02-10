@@ -24,7 +24,7 @@ function PiePag() {
                 <div className="col mb-md-0 mb-3" style={{fontSize:'small'}}>
                     <span className="text-uppercase h6">contactanos</span>
                     <ul className="list-unstyled">
-                        <li><span>+504 2xxxxxxx</span></li>
+                        <li><span>+504 31956103</span></li>
                         <li><span>correoempresa@mail.com</span></li>
                         <li><span>Tegucigalpa, Honduras</span></li>
                     </ul>
