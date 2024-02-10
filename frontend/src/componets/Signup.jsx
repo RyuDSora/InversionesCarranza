@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useState } from "react";
 
+import Container from "react-bootstrap/esm/Container";
+
 //npm install axios react-router-dom, instalar esa dependecia
 
 import { useNavigate } from "react-router-dom";
