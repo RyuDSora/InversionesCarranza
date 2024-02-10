@@ -40,7 +40,7 @@ function PiePag() {
                             </a>
                         </div>
                         <div className="col px-0">
-                            <a href="#/">
+                            <a href="https://wa.me/31956103">
                                 <img src={whats} alt="wh logo" style={{width:'50px'}}/>
                             </a>
                         </div>
@@ -48,7 +48,7 @@ function PiePag() {
                 </div>
             </div>
             <div className="footer-copyright text-start py-1 " style={{fontSize:'xx-small',paddingLeft:'195px'}}>© 2024 Copyright:
-                <a href="https://mdbootstrap.com/"> IS802-1900-1-2024</a>
+                <a href="/"> IS802-1900-1-2024</a>
             </div>
         </Container>
         </footer>
