@@ -1,6 +1,11 @@
+<<<<<<< HEAD
+create database DB_InCarranza;
+
+=======
 create database db_incarranza;
 
-/* creamos el usruario para la base de datos*/ 
+-- creamos el usuario para la base de datos
+>>>>>>> 17c4e1bd129df1cc40c7d363f6ecdbb640b5a7f3
 CREATE USER 'InCarranza'@'localhost' IDENTIFIED BY 'admin';
 GRANT ALL PRIVILEGES ON * . * TO 'InCarranza'@'localhost';
 FLUSH PRIVILEGES;

@@ -10,3 +10,6 @@ export default db
 
 
 //nodemon app, lo movi todo a app que esta en el BACKEND
+
+
+
