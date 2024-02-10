@@ -1,9 +1,9 @@
-import inversionesCarranza from "./InversionesCarranza.png"
+import inversionesCarranza from "../imgs/InversionesCarranza.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
-import fblogo from './fb-logo.svg';
-import Insta from './instagram-logo@logotyp.us.svg';
-import whats from './whatsapp-logo@logotyp.us.svg';
+import fblogo from '../imgs/fb-logo.svg';
+import Insta from '../imgs/instagram-logo@logotyp.us.svg';
+import whats from '../imgs/whatsapp-logo@logotyp.us.svg';
 
 function PiePag() {
     return(
