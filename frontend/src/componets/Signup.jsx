@@ -6,7 +6,7 @@ import Container from "react-bootstrap/esm/Container";
 
 //npm install axios react-router-dom, instalar esa dependecia
 
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 
 const URI = 'http://localhost:8000/usuarios/';
@@ -55,7 +55,7 @@ const CompRegistro = () => {
             return
         }
 
-        if (Ccontasenia!=contasenia){
+        if (Ccontasenia!==contasenia){
             alert('error de pass');
             return
         }
