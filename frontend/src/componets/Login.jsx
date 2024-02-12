@@ -2,50 +2,49 @@ import { useState } from "react";
 import axios from "axios";
 import Container from "react-bootstrap/esm/Container";
 
-export default function Login({ setPage, setLogin }) {
+export default function Login() {
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [check, setCheck] = useState(false);
 
-  const URI = 'http://localhost:3001/usuarios/';
+  const URI = 'http://localhost:8000/usuarios/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      if (email === "" || password === "") {
+      if (!email || !password ) {
         setError("Por favor llene todos los campos");
         return;
       }
 
       // Realiza la petición a la API para verificar las credenciales
-      const response = await axios.post(URI + 'login', {
-        email: email,
-        password: password,
-      });
+      const response = await axios.get(`${URI}?correo=${email}`);
+      const usuariosRegistrados = response.data;
+      const usuarioExistente = usuariosRegistrados.find(usuario => usuario.correo === email);
+      
 
       // Verifica si la autenticación fue exitosa
-      if (response.data.success) {
-        setError("");
-        setLogin(true);
-        setPage("perfil");
+      if (usuarioExistente.contasenia === password ) {
+        //ir a la pagina principal ya logueado  
+        if(check){
+          console.log('agregar cookies permanente');
+        }
+        alert('correcto');
+        window.location.href = '/';
       } else {
         setError("Correo o contraseña incorrectos");
+        return;
       }
     } catch (error) {
       console.error("Error:", error);
       setError("Hubo un error al intentar iniciar sesión");
+      return;
     }
   };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "correo") {
-      setEmail(value);
-    } else {
-      setPassword(value);
-    }
-  }
+  
 
   return (
     <Container>
@@ -59,7 +58,7 @@ export default function Login({ setPage, setLogin }) {
               className="form-control"
               placeholder="Correo electrónico del usuario"
               name="correo"
-              onChange={handleChange}
+              onChange={(e) => setEmail(e.target.value)}
               id="name-email"
             />
             <label htmlFor="name-email">Correo</label>
@@ -71,13 +70,13 @@ export default function Login({ setPage, setLogin }) {
               className="form-control"
               placeholder="Contraseña del usuario"
               name="password"
-              onChange={handleChange}
+              onChange={(e) => setPassword(e.target.value)}
               id="name-pass"
             />
             <label htmlFor="name-pass">Contraseña</label>
           </div>
-          <div className="form-check">
-            <input type="checkbox" className="form-check-input" id="check2" name="Recordarme" value="something" />
+          <div className="form-check ps-5">
+            <input type="checkbox" className="form-check-input" id="check2" name="Recordarme" value="something" onChange={(e) => setCheck(e.target.checked)}/>
             <label className="form-check-label float-start" htmlFor="check2">Recordarme</label>
           </div>
           <br />
