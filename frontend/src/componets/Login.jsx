@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import Container from "react-bootstrap/esm/Container";
-
 export default function Login() {
   
   const [email, setEmail] = useState("");
@@ -27,7 +26,7 @@ export default function Login() {
       
 
       // Verifica si la autenticación fue exitosa
-      if (usuarioExistente.contasenia === password ) {
+      if (usuarioExistente && usuarioExistente.contasenia === password ) {
         //ir a la pagina principal ya logueado  
         if(check){
           console.log('agregar cookies permanente');
@@ -44,7 +43,7 @@ export default function Login() {
       return;
     }
   };
-  
+
 
   return (
     <Container>
