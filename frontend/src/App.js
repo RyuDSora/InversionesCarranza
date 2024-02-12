@@ -10,6 +10,7 @@ import Login from './componets/Login.jsx'
 import LandingPage from "./componets/LandingPage.jsx";
 import NavBarIC from "./componets/NavBariC.jsx";
 import RecuperarLanding from './componets/RecuperarLanding.jsx'
+import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
 
 
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/Signup" element={<CompRegistro />}/>
               <Route path="/login" element={<Login />} />
               <Route path="/Recuperar" element={<RecuperarLanding />} />
+              <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
               <Route path="/Servicios" element={ "Servicios" } />
               <Route path="/Proyectos" element={ "Proyectos" } />
             </Routes>
