@@ -77,6 +77,7 @@ const CompRegistro = () => {
             alert('Usuario registrado exitosamente, ya puede iniciar sesion');
 
             // Redirigir al usuario a la página principal
+            sessionStorage.setItem('User', nombre+' '+apellido);
             window.location.href = '/';  // Redirige al usuario a la página principal
         } catch (error) {
             console.error('Error al realizar la solicitud HTTP:', error);

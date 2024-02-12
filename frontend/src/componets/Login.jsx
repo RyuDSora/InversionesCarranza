@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Container from "react-bootstrap/esm/Container";
+
 export default function Login() {
   
   const [email, setEmail] = useState("");
@@ -29,9 +30,11 @@ export default function Login() {
       if (usuarioExistente && usuarioExistente.contasenia === password ) {
         //ir a la pagina principal ya logueado  
         if(check){
-          console.log('agregar cookies permanente');
+          localStorage.setItem('User', usuarioExistente.nombre+' '+usuarioExistente.apellido);
+        }else{
+          sessionStorage.setItem('User', usuarioExistente.nombre+' '+usuarioExistente.apellido);
         }
-        alert('correcto');
+
         window.location.href = '/';
       } else {
         setError("Correo o contraseña incorrectos");

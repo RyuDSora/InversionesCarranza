@@ -37,4 +37,9 @@
     transform: rotate(360deg);
   }
 }
+.not-active { 
+  pointer-events: none; 
+  cursor: default; 
+} 
+
 

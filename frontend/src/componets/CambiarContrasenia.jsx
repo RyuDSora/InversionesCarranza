@@ -75,6 +75,7 @@ export default function CambiarContrasenia(props) {
                 // Mostrar mensaje de éxito
                 alert('Contraseña cambiada exitosamente.');
                 // Redirigir al usuario a la página principal
+                alert('Inicie Sesion con su nueva contraseña');
                 window.location.href = '/';
             }
         } catch (error) {
