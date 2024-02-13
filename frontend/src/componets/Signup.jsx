@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Container from "react-bootstrap/esm/Container";
 
-const URI = 'http://localhost:8000/usuarios/';
+const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const CompRegistro = () => {
     const [rol, setRol] = useState(2);

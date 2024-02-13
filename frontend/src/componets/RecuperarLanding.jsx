@@ -10,7 +10,7 @@ export default function RecuperarLanding() {
     const handleSolicitud = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8000/usuarios?correo=${email}`);
+            const response = await axios.get(`http://`+window.location.hostname+`:8000/usuarios?correo=${email}`);
             const usuarios = response.data;
             const usuarioExistente = usuarios.find(usuario => usuario.correo === email);
 

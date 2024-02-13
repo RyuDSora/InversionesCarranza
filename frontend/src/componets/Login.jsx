@@ -8,8 +8,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [check, setCheck] = useState(false);
+  
 
-  const URI = 'http://localhost:8000/usuarios/';
+  const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -43,14 +43,14 @@ export default function CambiarContrasenia(props) {
 
         try {
             // Realizar una solicitud GET a la API para obtener al usuario por su correo electrónico
-            const response = await axios.get(`http://localhost:8000/usuarios?correo=${email}`);
+            const response = await axios.get(`http://`+window.location.hostname+`:8000/usuarios?correo=${email}`);
             const usuarios = response.data;
             const usuarioExistente = usuarios.find(usuario => usuario.correo === email);
     
             // Verificar si se encontró un usuario con el correo proporcionado
             if (usuarioExistente) {
                 // Realizar una solicitud PUT para actualizar la contraseña del usuario
-                const updateResponse = await axios.put(`http://localhost:8000/usuarios/${usuarioExistente.id}`, {
+                const updateResponse = await axios.put(`http://`+window.location.hostname+`:8000/usuarios/${usuarioExistente.id}`, {
                     ...usuarioExistente,  // Mantener los datos del usuario excepto la contraseña
                     contasenia: password,  // Actualizar la contraseña
                 });
