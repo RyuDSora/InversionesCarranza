@@ -7,35 +7,17 @@ export default function CambiarContrasenia(props) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [email, setEmail] = useState('');
     const [name, setName] = useState('');
-    const [oldPassword, setOldPassword] = useState('');
-    const [submitDisabled, setSubmitDisabled] = useState(true); // Estado para deshabilitar el botón de enviar
 
     useEffect(() => {
-        // Leer el nombre de los parámetros de la URL
+        // Leer el correo electrónico y nombre de los parámetros de la URL
         const searchParams = new URLSearchParams(window.location.search);
+        const correo = searchParams.get('correo');
         const nombre = searchParams.get('nombre');
+        setEmail(correo);
         setName(nombre);
-        obtenerContrasenia(nombre);
     }, []);
-
-    useEffect(() => {
-        // Habilitar o deshabilitar el botón de enviar según la igualdad de contraseñas
-        setSubmitDisabled(password === oldPassword || password !== confirmPassword);
-    }, [password, confirmPassword, oldPassword]);
-
-    const obtenerContrasenia = async (nombre) => {
-        try {
-            const response = await axios.get(`http://localhost:8000/usuarios?nombre=${nombre}`);
-            const usuarios = response.data;
-            const usuario = usuarios.find(usuario => usuario.nombre === nombre);
-            if (usuario) {
-                setOldPassword(usuario.contasenia);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
@@ -51,12 +33,6 @@ export default function CambiarContrasenia(props) {
             return;
         }
 
-        // Validar que la nueva contraseña no sea igual a la contraseña anterior
-        if (password === oldPassword) {
-            setError('Por favor elija una contraseña diferente a la anterior');
-            return;
-        }
-
         // Validar que la contraseña cumpla con los requisitos
         const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
         if (!passwordRegex.test(password)) {
@@ -65,18 +41,28 @@ export default function CambiarContrasenia(props) {
         }
 
         try {
-            // Realizar una solicitud PUT para actualizar la contraseña del usuario
-            const updateResponse = await axios.put(`http://localhost:8000/usuarios/${props.id}`, {
-                contasenia: password,  // Actualizar la contraseña
-            });
-
-            // Verificar si la contraseña se actualizó correctamente
-            if (updateResponse.status === 200) {
-                // Mostrar mensaje de éxito
-                alert('Contraseña cambiada exitosamente.');
-                // Redirigir al usuario a la página principal
-                alert('Inicie Sesion con su nueva contraseña');
-                window.location.href = '/';
+            // Realizar una solicitud GET a la API para obtener al usuario por su correo electrónico
+            const response = await axios.get(`http://localhost:8000/usuarios?correo=${email}`);
+            const usuarios = response.data;
+            const usuarioExistente = usuarios.find(usuario => usuario.correo === email);
+    
+            // Verificar si se encontró un usuario con el correo proporcionado
+            if (usuarioExistente) {
+                // Realizar una solicitud PUT para actualizar la contraseña del usuario
+                const updateResponse = await axios.put(`http://localhost:8000/usuarios/${usuarioExistente.id}`, {
+                    ...usuarioExistente,  // Mantener los datos del usuario excepto la contraseña
+                    contasenia: password,  // Actualizar la contraseña
+                });
+    
+                // Verificar si la contraseña se actualizó correctamente
+                if (updateResponse.status === 200) {
+                    // Mostrar mensaje de éxito
+                    alert('Contraseña cambiada exitosamente.');
+                    // Redirigir al usuario a la página principal
+                    window.location.href = '/';
+                }
+            } else {
+                setError('');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -117,9 +103,7 @@ export default function CambiarContrasenia(props) {
                                     <label htmlFor="confirmPassword">Confirmar Contraseña</label>
                                 </div>
                                 <div className="form-floating mb-3 mt-3">
-                                    <button type="submit" className="btn btn-primary" disabled={submitDisabled}>
-                                        Cambiar Contraseña
-                                    </button>
+                                    <input type="submit" className="btn btn-primary" value="Cambiar Contraseña" />
                                 </div>
                             </form>
                         </div>
