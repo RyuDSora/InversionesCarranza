@@ -21,6 +21,7 @@ export default function CambiarContrasenia(props) {
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
+        
         // Validar que los campos no estén vacíos
         if (!password || !confirmPassword) {
             setError('Por favor completa todos los campos');
