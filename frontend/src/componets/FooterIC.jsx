@@ -7,7 +7,7 @@ import whats from '../imgs/whatsapp-logo@logotyp.us.svg';
 
 function FooterIC() {
     return(
-        <footer style={{position:'absolute',bottom:'0', width:'100%'}}>
+        <footer >
         <Container className="border rounded  bg-light py-3">
             <div className='row'>
                 <div className="col mt-md-0 mt-3">
