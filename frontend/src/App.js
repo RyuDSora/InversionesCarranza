@@ -11,6 +11,7 @@ import LandingPage from "./componets/LandingPage.jsx";
 import NavBarIC from "./componets/NavBariC.jsx";
 import RecuperarLanding from './componets/RecuperarLanding.jsx'
 import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
+import Perfil from './componets/Perfil.jsx';
 
 
 
@@ -31,7 +32,7 @@ function App() {
               <Route path="/Recuperar" element={<RecuperarLanding />} />
               <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
               <Route path="/Servicios" element={ "Servicios" } />
-              <Route path="/Perfil" element={ "Perfil" } />
+              <Route path="/Perfil" element={ <Perfil/> } />
               <Route path="/Proyectos" element={ "Proyectos" } />
             </Routes>
           </div>
