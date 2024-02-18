@@ -20,6 +20,16 @@ create table Usuarios (
     updatedAt datetime DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE ProyectosRealizados (
+    id int not null auto_increment primary key,
+    servicios int not null, -- 1 = Servicio de construcción, 2 = Servicio de remodelación, 3 = Servicio de creación de planos
+    titulo varchar(500) not null,
+    descripcion text not null,
+    imagen varchar(255) not null,
+    createdAt datetime DEFAULT CURRENT_TIMESTAMP,
+    updatedAt datetime DEFAULT CURRENT_TIMESTAMP
+);
+
 insert into usuarios (rol,nombre, apellido, telefono,correo, contasenia, fechaNacimiento) values 
 (1,"Eduar","Carranza","11111111","correo_admin@incarranza.com","principal","1992-09-22"), 
 (2,"Paco","Lopez","12514145","correo_cliente@incarranza.com","1234","1988-01-12"); 
