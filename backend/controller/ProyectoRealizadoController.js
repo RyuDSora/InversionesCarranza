@@ -1,4 +1,4 @@
-import ProyectoRealizadoModel from "../models/ProyectoRealizadoModel.js";
+import ProyectoRealizadoModel from "../models/ProyectoRealizadoModels.js";
 
 // Mostrar todos los proyectos realizados
 export const getAllProyectosRealizados = async (req, res) => {
