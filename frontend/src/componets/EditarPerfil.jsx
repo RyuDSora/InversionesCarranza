@@ -63,6 +63,9 @@ export default function EditarPerfil() {
         correo
       });
       console.log("Perfil actualizado correctamente");
+      // Guardar los nuevos datos del usuario en localStorage
+      localStorage.setItem('User', nombre + ' ' + apellido);
+      localStorage.setItem('UserId', userId);
       window.location.href = `/Perfil/${userId}`; 
     } catch (error) {
       console.error("Error updating user data:", error);

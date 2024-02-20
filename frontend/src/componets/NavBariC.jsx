@@ -30,8 +30,8 @@ export default function NavBarIC() {
   }
   else
   { 
-    UserL = sessionStorage.getItem('User')+'  .';
-    userId = sessionStorage.getItem('UserId'); // Asignamos el ID del usuario
+    UserL = localStorage.getItem('User') || sessionStorage.getItem('User');
+    userId = localStorage.getItem('UserId') || sessionStorage.getItem('UserId');
     console.log(UserL);
     user = true;
   }
@@ -45,7 +45,7 @@ export default function NavBarIC() {
   return (
     <Navbar expand="lg" className="pt-0">
       <Container className="bg-light border rounded-bottom-3 px-3 pb-3 pt-3">
-        <Navbar.Brand href="/">
+        <Navbar.Brand href='/'>
           <img
             src={inversionesCarranza}
             alt="InversionesCarranza"
@@ -103,5 +103,6 @@ export default function NavBarIC() {
     </Navbar>
   );
 }
+
 
 
