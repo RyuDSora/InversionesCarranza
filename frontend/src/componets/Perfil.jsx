@@ -4,6 +4,8 @@ import Container from 'react-bootstrap/esm/Container';
 import BGImg from '../imgs/bgimg.jpg';
 import Iperfil from '../imgs/perfil.png';
 import { useParams } from 'react-router-dom'; // Importa el hook useParams para obtener los parámetros de la URL
+import { Link } from 'react-router-dom';
+
 
 export default function Perfil() {
   const { userId } = useParams(); // Obtiene el userId de los parámetros de la URL
@@ -26,6 +28,14 @@ export default function Perfil() {
   if (!usuario) {
     return <p>Cargando información del usuario...</p>;
   }
+  const handleCambiarContrasenia = () => {
+    // Aquí puedes obtener el email y el nombre del usuario
+    const email = usuario.correo;
+    const nombre = usuario.nombre;
+  
+    // Redirigir a la página CambiarContrasenia con los parámetros en la URL
+    window.location.href = `/CambiarContrasenia?correo=${email}&nombre=${nombre}`;
+  };
 
   return (
     <Container className="my-2">
@@ -41,7 +51,7 @@ export default function Perfil() {
           </div>
 
           <div className="bg-light">
-            <img ref={(node) => { node.style.setProperty('margin-top', '-50px', 'important') }} src={Iperfil} alt="perfil" style={{ width: '150px' }} className="bg-light rounded-circle p-1 m-1" id="img-perf1" />
+            <img ref={(node) => { node && node.style.setProperty('margin-top', '-50px', 'important') }} src={Iperfil} alt="perfil" style={{ width: '150px' }} className="bg-light rounded-circle p-1 m-1" id="img-perf1" />
           </div>
           <span className="h2">Mi Perfil</span>
           <div></div>
@@ -76,7 +86,12 @@ export default function Perfil() {
           </form>
         </div>
         <hr />
-        <div id="foot_perfil">aquí van los botones de editar perfil y guardar </div>
+        <div id="foot_perfil">
+          <Link to={`/EditarPerfil/${userId}`} className="btn btn-primary me-2">Editar Perfil</Link>
+
+          <button onClick={handleCambiarContrasenia} className="btn btn-primary me-2">Cambiar Contraseña</button>
+        </div>
+
         <br />
       </div>
       <br />
