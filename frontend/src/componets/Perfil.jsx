@@ -50,10 +50,6 @@ export default function Perfil() {
         <div id="body_oerfil" className="px-3">
           <form action="" className="mx-auto">
             <div className="input-group mb-3">
-              <span className="input-group-text">Rol:</span>
-              <input type="text" className="form-control" disabled value={usuario.rol === 1 ? 'Administrador' : 'Cliente'} />
-            </div>
-            <div className="input-group mb-3">
               <span className="input-group-text">Nombre:</span>
               <input type="text" className="form-control" disabled value={usuario.nombre} />
             </div>
