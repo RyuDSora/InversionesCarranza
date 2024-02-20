@@ -32,7 +32,7 @@ function App() {
               <Route path="/Recuperar" element={<RecuperarLanding />} />
               <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
               <Route path="/Servicios" element={ "Servicios" } />
-              <Route path="/Perfil" element={ <Perfil/> } />
+              <Route path="/perfil/:userId" element={<Perfil />} />
               <Route path="/Proyectos" element={ "Proyectos" } />
             </Routes>
           </div>

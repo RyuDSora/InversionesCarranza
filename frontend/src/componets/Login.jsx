@@ -31,8 +31,10 @@ export default function Login() {
       if (usuarioExistente && usuarioExistente.contasenia === password ) {
         //ir a la pagina principal ya logueado  
         if(check){
+          localStorage.setItem('UserId', usuarioExistente.id);
           localStorage.setItem('User', usuarioExistente.nombre+' '+usuarioExistente.apellido);
         }else{
+          sessionStorage.setItem('UserId', usuarioExistente.id);
           sessionStorage.setItem('User', usuarioExistente.nombre+' '+usuarioExistente.apellido);
         }
 

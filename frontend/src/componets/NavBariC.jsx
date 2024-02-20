@@ -1,4 +1,3 @@
-
 import inversionesCarranza from "../imgs/InversionesCarranza.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -18,18 +17,21 @@ export default function NavBarIC() {
   var register = false;
   var user = false;
   var UserL = '';
+  var userId = ''; // Agregamos la variable para almacenar el ID del usuario
 
   if(localStorage.length===0){
     if(sessionStorage.length===0){
       console.log('no hay usuario');
     }else{
       UserL = sessionStorage.getItem('User');
+      userId = sessionStorage.getItem('UserId'); // Asignamos el ID del usuario
       user = true;  
     }
   }
   else
   { 
     UserL = sessionStorage.getItem('User')+'  .';
+    userId = sessionStorage.getItem('UserId'); // Asignamos el ID del usuario
     console.log(UserL);
     user = true;
   }
@@ -80,9 +82,11 @@ export default function NavBarIC() {
                 {UserL}
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={ ()=>{window.location.href = '/Perfil'}} >Mi Perfil</Dropdown.Item>
+                <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${userId}`}} >Mi Perfil</Dropdown.Item>
                 <Dropdown.Item onClick={()=>{sessionStorage.removeItem('User');
-                                            localStorage.removeItem('User'); 
+                                            localStorage.removeItem('User');
+                                            sessionStorage.removeItem('UserId'); // Removemos el ID del usuario
+                                            localStorage.removeItem('UserId'); // Removemos el ID del usuario
                                             window.location.href = '/';}}>
                   Cerrar Sesion
                 </Dropdown.Item>
@@ -99,4 +103,5 @@ export default function NavBarIC() {
     </Navbar>
   );
 }
+
 
