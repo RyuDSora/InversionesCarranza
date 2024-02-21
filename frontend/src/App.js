@@ -13,6 +13,7 @@ import RecuperarLanding from './componets/RecuperarLanding.jsx'
 import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
 import Perfil from './componets/Perfil.jsx';
 import EditPerfil from './componets/EditarPerfil.jsx';
+import Projects from './componets/projects.jsx'
 
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
               <Route path="/Servicios" element={ "Servicios" } />
               <Route path="/perfil/:userId" element={<Perfil />} />
               <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
-              <Route path="/Proyectos" element={ "Proyectos" } />
+              <Route path="/Proyectos" element={ <Projects/> } />
             </Routes>
           </div>
           {FooterIC()}
