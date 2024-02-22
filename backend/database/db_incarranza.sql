@@ -64,7 +64,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `servicios` (
   `idservicios` INT NOT NULL AUTO_INCREMENT,
   `nombre_servicio` VARCHAR(45) NOT NULL,
-  `detalle_servicio` VARCHAR(45) NOT NULL,
+  `detalle_servicio` VARCHAR(500) NOT NULL,
   `servicio_padre` INT ,
   `img_principal` BLOB NOT NULL,
   PRIMARY KEY (`idservicios`),
@@ -83,7 +83,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `proyectos` (
   `idproyectos` INT NOT NULL AUTO_INCREMENT,
   `nombreProyecto` VARCHAR(45) NOT NULL,
-  `descripcion_proyecto` VARCHAR(45) NOT NULL,
+  `descripcion_proyecto` VARCHAR(500) NOT NULL,
   `img_principal` BLOB NOT NULL,
   `categoria_servicio` INT NOT NULL,
   PRIMARY KEY (`idproyectos`),
@@ -102,7 +102,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `proyectos_has_imagenes` (
   `idproyecto` INT NOT NULL,
   `idimagen` INT NOT NULL,
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   INDEX `fk_proyectos_has_imagenes_imagenes1_idx` (`idimagen` ASC) VISIBLE,
   INDEX `fk_proyectos_has_imagenes_proyectos1_idx` (`idproyecto` ASC) VISIBLE,
   PRIMARY KEY (`id`),
