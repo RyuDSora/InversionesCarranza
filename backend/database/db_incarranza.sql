@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `servicios` (
   `nombre_servicio` VARCHAR(45) NOT NULL,
   `detalle_servicio` VARCHAR(45) NOT NULL,
   `servicio_padre` INT NOT NULL,
+  `img_principal` BLOB NOT NULL,
   PRIMARY KEY (`idservicios`),
   INDEX `fk_servicios_servicios_idx` (`servicio_padre` ASC) VISIBLE,
   CONSTRAINT `fk_servicios_servicios`
