@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `servicios` (
   `idservicios` INT NOT NULL AUTO_INCREMENT,
   `nombre_servicio` VARCHAR(45) NOT NULL,
   `detalle_servicio` VARCHAR(45) NOT NULL,
-  `servicio_padre` INT NOT NULL,
+  `servicio_padre` INT ,
   `img_principal` BLOB NOT NULL,
   PRIMARY KEY (`idservicios`),
   INDEX `fk_servicios_servicios_idx` (`servicio_padre` ASC) VISIBLE,
