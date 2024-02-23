@@ -97,8 +97,8 @@ function Cont(servicio, url) {
             <div className='text-start h5 ps-4 ms-2'><span>{servicio}</span></div>
             <div className='d-flex flex-wrap px-3 justify-content-around'>
                 <div>{<Project name='Proyecto 1' image={PR0} url={url}/>}</div>
-                <div>{<Project name='Proyecto 2' image={PR0} url={url}/>}</div>
-                <div>{<Project name='Proyecto 3' image={PR0} url={url}/>}</div>
+                <div>{<Project name='Proyecto 2' image={PR2} url={url}/>}</div>
+                <div>{<Project name='Proyecto 3' image={PR3} url={url}/>}</div>
                 <div>{More(url)}</div>
             </div>
         </div>

@@ -29,6 +29,8 @@ function Servicios() {
       navigate('/construccion');
     } else if (servicio.nombre === 'Remodelaciones') {
       navigate('/remodelaciones');
+    } else if (servicio.nombre === 'Diseño de Planos') {
+      navigate('/disenoplanos'); // Cambia esta línea para redirigir a 'DisenoPlanos.jsx'
     } else {
       navigate(`/servicio/${servicio.nombre}`);
     }
@@ -59,3 +61,6 @@ function Servicios() {
 }
 
 export default Servicios;
+
+
+

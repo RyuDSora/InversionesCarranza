@@ -12,6 +12,7 @@ import RecuperarLanding from './componets/RecuperarLanding.jsx'
 import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
 import Construccion from './componets/Construccion.jsx';
 import Remodelaciones from './componets/Remodelaciones.jsx';
+import DisenoPlanos from './componets/DisenoPlanos';
 import Servicios from './componets/Servicios.jsx'; 
 import Perfil from './componets/Perfil.jsx';
 import EditPerfil from './componets/EditarPerfil.jsx';
@@ -38,6 +39,7 @@ function App() {
               <Route path="/Servicios" element={ <Servicios /> } />
               <Route path="/Construccion" element={<Construccion />} />
               <Route path="/Remodelaciones" element={<Remodelaciones />} />
+              <Route path="/DisenoPlanos" element={<DisenoPlanos />} />
               <Route path="/perfil/:userId" element={<Perfil />} />
               <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
               <Route path="/Proyectos" element={ <Projects/> } />
@@ -51,3 +53,5 @@ function App() {
 }
 
 export default App;
+
+
