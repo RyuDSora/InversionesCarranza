@@ -27,6 +27,8 @@ function Servicios() {
   const handleButtonClick = (servicio) => {
     if (servicio.nombre === 'Construcción') {
       navigate('/construccion');
+    } else if (servicio.nombre === 'Remodelaciones') {
+      navigate('/remodelaciones');
     } else {
       navigate(`/servicio/${servicio.nombre}`);
     }
@@ -57,5 +59,3 @@ function Servicios() {
 }
 
 export default Servicios;
-
-

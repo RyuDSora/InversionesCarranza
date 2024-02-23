@@ -11,11 +11,13 @@ import NavBarIC from "./componets/NavBariC.jsx";
 import RecuperarLanding from './componets/RecuperarLanding.jsx'
 import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
 import Construccion from './componets/Construccion.jsx';
+import Remodelaciones from './componets/Remodelaciones.jsx';
 import Servicios from './componets/Servicios.jsx'; 
 import Perfil from './componets/Perfil.jsx';
 import EditPerfil from './componets/EditarPerfil.jsx';
 import Projects from './componets/projects.jsx';
-import Guardar from './componets/guardarDatos.jsx'
+
+
 
 function App() {
 
@@ -35,10 +37,10 @@ function App() {
               <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
               <Route path="/Servicios" element={ <Servicios /> } />
               <Route path="/Construccion" element={<Construccion />} />
+              <Route path="/Remodelaciones" element={<Remodelaciones />} />
               <Route path="/perfil/:userId" element={<Perfil />} />
               <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
               <Route path="/Proyectos" element={ <Projects/> } />
-              <Route path="/Guardar" element={<Guardar/>}/>
             </Routes>
           </div>
           {FooterIC()}
