@@ -16,7 +16,7 @@ export const getAllServiciosOfrecidos = async (req, res) => {
 // Mostrar servicios por id 
 export const getServiciosOfrecidos= async (req, res) => {
   try {
-      const ServiciosOfrecidos = await PServiciosOfrecidosModel.findByPk(req.params.id);
+      const ServiciosOfrecidos = await ServiciosOfrecidosModel.findByPk(req.params.id);
       if (ServiciosOfrecidos) {
           res.json(ServiciosOfrecidos);
       } else {

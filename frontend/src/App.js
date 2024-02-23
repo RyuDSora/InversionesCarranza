@@ -15,7 +15,7 @@ import Servicios from './componets/Servicios.jsx';
 import Perfil from './componets/Perfil.jsx';
 import EditPerfil from './componets/EditarPerfil.jsx';
 import Projects from './componets/projects.jsx';
-
+import Guardar from './componets/guardarDatos.jsx'
 
 function App() {
 
@@ -38,6 +38,7 @@ function App() {
               <Route path="/perfil/:userId" element={<Perfil />} />
               <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
               <Route path="/Proyectos" element={ <Projects/> } />
+              <Route path="/Guardar" element={<Guardar/>}/>
             </Routes>
           </div>
           {FooterIC()}
