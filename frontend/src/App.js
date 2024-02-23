@@ -1,28 +1,32 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import React from "react";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+
 import "./App.css";
-import FooterIC from "./componets/FooterIC.jsx";
-import CompRegistro from "./componets/Signup.jsx";
-import Login from './componets/Login.jsx'
-import LandingPage from "./componets/LandingPage.jsx";
-import NavBarIC from "./componets/NavBariC.jsx";
-import RecuperarLanding from './componets/RecuperarLanding.jsx'
+import FooterIC           from "./componets/FooterIC.jsx";
+import CompRegistro       from "./componets/Signup.jsx";
+import Login              from './componets/Login.jsx'
+import LandingPage        from "./componets/LandingPage.jsx";
+import NavBarIC           from "./componets/NavBariC.jsx";
+import RecuperarLanding   from './componets/RecuperarLanding.jsx'
 import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
-import Construccion from './componets/Construccion.jsx';
-import Remodelaciones from './componets/Remodelaciones.jsx';
-import DisenoPlanos from './componets/DisenoPlanos';
-import Servicios from './componets/Servicios.jsx'; 
-import Perfil from './componets/Perfil.jsx';
-import EditPerfil from './componets/EditarPerfil.jsx';
-import Projects from './componets/projects.jsx';
+import Construccion       from './componets/Construccion.jsx';
+import Remodelaciones     from './componets/Remodelaciones.jsx';
+import DisenoPlanos       from './componets/DisenoPlanos';
+import Servicios          from './componets/Servicios.jsx'; 
+import Perfil             from './componets/Perfil.jsx';
+import EditPerfil         from './componets/EditarPerfil.jsx';
+import Projects           from './componets/projects.jsx';
+import Guardar            from './componets/guardarDatos.jsx'
 
 
 
 function App() {
 
   return (
+    <>
     <div className="App">
       <div >
         <BrowserRouter>
@@ -43,12 +47,14 @@ function App() {
               <Route path="/perfil/:userId" element={<Perfil />} />
               <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
               <Route path="/Proyectos" element={ <Projects/> } />
+              <Route path="/Guardar" element={<Guardar/>}/>
             </Routes>
           </div>
-          {FooterIC()}
         </BrowserRouter>
       </div>
     </div>
+    <footer style={{textAlign:'center'}}>{<FooterIC/>}</footer>
+    </>
   );
 }
 

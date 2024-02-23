@@ -3,7 +3,6 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Dropdown } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 import perfil from '../imgs/perfil.png';
 
@@ -21,7 +20,7 @@ export default function NavBarIC() {
 
   if(localStorage.length===0){
     if(sessionStorage.length===0){
-      console.log('no hay usuario');
+      //console.log('no hay usuario');
     }else{
       UserL = sessionStorage.getItem('User');
       userId = sessionStorage.getItem('UserId'); // Asignamos el ID del usuario
@@ -32,10 +31,10 @@ export default function NavBarIC() {
   { 
     UserL = localStorage.getItem('User') || sessionStorage.getItem('User');
     userId = localStorage.getItem('UserId') || sessionStorage.getItem('UserId');
-    console.log(UserL);
+    //console.log(UserL);
     user = true;
   }
-  console.log(UserL);
+  //console.log(UserL);
   if( URLactual === '/Servicios'){services = true;}
   if( URLactual === '/login'){Login = true;}
   if( URLactual === '/'){home = true;}
@@ -44,7 +43,7 @@ export default function NavBarIC() {
   
   return (
     <Navbar expand="lg" className="pt-0">
-      <Container className="bg-light border rounded-bottom-3 px-3 pb-3 pt-3">
+      <Container className="bg-light px-3 pb-3 pt-3">
         <Navbar.Brand href='/'>
           <img
             src={inversionesCarranza}
@@ -65,13 +64,15 @@ export default function NavBarIC() {
           <Nav.Link href="/Proyectos" className={project ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
             Proyectos
           </Nav.Link>
-          <div className={user ? 'd-none' :"d-flex"}>
+          <div className={user ? 'd-none' :"d-flex justify-content-center"}>
+            <div style={{textAlign:'cemter'}}>
             <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
               Inicia Sesión
             </Nav.Link>
             <Nav.Link href="/Signup"  className={register ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
               Registrarse
             </Nav.Link>
+            </div>
           </div>
           
           

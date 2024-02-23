@@ -3,6 +3,8 @@
 # dependencies
 
 /node_modules/.cache/
+/node_modules/.cache/.eslintcache
+/node_modules/.cache/default-development
 /.pnp
 .pnp.js
 

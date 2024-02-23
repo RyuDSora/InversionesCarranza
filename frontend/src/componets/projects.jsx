@@ -11,14 +11,14 @@ import Modal from 'react-bootstrap/Modal';
 export default function Projects(params) {
     return (
         <Container>
-            <div className='bg-light border rounded-3'>
-                <div className='p-2 shadow'><span className='h2'>Nuestros Proyectos</span></div>
+            <div className='bg-light '>
+                <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
                 
                 {Cont('Construcción','/Proyectos/Construccion')}
-                <hr />
-                {Cont('Remodelación','/Proyectos/Remodelacion')}
-                <hr />
-                {Cont('Planos','/Proyectos/Planos')}
+                
+                {Cont('Remodelaciones','/Proyectos/Remodelacion')}
+                
+                {Cont('Diseño de Planos','/Proyectos/Planos')}
                 
             </div>
         </Container>
@@ -36,7 +36,7 @@ function Project({ name, image, url }) {
         <div style={{ width: '300px' }} className='bg-light border rounded-3 pt-2 pb-3 my-2'>
             <div className='p-2'><span className='h6'>{name}</span></div>
             <div className='px-3'>
-                <img src={image} alt="img" className='w-100 border rounded-3'/>
+                <img src={image} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles

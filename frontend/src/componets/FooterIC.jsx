@@ -1,5 +1,4 @@
 import inversionesCarranza from "../imgs/InversionesCarranza.png"
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import fblogo from '../imgs/fb-logo.svg';
 import Insta from '../imgs/instagram-logo@logotyp.us.svg';
@@ -7,8 +6,7 @@ import whats from '../imgs/whatsapp-logo@logotyp.us.svg';
 
 function FooterIC() {
     return(
-        <footer >
-        <Container className="border rounded  bg-light py-3">
+        <Container className="bg-light py-3">
             <div className='row'>
                 <div className="col mt-md-0 mt-3">
                     <img src={inversionesCarranza} alt="InCarranza" style={{width:200,margin:0}}/>
@@ -51,7 +49,6 @@ function FooterIC() {
                 <a href="/"> IS802-1900-1-2024</a>
             </div>
         </Container>
-        </footer>
     );
 }
 
