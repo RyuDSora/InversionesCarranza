@@ -17,12 +17,14 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Table `imagenes`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `imagenes` (
-  `idimagenes` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `descricion` VARCHAR(45) NOT NULL,
   `tipo` VARCHAR(5) NOT NULL,
   `archivo` BLOB NOT NULL,
-  PRIMARY KEY (`idimagenes`))
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -47,12 +49,12 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   INDEX `fk_usuarios_imagenes2_idx` (`fondo` ASC) VISIBLE,
   CONSTRAINT `fk_usuarios_imagenes1`
     FOREIGN KEY (`perrfil`)
-    REFERENCES `imagenes` (`idimagenes`)
+    REFERENCES `imagenes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_usuarios_imagenes2`
     FOREIGN KEY (`fondo`)
-    REFERENCES `imagenes` (`idimagenes`)
+    REFERENCES `imagenes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -62,16 +64,18 @@ ENGINE = InnoDB;
 -- Table `servicios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `servicios` (
-  `idservicios` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nombre_servicio` VARCHAR(45) NOT NULL,
   `detalle_servicio` VARCHAR(500) NOT NULL,
   `servicio_padre` INT ,
   `img_principal` BLOB NOT NULL,
-  PRIMARY KEY (`idservicios`),
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
   INDEX `fk_servicios_servicios_idx` (`servicio_padre` ASC) VISIBLE,
   CONSTRAINT `fk_servicios_servicios`
     FOREIGN KEY (`servicio_padre`)
-    REFERENCES `servicios` (`idservicios`)
+    REFERENCES `servicios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -81,16 +85,18 @@ ENGINE = InnoDB;
 -- Table `mydb`.`proyectos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `proyectos` (
-  `idproyectos` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nombreProyecto` VARCHAR(45) NOT NULL,
   `descripcion_proyecto` VARCHAR(500) NOT NULL,
   `img_principal` BLOB NOT NULL,
   `categoria_servicio` INT NOT NULL,
-  PRIMARY KEY (`idproyectos`),
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
   INDEX `fk_proyectos_servicios1_idx` (`categoria_servicio` ASC) VISIBLE,
   CONSTRAINT `fk_proyectos_servicios1`
     FOREIGN KEY (`categoria_servicio`)
-    REFERENCES `servicios` (`idservicios`)
+    REFERENCES `servicios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -103,17 +109,19 @@ CREATE TABLE IF NOT EXISTS `proyectos_has_imagenes` (
   `idproyecto` INT NOT NULL,
   `idimagen` INT NOT NULL,
   `id` INT NOT NULL AUTO_INCREMENT,
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `fk_proyectos_has_imagenes_imagenes1_idx` (`idimagen` ASC) VISIBLE,
   INDEX `fk_proyectos_has_imagenes_proyectos1_idx` (`idproyecto` ASC) VISIBLE,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_proyectos_has_imagenes_proyectos1`
     FOREIGN KEY (`idproyecto`)
-    REFERENCES `proyectos` (`idproyectos`)
+    REFERENCES `proyectos` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_proyectos_has_imagenes_imagenes1`
     FOREIGN KEY (`idimagen`)
-    REFERENCES `imagenes` (`idimagenes`)
+    REFERENCES `imagenes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
