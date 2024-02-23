@@ -11,7 +11,7 @@ function Servicios() {
     },
     { 
       nombre: 'Remodelaciones', 
-      descripcion: 'Nos especializamos en la construcción de casas y oficinas de trabajo de primera calidad.', 
+      descripcion: 'Nos destacamos en remodelaciones para cualquier tipo de espacio y servicios de mantenimiento.', 
       imagen: 'https://scontent.ftgu4-1.fna.fbcdn.net/v/t39.30808-6/322331734_1335197530666565_1245614110228181443_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=dd5e9f&_nc_ohc=EBjzGQqZgFgAX9bdaHy&_nc_ht=scontent.ftgu4-1.fna&oh=00_AfA_TAuGztruciewHAs9YaA2H8hJ3cTyeDaWXPa9CG8OrA&oe=65DBD15A', 
 
     },
