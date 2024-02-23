@@ -61,3 +61,12 @@ export const updateServiciosOfrecidos = async (req, res) => {
   }
 };
 
+// Crear un nuevo servicio
+export const createServiciosOfrecidos = async (req, res) => {
+    try {
+        await ServiciosOfrecidosModel.create(req.body);
+        res.json({ message: '¡SE CREO UN SERVICIO CORRECTAMENTE !' });
+    } catch (error) {
+        res.json({ message: error.message });
+    }
+};

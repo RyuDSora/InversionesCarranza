@@ -5,7 +5,7 @@ import db from "./database/db.js";
 //importamos nuestro enrutador 
 import usuarioRoutes from "./routes/UsuarioRoutes.js";
 import proyectosRealizados from "./routes/ProyectosRealizadoRoutes.js"
-import ServiciosOfrecidos  from "./routes/ServiciosOfrecidosRoutes.js";
+import serviciosOfrecidos  from "./routes/ServiciosOfrecidosRoutes.js";
 
 
 const app = express()
@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use('/usuarios', usuarioRoutes)
 app.use('/proyectosrealizados', proyectosRealizados)
-app.use('/ServiciosOfrecidos', ServiciosOfrecidos)
+app.use('/ServiciosOfrecidos', serviciosOfrecidos)
 
 app.use
 
