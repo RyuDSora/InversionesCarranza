@@ -28,6 +28,11 @@ export default function Perfil() {
   if (!usuario) {
     return <p>Cargando información del usuario...</p>;
   }
+
+   // Formatear la fecha de nacimiento para eliminar la parte de la hora
+   const fechaNacimientoSinHora = new Date(usuario.fechaNacimiento).toISOString().split('T')[0];
+
+
   const handleCambiarContrasenia = () => {
     // Aquí puedes obtener el email y el nombre del usuario
     const email = usuario.correo;
@@ -73,7 +78,7 @@ export default function Perfil() {
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Fecha Nacimiento:</span>
-              <input type="text" className="form-control" disabled value={usuario.fechaNacimiento} />
+              <input type="text" className="form-control" disabled value={fechaNacimientoSinHora} />
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Correo:</span>
