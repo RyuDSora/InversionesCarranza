@@ -27,8 +27,8 @@ export const getProyectoRealizado = async (req, res) => {
 // Crear un proyecto realizado
 export const createProyectoRealizado = async (req, res) => {
     try {
-        await ProyectoRealizadoModel.create(req.body);
-        res.json({ message: '¡Proyecto realizado creado correctamente!' });
+        const PR = await ProyectoRealizadoModel.create(req.body);
+        res.json({ message: '¡Proyecto realizado creado correctamente!',id:PR.id });
     } catch (error) {
         res.json({ message: error.message });
     }

@@ -20,7 +20,7 @@ import Perfil             from './componets/Perfil.jsx';
 import EditPerfil         from './componets/EditarPerfil.jsx';
 import Projects           from './componets/projects.jsx';
 import Guardar            from './componets/guardarDatos.jsx'
-
+import MasProyectos       from "./componets/MasProjectos.jsx";
 
 
 function App() {
@@ -36,17 +36,23 @@ function App() {
           <div>
             <Routes>
               <Route path='/' element={<LandingPage />} />
+
+
               <Route path="/Signup" element={<CompRegistro />}/>
               <Route path="/login" element={<Login />} />
               <Route path="/Recuperar" element={<RecuperarLanding />} />
               <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
+              <Route path="/perfil/:userId" element={<Perfil />} />
+              <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
+
               <Route path="/Servicios" element={ <Servicios /> } />
               <Route path="/Construccion" element={<Construccion />} />
               <Route path="/Remodelaciones" element={<Remodelaciones />} />
               <Route path="/DisenoPlanos" element={<DisenoPlanos />} />
-              <Route path="/perfil/:userId" element={<Perfil />} />
-              <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
+              
+              
               <Route path="/Proyectos" element={ <Projects/> } />
+              <Route path="/Proyectos/:Id" element={ <MasProyectos/>} />
               <Route path="/Guardar" element={<Guardar/>}/>
             </Routes>
           </div>

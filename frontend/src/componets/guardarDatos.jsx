@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Construccion from '../imgs/ServicioContruccion.jpg';
 import Remodelacion from '../imgs/ServicioRemodelacion.jpg';
 import Planos from '../imgs/ServicioDicenoPlanos.jpg';
 import axios from 'axios';
 
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
-//const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
+const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
 const Name = () => {
-    const [ setError] = useState('');
-    const [detalle, setDetalle] = useState('');
-    const [nombre, setNombre] = useState('');
-    const [img, setImg] = useState('');
     const servicios = {
         "1": { 
             nombre_servicio: 'Construcción', 
@@ -30,39 +26,54 @@ const Name = () => {
           }  
 
     };
-    //const proyectos = {};
+    const Proyectos = [];
+    
+        for (let index = 0; index < 15; index++) {
+            let numero = index+1;
+            Proyectos.push({
+                    categoria_servicio: 1,
+                    nombreProyecto: 'Proyecto CR'+ numero,
+                    descripcion_proyecto: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo hic minus magnam earum repudiandae aut ipsam sunt voluptatum laboriosam autem. Dicta voluptate mollitia itaque consectetur incidunt labore excepturi in neque!',
+                    img_principal: '/no definida'}
+            );}
+        for (let index = 0; index < 15; index++) {
+            let numero = index+1;
+            Proyectos.push({
+                    categoria_servicio: 2,
+                    nombreProyecto: 'Proyecto RM'+ numero,
+                    descripcion_proyecto: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo hic minus magnam earum repudiandae aut ipsam sunt voluptatum laboriosam autem. Dicta voluptate mollitia itaque consectetur incidunt labore excepturi in neque!',
+                    img_principal: '/no definida'}
+            );}
+        for (let index = 0; index < 15; index++) {
+            let numero = index+1;
+            Proyectos.push({
+                    categoria_servicio: 3,
+                    nombreProyecto: 'Proyecto DP'+ numero,
+                    descripcion_proyecto: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo hic minus magnam earum repudiandae aut ipsam sunt voluptatum laboriosam autem. Dicta voluptate mollitia itaque consectetur incidunt labore excepturi in neque!',
+                    img_principal: '/no definida'}
+            );}
+    
+    console.log(Proyectos);
+
+
+
+
     const handleSubmit = async (e) =>{
         e.preventDefault();
         try {
-            console.log(URIServicios);
             await axios.post(URIServicios,servicios[1]);
             await axios.post(URIServicios,servicios[2]);
             await axios.post(URIServicios,servicios[3]);
-            await axios.post(URIServicios,{ 
-                nombre_servicio: nombre, 
-                detalle_servicio: detalle, 
-                img_principal: img, 
-              })
-            alert('exitosamente');
+            for (let index = 0; index < Proyectos.length; index++) {
+                await axios.post(URIProyectos,Proyectos[index]);
+            }
         } catch (error) {
             console.error('Error al realizar la solicitud HTTP:', error);
-            setError('Se produjo un error al intentar registrar al usuario. Por favor, inténtelo de nuevo más tarde.');
         }
     }
     
     return(
         <form onSubmit={handleSubmit}>
-            <label htmlFor="nombre">nombre servicio</label>
-            <input type="text" name="nombre" id="nombre" value={nombre}
-                            onChange={(e) => setNombre(e.target.value)}/>
-            <br />
-            <label htmlFor="decripcion">detalle_servicio</label>
-            <input type="textarea" name="decripcion" id="descr" value={detalle}
-                            onChange={(e) => setDetalle(e.target.value)}/>
-            <br />
-            <label htmlFor="imd">img</label>
-            <input type="file" name="img" id="" value={img}
-                            onChange={(e) => setImg(e.target.value)}/>
             <input type="submit" />
         </form>
     )

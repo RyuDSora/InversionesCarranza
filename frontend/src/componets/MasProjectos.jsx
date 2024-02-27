@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import Container from 'react-bootstrap/esm/Container';
+import axios from 'axios';
+import Container  from 'react-bootstrap/Container';
+import Carousel from 'react-bootstrap/Carousel';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 import PR0 from '../imgs/proyectIMG.jpg';
 import PR1 from '../imgs/proyectIMG1.jpg';
 import PR2 from '../imgs/proyectIMG2.jpg';
 import PR3 from '../imgs/proyectIMG4.jpg';
-import Carousel from 'react-bootstrap/Carousel';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
 
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
 const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
 
+export default function MasProyectos() {
+    var serv = '';
+    var servName = '';
 
-export default function Projects(params) {
+    var cadena  = window.location.pathname;
+    var expresionRegular = /\d+$/;
+    if (expresionRegular.test(cadena)) {
+        var ultimosCaracteres = cadena.match(expresionRegular)[0];
+        serv = parseInt(ultimosCaracteres);}
+
     let [Servicios,setServicios] = useState([]);
     let [Proyectos, setProyectos] = useState([]);
-    let [Prxser, setPrxser] = useState([])
-
-    const Proyectosxservicios = [];
-
     useEffect(() => {
         const service = async () => {
             try {
@@ -34,65 +39,49 @@ export default function Projects(params) {
     
         service();
     }, []); 
-    
     useEffect(() => {
-        const Projew = async () => {
+        const fetchProyectos = async () => {
             try {
-                const response1 = await axios.get(URIProyectos);
-                setProyectos(response1.data);
+                const response = await axios.get(URIProyectos);
+                // Filtrar los proyectos por categoria_servicio igual al ID del servicio obtenido de la URL
+                const proyectosFiltrados = response.data.filter(proyecto => proyecto.categoria_servicio === serv);
+                setProyectos(proyectosFiltrados);
             } catch (error) {
                 console.log(error);
             }
         }
     
-        Projew();
-    }, []);
+        fetchProyectos();
+    }, [serv]);
     
-    useEffect(() => {
-        // const Proyectosxservicios = {};
-        Servicios.forEach(servicio => {
-            const proyectosDelServicio = Proyectos.filter(proyecto => proyecto.categoria_servicio === servicio.id);
-            Proyectosxservicios.push({id:servicio.id,proyectosDelServicio});
-        });
-        //console.log(Proyectosxservicios[0]);
-        Prxser = setPrxser(Proyectosxservicios);
-    
-    }, [Servicios, Proyectos]);
-    
-    //console.log(Prxser[0]);
+    for (let index = 0; index < Servicios.length; index++) {
+        if (Servicios[index].id===serv) {
+            servName = Servicios[index].nombre_servicio;
+        }
+    }
+
 
     return (
         <Container>
             <div className='bg-light '>
-                <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
-                {Servicios.map(Serv => (
-                <div key={Serv.id+Serv.nombre_servicio}>
-                    {Cont( Serv.id, Serv.nombre_servicio, '/Proyectos/'+Serv.nombre_servicio, Prxser)}
+            <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
+            <div className='p-2'><span className='h4'>{servName}</span></div>
+            <div className='my-2 py-3'>
+                <div className='d-flex flex-wrap px-3 justify-content-around'>
+                    {Proyectos.map(Proy => (
+                        <div key={Proy.id+Proy.nombreProyecto}>
+                            <Project nombre={Proy.nombreProyecto} img={PR0} />
                 </div>))}
+                </div>
+            </div>    
             </div>
         </Container>
-    );
+    );}
 
-}
-function Cont(ids,servicio, url2,PJ) {
-    return (
-        <div className='my-2 py-3'>
-            <div className='text-start h5 ps-4 ms-2'><span>{servicio}</span></div>
-            <div className='d-flex flex-wrap px-3 justify-content-around'>
-                {PJ.map(Proye =>(Proye.id===ids && 
-                    Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
-                        <div key={Pas.id+Pas.nombreProyecto}>
-                            <Project name={Pas.nombreProyecto} image={PR2}/>
-                        </div>
-                    ))
-                ))}
-                <div>{More(ids,url2)}</div>
-            </div>
-        </div>
-    );
-}
-//
-function Project({ name, image}) {
+    
+
+    
+function Project({nombre,img}) {
     const [show, setShow] = useState(false);
     const [index, setIndex] = useState(0);
     const handleClose = () => setShow(false);
@@ -101,9 +90,9 @@ function Project({ name, image}) {
     
     return (
         <div style={{ width: '300px' }} className='bg-light border rounded-3 pt-2 pb-3 my-2'>
-            <div className='p-2'><span className='h6'>{name}</span></div>
+            <div className='p-2'><span className='h6'>{nombre}</span></div>
             <div className='px-3'>
-                <img src={image} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
+                <img src={img} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -115,7 +104,7 @@ function Project({ name, image}) {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{name}</Modal.Title>
+                    <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Carousel activeIndex={index} onSelect={handleSelect}>
@@ -143,19 +132,3 @@ function Project({ name, image}) {
         </div>
     );
 }
-
-function More(id,url) {
-    return (
-        <div style={{ width: '300px', height: '500px' }} className='bg-light border rounded-3 py-2 my-2 d-flex align-items-center'>
-            <a href={url+id} className='mx-auto'>
-                <div className='border rounded-4' style={{ width: '100px', height: '100px' }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                    </svg>
-                </div>
-            </a>
-        </div>
-    );
-}
-
-
