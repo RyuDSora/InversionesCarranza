@@ -101,24 +101,39 @@ export default function Projects(params) {
 
 }
 
-function Cont(ids,servicio, url2,PJ) {
+function Cont(ids, servicio, url2, PJ) {
+    let element;
+    for (let index = 0; index < PJ.length; index++) {
+        element = PJ[index];
+       if(element.proyectosDelServicio.length===0){
+        console.log('vacio');
+       };
+        
+    }
     return (
         <div className='my-2 py-3 '>
             <div className='text-start h5 ps-4 ms-2'><span>{servicio}</span></div>
             <div className='d-flex flex-wrap px-3 justify-content-around'>
-                {PJ.map(Proye =>(Proye.id===ids && 
-                    Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
-                        <div key={Pas.id+Pas.nombreProyecto}>
-                            <Project name={Pas.nombreProyecto} image={PR2}/>
-                        </div>
-                    ))
-                ))}
-                <div>{More(ids,url2)}</div>
+                {element.proyectosDelServicio.length === 0 ? (
+                    <div>No hay proyectos</div>
+                ) : (
+                    <>
+                        {PJ.map(Proye => (Proye.id === ids &&
+                            Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
+                                <div key={Pas.id + Pas.nombreProyecto}>
+                                    <Project name={Pas.nombreProyecto} image={PR2} />
+                                </div>
+                            ))
+                        ))}
+                        <div>{More(ids, url2)}</div>
+                    </>
+                )}
             </div>
         </div>
     );
+    
 }
-//
+/**/
 function Project({ name, image}) {
     const [show, setShow] = useState(false);
     const [index, setIndex] = useState(0);
