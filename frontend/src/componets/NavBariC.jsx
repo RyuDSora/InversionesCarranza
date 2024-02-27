@@ -42,8 +42,8 @@ export default function NavBarIC() {
   if( URLactual === '/Signup'){register = true;}
   
   return (
-    <Navbar expand="lg" className="pt-0">
-      <Container className="bg-light px-3 pb-3 pt-3">
+    <Navbar expand="lg" className="pt-0 bg-light ">
+      <Container className="px-3 pb-3 pt-3">
         <Navbar.Brand href='/'>
           <img
             src={inversionesCarranza}
@@ -64,14 +64,16 @@ export default function NavBarIC() {
           <Nav.Link href="/Proyectos" className={project ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
             Proyectos
           </Nav.Link>
-          <div className={user ? 'd-none' :"d-flex justify-content-center"}>
-            <div style={{textAlign:'cemter'}}>
-            <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
-              Inicia Sesión
-            </Nav.Link>
-            <Nav.Link href="/Signup"  className={register ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
-              Registrarse
-            </Nav.Link>
+          <div >
+            <div className={user ? 'd-none' :"d-flex justify-content-center"}>
+              <div style={{textAlign:'cemter'}} className="d-flex flex-wrap">
+                <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3 order-1' :"mx-3"}>
+                  Inicia Sesión
+                </Nav.Link>
+                <Nav.Link href="/Signup"  className={register ? 'text-success text-uppercase not-active mx-3 order-2' :"mx-3"}>
+                  Registrarse
+                </Nav.Link>
+              </div>
             </div>
           </div>
           

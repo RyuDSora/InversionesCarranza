@@ -47,7 +47,7 @@ export default function LandingPage() {
 
  function Tabs(logo,nombre,parrafo,alter) {
   return(
-    <div className="border rounded-4 bg-light">
+    <div className="rounded-4 shadow-lg">
         <div className="row">
           <div className="col mt-2 mb-2 pt-2">
             <img src={logo} alt={alter} style={{ width: 300, margin: 0 }} />

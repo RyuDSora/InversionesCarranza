@@ -26,41 +26,43 @@ import MasProyectos       from "./componets/MasProjectos.jsx";
 function App() {
 
   return (
-    <>
-    <div className="App">
-      <div >
-        <BrowserRouter>
-          <header>
-            <NavBarIC />
-          </header>
-          <div>
-            <Routes>
-              <Route path='/' element={<LandingPage />} />
+    <div className="fondo-difuminado">
+    <div className="relativo">
+      <div className="App ">
+        <div className="App">
+          <BrowserRouter>
+            <header>
+              <NavBarIC />
+            </header>
+            <div >
+              <Routes>
+                <Route path='/' element={<LandingPage />} />
 
 
-              <Route path="/Signup" element={<CompRegistro />}/>
-              <Route path="/login" element={<Login />} />
-              <Route path="/Recuperar" element={<RecuperarLanding />} />
-              <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
-              <Route path="/perfil/:userId" element={<Perfil />} />
-              <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
+                <Route path="/Signup" element={<CompRegistro />}/>
+                <Route path="/login" element={<Login />} />
+                <Route path="/Recuperar" element={<RecuperarLanding />} />
+                <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
+                <Route path="/perfil/:userId" element={<Perfil />} />
+                <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
 
-              <Route path="/Servicios" element={ <Servicios /> } />
-              <Route path="/Construccion" element={<Construccion />} />
-              <Route path="/Remodelaciones" element={<Remodelaciones />} />
-              <Route path="/DisenoPlanos" element={<DisenoPlanos />} />
-              
-              
-              <Route path="/Proyectos" element={ <Projects/> } />
-              <Route path="/Proyectos/:Id" element={ <MasProyectos/>} />
-              <Route path="/Guardar" element={<Guardar/>}/>
-            </Routes>
-          </div>
-        </BrowserRouter>
+                <Route path="/Servicios" element={ <Servicios /> } />
+                <Route path="/Construccion" element={<Construccion />} />
+                <Route path="/Remodelaciones" element={<Remodelaciones />} />
+                <Route path="/DisenoPlanos" element={<DisenoPlanos />} />
+
+
+                <Route path="/Proyectos" element={ <Projects/> } />
+                <Route path="/Proyectos/:Id" element={ <MasProyectos/>} />
+                <Route path="/Guardar" element={<Guardar/>}/>
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </div>
       </div>
+      <footer style={{textAlign:'center'}} className="bg-light ">{<FooterIC/>}</footer>
     </div>
-    <footer style={{textAlign:'center'}}>{<FooterIC/>}</footer>
-    </>
+    </div>
   );
 }
 

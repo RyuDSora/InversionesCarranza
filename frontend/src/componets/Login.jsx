@@ -52,8 +52,8 @@ export default function Login() {
 
 
   return (
-    <Container>
-      <form className="border rounded-3 bg-light mx-auto mb-3 pb-3" style={{ width: '340px' }} onSubmit={handleSubmit}>
+    <Container className="mt-3">
+      <form className="border rounded-3 bg-light shadow mx-auto mb-3 pb-3" style={{ width: '340px' }} onSubmit={handleSubmit}>
         <div className="form-title py-3"><span className="h4">Iniciar Sesión</span></div>
         <div className="px-3">
           <div className="form-floating mb-3 mt-3">

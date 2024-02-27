@@ -63,7 +63,7 @@ export default function MasProyectos() {
 
     return (
         <Container>
-            <div className='bg-light '>
+            <div className='mt-3'>
             <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
             <div className='p-2'><span className='h4'>{servName}</span></div>
             <div className='my-2 py-3'>
@@ -89,7 +89,7 @@ function Project({nombre,img}) {
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
     
     return (
-        <div style={{ width: '300px' }} className='bg-light border rounded-3 pt-2 pb-3 my-2'>
+        <div style={{ width: '300px',backgroundColor:'rgb(255,255,255,0.5)' }} className='shadow rounded-3 pt-2 pb-3 my-2'>
             <div className='p-2'><span className='h6'>{nombre}</span></div>
             <div className='px-3'>
                 <img src={img} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>

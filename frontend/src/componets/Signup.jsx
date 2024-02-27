@@ -86,7 +86,7 @@ const CompRegistro = () => {
     };
 
     return (
-        <Container>
+        <Container className='mt-3'>
             <form className="border rounded-3 bg-light mx-auto mb-3 pb-3" style={{width:'340px'}} onSubmit={handleSubmit}>
                 <div className="form-title py-3"><span className="h4">Crea una Cuenta</span></div>
                 <div className="px-3">

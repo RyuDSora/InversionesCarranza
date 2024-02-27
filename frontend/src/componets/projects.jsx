@@ -6,6 +6,7 @@ import PR2 from '../imgs/proyectIMG2.jpg';
 import PR3 from '../imgs/proyectIMG4.jpg';
 import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 
@@ -17,6 +18,7 @@ export default function Projects(params) {
     let [Servicios,setServicios] = useState([]);
     let [Proyectos, setProyectos] = useState([]);
     let [Prxser, setPrxser] = useState([])
+    const [mostrarCargando, setMostrarCargando] = useState(true);
 
     const Proyectosxservicios = [];
 
@@ -42,6 +44,7 @@ export default function Projects(params) {
                 setProyectos(response1.data);
             } catch (error) {
                 console.log(error);
+                
             }
         }
     
@@ -61,22 +64,46 @@ export default function Projects(params) {
     
     //console.log(Prxser[0]);
 
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setMostrarCargando(false);
+        }, 300); // 2000 milisegundos (2 segundos) de retraso antes de mostrar el spinner
+        return () => clearTimeout(timeout);
+    }, []);
+
     return (
         <Container>
-            <div className='bg-light '>
+            <div className='mt-3 pt-2'>
                 <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
-                {Servicios.map(Serv => (
-                <div key={Serv.id+Serv.nombre_servicio}>
-                    {Cont( Serv.id, Serv.nombre_servicio, '/Proyectos/'+Serv.nombre_servicio, Prxser)}
-                </div>))}
+                {mostrarCargando ? (
+                    <div className='pb-4 my-2'>
+                        <div className='pb-4 mb-4'><span className='h3'>Cargando...</span></div>
+                    </div>
+                ) : (
+                    <div>
+                        {Servicios.length === 0 ? (
+                            <div className='pb-4 my-2'>
+                                <div className='pb-4 mb-4'><span className='h3'>Cargando...</span></div>
+                                <Spinner animation="border" variant="primary" />
+                            </div>
+                        ) : (
+                            Servicios.map(Serv => (
+                                <div key={Serv.id + Serv.nombre_servicio}>
+                                    {Cont(Serv.id, Serv.nombre_servicio, '/Proyectos/' + Serv.nombre_servicio, Prxser)}
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )}
             </div>
         </Container>
     );
 
 }
+
 function Cont(ids,servicio, url2,PJ) {
     return (
-        <div className='my-2 py-3'>
+        <div className='my-2 py-3 '>
             <div className='text-start h5 ps-4 ms-2'><span>{servicio}</span></div>
             <div className='d-flex flex-wrap px-3 justify-content-around'>
                 {PJ.map(Proye =>(Proye.id===ids && 
