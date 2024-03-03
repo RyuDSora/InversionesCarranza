@@ -3,6 +3,7 @@ import imagenM from "../imgs/imagenM.png"
 import imagenV from "../imgs/imagenV.png"
 import Container from "react-bootstrap/esm/Container";
 
+
 export default function LandingPage() {
 	const P_Mision = 'En Inversiones Carranza nuestra misión es proporcionar servicios de construcción'
   +'de alta calidad, cumpliendo con los más altos'
@@ -47,12 +48,12 @@ export default function LandingPage() {
 
  function Tabs(logo,nombre,parrafo,alter) {
   return(
-    <div className="rounded-4 shadow-lg" style={{backgroundColor:'rgb(255,255,255,0.3)'}}>
+    <div className="rounded-4 shadow-lg" style={{backgroundColor:'rgb(255,255,255,0.7)'}}>
         <div className="row">
-          <div className="col mt-2 mb-2 pt-2">
+          <div className="col-sm-6 mt-2 mb-2 pt-2 d-flex justify-content-center align-items-center">
             <img src={logo} alt={alter} style={{ width: 300, margin: 0 }} />
           </div>
-          <div className="col mt-2 mb-2 pt-2">
+          <div className="col-sm-6 mt-2 mb-2 pt-2">
             <div className="w-75 mx-auto">
               <p className="h3">{nombre}</p>
               <p className="text-center">

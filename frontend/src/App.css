@@ -54,7 +54,7 @@
   inset: 0;
   background-color: white;
   content: "";
-  filter: opacity(0.8);
+  filter: opacity(0.5);
 }
 .relativo{
   position: relative;

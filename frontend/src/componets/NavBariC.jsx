@@ -86,6 +86,10 @@ export default function NavBarIC() {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${userId}`}} >Mi Perfil</Dropdown.Item>
+                <Dropdown.Item onClick={ ()=>{window.location.href = `/AddAdmin`}} >Agregar Admin</Dropdown.Item>
+                <Dropdown.Item onClick={ ()=>{window.location.href = `/Users`}} >Ver Usuarios</Dropdown.Item>
+                <Dropdown.Item onClick={ ()=>{window.location.href = `/EditSrv`}} >Editar Servicios</Dropdown.Item>
+                <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>
                 <Dropdown.Item onClick={()=>{sessionStorage.removeItem('User');
                                             localStorage.removeItem('User');
                                             sessionStorage.removeItem('UserId'); // Removemos el ID del usuario
