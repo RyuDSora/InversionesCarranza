@@ -2,44 +2,57 @@ import inversionesCarranza from "../imgs/InversionesCarranza.png";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import React, { useState, useEffect } from 'react';
 import { Dropdown } from "react-bootstrap";
 import "../App.css";
 import perfil from '../imgs/perfil.png';
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
 
 export default function NavBarIC() {
-  var URLactual = window.location.pathname;
-  
-  var services = false;
-  var Login = false;
-  var home = false;
-  var project = false;
-  var register = false;
-  var user = false;
-  var UserL = '';
-  var userId = ''; // Agregamos la variable para almacenar el ID del usuario
+  const [Admin,setAdmin] = useState(false);//verificar si es administrador
+  const [user,setUser] = useState(false);//variable para comprobar un login
+  const [UserL,setUserL] = useState('');//nombre de usuario
+  const [UserId,setUserId] = useState('');//id usuario
+  const [services,setServicios] = useState(false);
+  const [Login,setLogin]=useState(false); 
+  const [home,sethome]=useState(false); 
+  const [project,setproject]=useState(false); 
+  const [register,setregister]=useState(false);  
 
-  if(localStorage.length===0){
-    if(sessionStorage.length===0){
-      //console.log('no hay usuario');
-    }else{
-      UserL = sessionStorage.getItem('User');
-      userId = sessionStorage.getItem('UserId'); // Asignamos el ID del usuario
-      user = true;  
+  var URLactual = window.location.pathname;
+  //desencriptar cookies
+  const encryptionKey = 'mysecretkey';
+  const decryptValue = (encryptedValue, key) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  };
+
+  //recuperar datos
+  useEffect(()=>{
+    if( URLactual === '/Servicios') {setServicios(true)}
+    if( URLactual === '/login')     {setLogin(true)}
+    if( URLactual === '/')          {sethome(true)}
+    if( URLactual === '/Proyectos') {setproject (true)}
+    if( URLactual === '/Signup')    {setregister(true)}
+
+
+    if(localStorage.length===0){
+      if(sessionStorage.length===0){}else{
+        setUser(true); 
+        setUserL(decryptValue(Cookies.get('User'), encryptionKey));
+        setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
+        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===1){setAdmin(true)};  
+        }
+    }else
+    { 
+      setUser(true); 
+      setUserL(decryptValue(Cookies.get('User'), encryptionKey));
+      setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
+      if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===1){setAdmin(true)};
     }
-  }
-  else
-  { 
-    UserL = localStorage.getItem('User') || sessionStorage.getItem('User');
-    userId = localStorage.getItem('UserId') || sessionStorage.getItem('UserId');
-    //console.log(UserL);
-    user = true;
-  }
-  //console.log(UserL);
-  if( URLactual === '/Servicios'){services = true;}
-  if( URLactual === '/login'){Login = true;}
-  if( URLactual === '/'){home = true;}
-  if( URLactual === '/Proyectos'){project = true;}
-  if( URLactual === '/Signup'){register = true;}
+  },[])
+  
   
   return (
     <Navbar expand="lg" className="pt-0 bg-light ">
@@ -64,49 +77,39 @@ export default function NavBarIC() {
           <Nav.Link href="/Proyectos" className={project ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
             Proyectos
           </Nav.Link>
-          <div >
-            <div className={user ? 'd-none' :"d-flex justify-content-center"}>
-              <div style={{textAlign:'cemter'}} className="d-flex flex-wrap">
-                <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3 order-1' :"mx-3"}>
-                  Inicia Sesión
-                </Nav.Link>
-                <Nav.Link href="/Signup"  className={register ? 'text-success text-uppercase not-active mx-3 order-2' :"mx-3"}>
-                  Registrarse
-                </Nav.Link>
-              </div>
-            </div>
-          </div>
-          
-          
-          <div className={user ? 'd-flex' :"d-none"} style={{justifyContent:'center'}}>
-            <Dropdown>
+          {user ? 
+          (<>
+          <Dropdown>
               <Dropdown.Toggle id="dropdown-basic" className="btn-light">
                 <img src={perfil} alt="perfil-img" style={{width:'30px', paddingRight:'5px'}}/>
                 {UserL}
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${userId}`}} >Mi Perfil</Dropdown.Item>
-                <Dropdown.Item onClick={ ()=>{window.location.href = `/AddAdmin`}} >Agregar Admin</Dropdown.Item>
-                <Dropdown.Item onClick={ ()=>{window.location.href = `/Users`}} >Ver Usuarios</Dropdown.Item>
-                <Dropdown.Item onClick={ ()=>{window.location.href = `/EditSrv`}} >Editar Servicios</Dropdown.Item>
-                <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>
-                <Dropdown.Item onClick={()=>{sessionStorage.removeItem('User');
-                                            localStorage.removeItem('User');
-                                            sessionStorage.removeItem('UserId'); // Removemos el ID del usuario
-                                            localStorage.removeItem('UserId'); // Removemos el ID del usuario
-                                            window.location.href = '/';}}>
+                <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${UserId}`}} >Mi Perfil</Dropdown.Item>
+                {Admin ? /*comprobamo si es administrador: si lo es mostrara la siguiente lista*/  (<>
+                  <Dropdown.Item onClick={ ()=>{window.location.href = `/AddAdmin`}} >Agregar Admin</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{window.location.href = `/Users`}} >Ver Usuarios</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{window.location.href = `/EditSrv`}} >Editar Servicios</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>
+                </>):(<></>)}
+                <Dropdown.Item onClick={()=>{ localStorage.removeItem('session');
+                                              sessionStorage.removeItem('session');
+                                              window.location.href = '/';}}>
                   Cerrar Sesion
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-                
-                
-          </div>
-          
+          </>):
+          (<>
+            <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3 order-1' :"mx-3"}>
+            Inicia Sesión
+            </Nav.Link>
+            <Nav.Link href="/Signup"  className={register ? 'text-success text-uppercase not-active mx-3 order-2' :"mx-3"}>
+            Registrarse
+          </Nav.Link></>
+          )}
         </Navbar.Collapse>
-        
       </Container>
-      
     </Navbar>
   );
 }
