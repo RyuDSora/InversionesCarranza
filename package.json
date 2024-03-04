@@ -2,7 +2,8 @@
   "name": "inversiones_carranza",
     "version": "3.0.0",
     "scripts": {
-      "start": "concurrently \"cd frontend && npm start\" \"cd backend && npm run start\""
+      "start": "concurrently \"cd frontend && npm start\" \"cd backend && npm run start\"",
+      "build": "cd frontend && npm run build"
     },
   "dependencies": {
     "react-router-dom": "^6.22.0"
