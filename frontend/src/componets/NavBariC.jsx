@@ -37,8 +37,8 @@ export default function NavBarIC() {
     if( URLactual === '/Signup')    {setregister(true)}
 
 
-    if(localStorage.length===0){
-      if(sessionStorage.length===0){}else{
+    if(!localStorage.getItem('session')){
+      if(!sessionStorage.getItem('session')){}else{
         setUser(true); 
         setUserL(decryptValue(Cookies.get('User'), encryptionKey));
         setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
