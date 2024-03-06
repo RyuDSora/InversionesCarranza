@@ -15,7 +15,7 @@ export default function Perfil() {
     const fetchUsuarioData = async () => {
       try {
         // Realiza una solicitud GET para obtener la información del usuario desde la base de datos utilizando el userId obtenido de la URL
-        const response = await axios.get(`http://localhost:8000/usuarios/${userId}`);
+        const response = await axios.get(`http://`+window.location.hostname+`:8000/usuarios/${userId}`);
         setUsuario(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);

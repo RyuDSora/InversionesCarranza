@@ -52,15 +52,15 @@ export default function Login() {
 
         if (usuarioExistente && usuarioExistente.contasenia === password) {
           if (rememberMe) {
-            Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey))
-            Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey))
-            Cookies.set('User',encryptValue(usuarioExistente.nombre + ' ' + usuarioExistente.apellido, encryptionKey))
-            localStorage.setItem('session',true);
+            Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey),{expires:365});
+            Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey),{expires:365});
+            Cookies.set('User',encryptValue(usuarioExistente.nombre + ' ' + usuarioExistente.apellido, encryptionKey),{expires:365});
+            Cookies.set('session',true,{expires:365});
           } else {
-            Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey))
-            Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey))
-            Cookies.set('User',encryptValue(usuarioExistente.nombre + ' ' + usuarioExistente.apellido, encryptionKey))
-            sessionStorage.setItem('session',true)
+            Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey));
+            Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey));
+            Cookies.set('User',encryptValue(usuarioExistente.nombre + ' ' + usuarioExistente.apellido, encryptionKey));
+            Cookies.set('session',true);
           }
           navigate('/');
           window.location.reload();

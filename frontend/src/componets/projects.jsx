@@ -132,7 +132,7 @@ function Cont(ids, servicio, url2, PJ, lsImg) {
                                     Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
                                         <div className='col-sm-3'>
                                             <div key={Proye.id+Pas} >
-                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? Pas.img_principal : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
+                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
                                             </div>
                                         </div>
                                     ))
@@ -143,7 +143,7 @@ function Cont(ids, servicio, url2, PJ, lsImg) {
                                     Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
                                         <div className='col-sm-3'>
                                             <div key={Proye.id+Pas} >
-                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'https://img.freepik.com/vector-gratis/escena-dibujos-animados-sitio-construccion-edificios_1308-105248.jpg' : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
+                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
                                             </div>
                                         </div>
                                     ))

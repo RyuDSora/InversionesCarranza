@@ -5,6 +5,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 import PR0 from '../imgs/proyectIMG.jpg';
 import PR1 from '../imgs/proyectIMG1.jpg';
 import PR2 from '../imgs/proyectIMG2.jpg';
@@ -64,16 +65,17 @@ export default function MasProyectos() {
     return (
         <Container>
             <div className='mt-3'>
-            <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
-            <div className='p-2'><span className='h4'>{servName}</span></div>
-            <div className='my-2 py-3'>
-                <div className='d-flex flex-wrap px-3 justify-content-around'>
-                    {Proyectos.map(Proy => (
-                        <div key={Proy.id+Proy.nombreProyecto}>
-                            <Project nombre={Proy.nombreProyecto} img={PR0} />
-                </div>))}
-                </div>
-            </div>    
+                <div className='p-2'><span className='h2'>Nuestros Proyectos</span></div>
+                <div className='p-2'><span className='h4'>{servName}</span></div>
+                <div className='my-2 py-3'>
+                    <div className='d-flex flex-wrap px-3 justify-content-around'>
+                        {Proyectos.map(Proy => (
+                            <div key={Proy} className='col-sm-3 mx-2'>
+                                <Project proye={Proy} />
+                            </div>
+                        ))}
+                    </div>
+                </div>    
             </div>
         </Container>
     );}
@@ -81,18 +83,19 @@ export default function MasProyectos() {
     
 
     
-function Project({nombre,img}) {
+function Project({proye}) {
     const [show, setShow] = useState(false);
     const [index, setIndex] = useState(0);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
+    console.log(proye);
     
     return (
-        <div style={{ width: '300px',backgroundColor:'rgb(255,255,255,0.5)' }} className='shadow rounded-3 pt-2 pb-3 my-2'>
-            <div className='p-2'><span className='h6'>{nombre}</span></div>
+        <div style={{ backgroundColor:'rgb(255,255,255,0.5)' }} className='shadow rounded-3 pt-2 pb-3 my-2'>
+            <div className='p-2'><span className='h6'>{proye.nombreProyecto}</span></div>
             <div className='px-3'>
-                <img src={img} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
+                <img src={proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -104,7 +107,7 @@ function Project({nombre,img}) {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{nombre}</Modal.Title>
+                    <Modal.Title>{proye.nombreProyecto}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Carousel activeIndex={index} onSelect={handleSelect}>

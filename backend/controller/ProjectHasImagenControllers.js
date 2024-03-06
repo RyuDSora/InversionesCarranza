@@ -1,4 +1,4 @@
-import ProjectHasImagenModels from "../models/ProjectHasImagenModels";
+import ProjectHasImagenModels from "../models/ProjectHasImagenModels.js";
 
 // Mostrar todas las columnas de img x proyects
 export const GetAllProjHasImg = async (req, res) => {
@@ -21,10 +21,10 @@ export const GuardarImgXProj = async (req, res) => {
 };
 
 // Eliminar una imagen de un proyecto
-export const deleteProyectoRealizado = async (req, res) => {
+export const DeleteProyecthasImagen = async (req, res) => {
     try {
         const deletedRowCount = await ProjectHasImagenModels.destroy({
-            where: { id: req.params.id }
+            where: { idproyecto: req.params.id }
         });
         if (deletedRowCount === 0) {
             res.status(404).json({ message: 'No se encontró nada para eliminar' });

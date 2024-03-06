@@ -6,31 +6,27 @@ import { BsPlus } from 'react-icons/bs';
 import { FaEdit,FaTrash } from 'react-icons/fa';
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
-import IMGP from '../imgs/imagenX.png';
-import IMG1 from '../imgs/CasaAthems.jpg'
-import IMG2 from '../imgs/diseño1.jpg'
-import IMG3 from '../imgs/diseño2.jpg'
 
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
 const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
+const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';
 
 function ProyectosAdmin(params) {
-    let [Servicios,setServicios] = useState([]);
-    const [ShowService, setShowService]= useState(1); 
-    const [Proyectos,setProyectos]= useState([]);
-    const [btnSelected, setBtnSelected] = useState(1);
-    const [show, setShow] = useState(false);
-    const [ProyectoName,setProyectoName] = useState('');
-    const [servicioSeleccionado, setServicioSeleccionado] = useState('');
-    const [ProyectoDescripcion, setProyectoDescripcion ]= useState('');
-    const [ProyectoIMG,setProyectoIMG] = useState(null);
-    const [ProyectoLsIMG,setProyectoLsIMG] = useState([]);
+    
+    let [Servicios,setServicios] = useState([]);   //variable para los servicios principales
+    const [ShowService, setShowService]= useState(1); //variable para saber que pestaña de servicio esta activa 
+    const [Proyectos,setProyectos]= useState([]);  //variable para guardar los proyectos segun el servicio seleccionado
+    const [btnSelected, setBtnSelected] = useState(1);//variable...
+    const [show, setShow] = useState(false); //variable para mostrar o esconder la modal de +
+    const [ProyectoName,setProyectoName] = useState(''); //variable para el nombre del proyecto +
+    const [servicioSeleccionado, setServicioSeleccionado] = useState(''); //variable para el servicio seleccionado +
+    const [ProyectoDescripcion, setProyectoDescripcion ]= useState(''); //variable para la descripcion +
+    const [ProyectoIMG,setProyectoIMG] = useState(null); //variable para la imagen principal +
+    const [ProyectoLsIMG,setProyectoLsIMG] = useState([]); //variable para las otras imgs
     const [previewURL, setPreviewURL] = useState('');
     const [previewURLs, setPreviewURLs] = useState([]);
     const [estado,setEstado]= useState(false);
-    /////// de prueba
-    const [ImagP/*, setImgP*/] = useState(IMGP);
-    const [lsImgP/*, setlsImgP*/] = useState([IMG1, IMG2, IMG3]);
+    const [lsImgP, setlsImgP] = useState([]);
     /////////////////////////////////
     
     useEffect(() => {
@@ -51,11 +47,15 @@ function ProyectosAdmin(params) {
     useEffect(() => {
         const Projew = async () => {
             try {
+                await fetch('http://'+window.location.hostname+':8000/images/get')
                 const response = await axios.get(URIProyectos);
                 const ProyectoData = response.data.filter(
                     proye => proye.categoria_servicio === ShowService);
                 
                 setProyectos(ProyectoData);
+
+               const response1 = await axios.get(URIPRXIMG);
+                setlsImgP (response1.data);
             } catch (error) {
                 console.log(error);
                 
@@ -66,45 +66,80 @@ function ProyectosAdmin(params) {
         setEstado(false);
     }, [estado,ShowService]);
     
+   
     /////////////////////////////////////////////
     const handleShow = () => setShow(true);
-
+   
     const handleSubmit = async (event) => {
         event.preventDefault();
-    // Aquí puedes agregar la lógica para enviar el formulario
+        //aqui vamos a enviar la imagen principal primero
         try {
-            //se agregara la imagen principal a la base de datos y se recuperara su id
-            var servis = null; //variable para saber el id de servicio
-            //var idImgP = null; //variable para recuperar el id de la imagen principal
-            var proyectoaddid= null;//variable para recuperar el id del proyecto guardado
+            var idIMGPrincipal;
+            var servis = null;
 
             for (let index = 0; index < Servicios.length; index++) {
                 if (servicioSeleccionado===Servicios[index].nombre_servicio) {servis = Servicios[index].id;}
             }
 
+            if(!ProyectoIMG){
+                alert('cargue una imagen en principal')
+                return
+              }
+            const formdata = new FormData()
+            formdata.append('image', ProyectoIMG)
+            await fetch('http://'+window.location.hostname+':8000/images/post', {
+            method: 'POST',
+            body: formdata
+            })
+            .then(res => res.json())
+            .then(data => {
+            idIMGPrincipal = data.id;
+            })
+            .catch(err => {
+            console.error(err)
+            })
+            
             const proyectoAdd = {
                 "nombreProyecto":ProyectoName,
                 "categoria_servicio":servis,
                 "descripcion_proyecto":ProyectoDescripcion,
-                "img_principal":1
+                "img_principal":idIMGPrincipal
             }
-             const response = await axios.post(URIProyectos,proyectoAdd);
-             setEstado(true);
-             proyectoaddid = response.data.id;
-             console.log(proyectoaddid);
+            
+            const response = await axios.post(URIProyectos,proyectoAdd);
+            
+            if (ProyectoLsIMG.length>0) {
+                ProyectoLsIMG.map(
+                    imag =>{ 
+                        const formdatas = new FormData()
+                        formdatas.append('image', imag)
+                        fetch('http://'+window.location.hostname+':8000/images/post', {
+                        method: 'POST',
+                        body: formdatas
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            axios.post(URIPRXIMG,{"idproyecto":response.data.id,"idimagen":data.id})
+                        })
+                        .catch(err => {
+                        console.error(err)
+                        
+                    });
+                    return null;
+                    }
+                )
+            }
+
         } catch (error) {
             console.error('Error al realizar la solicitud HTTP:', error);
         }
+
+        setEstado(true);
         setShow(false);
         setProyectoName('');setServicioSeleccionado('');setProyectoDescripcion('');
-        setProyectoIMG(null);setProyectoLsIMG([]);
+        setProyectoIMG(null);setPreviewURL('');setPreviewURL('');setPreviewURLs([]);
+        
     };
-
-
-
-
-
-
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -137,7 +172,11 @@ function ProyectosAdmin(params) {
     const deletedProyecto = (id) => {
         const confirmacion = confirm("¿Estás seguro que deseas borrar este proyecto?");
         if (confirmacion) {
-            const response = axios.delete(URIProyectos+id).then(resp => {setEstado(true)})
+            const response = axios.get(URIPRXIMG);
+            if (response.data>0) {
+                axios.delete(URIPRXIMG+id);    
+            }
+            axios.delete(URIProyectos+id).then(resp => {setEstado(true)})
         }
     }; 
     /* eslint-enable no-restricted-globals */
@@ -146,7 +185,6 @@ function ProyectosAdmin(params) {
         setShowService(params);
         setBtnSelected(params);
     }
-    
     return (
         <Container>
             <div className='p-2'><span className='h5'>Nuestros Proyectos</span></div>
@@ -181,15 +219,16 @@ function ProyectosAdmin(params) {
                     </div>
                     <div className='row py-2'>
                         <div className='col-sm-3 d-flex align-items-center' >
-                            <img src={proye.img_principal ? 'https://img.freepik.com/vector-gratis/escena-dibujos-animados-sitio-construccion-edificios_1308-105248.jpg' : IMGPrueba} alt="casa" className='w-100' title={'Imagen Principal: '+proye.nombreProyecto}/>
+                            <img src={proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba} alt="casa" className='w-100' title={'Imagen Principal: '+proye.nombreProyecto}/>
                         </div>
                         <div className='col-sm-9'>
                             <div>
                                 <div ><p>{proye.descripcion_proyecto}</p></div>
                             </div>
                             <div className='d-flex flex-wrap'>
-                                {lsImgP.map(imagep => (
-                                    <img key={imagep} src={imagep} alt='img' className='px-2' style={{maxWidth:100,maxHeight:100}}/>
+
+                                {lsImgP.map(imagep => (imagep.idproyecto===proye.id ?
+                                    (<img key={imagep.idproyecto+' '+imagep.idimagen+' '} src={'http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg'} alt='img' className='px-2 m-2' style={{maxWidth:100,maxHeight:100}}/>):(<></>)
                                 ))}
                             </div>
                         </div>

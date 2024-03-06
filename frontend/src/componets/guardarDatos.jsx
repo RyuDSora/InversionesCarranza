@@ -3,56 +3,53 @@ import axios from 'axios';
 
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
 const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
-const URIImages = 'http://'+window.location.hostname+':8000/imagenes/';
+//const URIImages = 'http://'+window.location.hostname+':8000/imagenes/';
 const Name = () => {
   const [file, setFile] = useState(null)
   const [imagesList,setImagesList]=useState([])
   const [lsUp, setLsUp] = useState(false)
-  const [LSIMAGEN,setLSIMAGEN] = useState([])
+  
+  useEffect(()=>{
+    fetch('http://'+window.location.hostname+':8000/images/get')
+    .then(res => res.json())
+    .then(res => setImagesList(res))
+    .catch(err => {
+      console.error(err)
+    })
+    setLsUp(false) 
+  },[lsUp])
   const selectedHandler = e => {
     setFile(e.target.files[0])
   }
-
-  useEffect(() => {
-    const imageness = async () => {
-        try {
-            const response = await axios.get(URIImages);
-            const imagessData = response.data
-            setLSIMAGEN(imagessData);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    imageness();
-  }, []); 
-
+  
   const sendHandler = () => {
-    // Verifica si hay un archivo seleccionado
-    if (!file) {
-        alert('Debes subir un archivo');
-        return;
+    if(!file){
+      alert('you must upload file')
+      return
     }
 
-    // Crea un nuevo FormData y agrega el archivo seleccionado
-    const formData = new FormData();
-    formData.append('image', file);
+    const formdata = new FormData()
+    formdata.append('image', file)
 
-    // Envía la solicitud POST al servidor utilizando Axios
-    axios.post(URIImages, formData)
-        .then(res => res.text()) // Convierte la respuesta a texto
-        .then(res => {
-            console.log(res); // Registra la respuesta en la consola
-            setLsUp(true); // Actualiza el estado para indicar que la imagen se ha subido con éxito
-        })
-        .catch(err => {
-            console.error(err); // Maneja cualquier error capturado durante el proceso de envío
-        });
+    fetch('http://'+window.location.hostname+':8000/images/post', {
+      method: 'POST',
+      body: formdata
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log('ID de la imagen subida:', data.id);
+      setLsUp(true)
+    })
+    .catch(err => {
+      console.error(err)
+    })
 
-    // Limpia el campo de entrada de archivos y reinicia la variable de archivo
-    document.getElementById('fileinput').value = null;
-    setFile(null);
-};
+    document.getElementById('fileinput').value = null
+
+    setFile(null)
+  }
+
+  
     const servicios = {
         "1": { 
             nombre_servicio: 'Construcción', 
@@ -130,12 +127,13 @@ const Name = () => {
         </form>
         </nav>
         <br />
-        <nav className='navbar navbar-dark bg-dark'>
-            <div className='container'>
-                <a href="#!" className='navbar-brand'>Guardar Imagen</a>
-            </div>
-        </nav>
-        <div className="container mt-5">
+        <nav className="navbar navbar-dark bg-dark">
+        <div className="container">
+          <a href="#!" className="navbar-brand">Image App</a>
+        </div>
+      </nav>
+
+      <div className="container mt-5">
         <div className="card p-3">
           <div className="row">
             <div className="col-10">
@@ -150,17 +148,12 @@ const Name = () => {
       <div className='container mt-3' style={{display:'flex',flexWrap:'wrap'}}>
           {imagesList.map(img => (
             <div key={img} className='card p-2'>
-              <img src={'http://localhost:9000/'+img} alt="..." className='card-img-top' style={{height:200,width:300}}></img>
+              <img src={'http://'+window.location.hostname+':8000/'+img} alt="..." className='card-img-top' style={{height:200,width:300}}></img>
             </div> 
           ))}
       </div>
-      { LSIMAGEN.map(lmagen => (
-          <div key={lmagen}>
-            <span>{lmagen.id}</span>
-            <span>{lmagen.nombre}</span>
-            <span>{lmagen.tipo}</span>
-          </div>
-        ))}
+
+        
         </>
     )
 }
