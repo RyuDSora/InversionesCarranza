@@ -8,6 +8,7 @@ import "../App.css";
 import perfil from '../imgs/perfil.png';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
+import { } from 'react-router-dom';
 
 export default function NavBarIC() {
   const [Admin,setAdmin] = useState(false);//verificar si es administrador
@@ -51,7 +52,7 @@ export default function NavBarIC() {
       setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
       if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===1){setAdmin(true)};
     }
-  },[])
+  },[URLactual])
   
   
   return (
@@ -87,7 +88,7 @@ export default function NavBarIC() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${UserId}`}} >Mi Perfil</Dropdown.Item>
                 {Admin ? /*comprobamo si es administrador: si lo es mostrara la siguiente lista*/  (<>
-                  <Dropdown.Item onClick={ ()=>{window.location.href = `/AddAdmin`}} >Agregar Admin</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{window.location.href = `/AgregarAdministrador`}} >Agregar Admin</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/Users`}} >Ver Usuarios</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/EditSrv`}} >Editar Servicios</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>

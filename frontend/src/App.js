@@ -21,7 +21,8 @@ import EditPerfil         from './componets/EditarPerfil.jsx';
 import Projects           from './componets/projects.jsx';
 import Guardar            from './componets/guardarDatos.jsx'
 import MasProyectos       from "./componets/MasProjectos.jsx";
-import ProyectosAdmin from "./componets/ProyectosAdmin.jsx";
+import ProyectosAdmin     from "./componets/ProyectosAdmin.jsx";
+import AgregarAdministrador from './componets/AgregarAdministrador.jsx';
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
                 <Route path="/Proyectos/:Id" element={ <MasProyectos/>} />
                 <Route path="/Guardar" element={<Guardar/>}/>
                 <Route path="/EditPr" element={ <ProyectosAdmin/>} />
+                <Route path="/AgregarAdministrador" element={ <AgregarAdministrador/>} />
                 
               </Routes>
             </div>
