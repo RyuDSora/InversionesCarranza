@@ -25,13 +25,11 @@ function AgregarAdministrador() {
         setPasswordValido(password.length >= 8);
 
         if (nombreValido && apellidoValido && telefonoValido && fechaNacimientoValido && emailValido && passwordValido) {
-            // Aquí puedes implementar la lógica para agregar el nuevo administrador
             console.log(`Nombre ${nombre}, Apellido ${apellido}, Telefono ${telefono}, Fecha de Nacimiento ${fechaNacimiento}, Email: ${email}, Password: ${password}`);
         }
     };
 
     const handleCancel = () => {
-        // Aquí puedes implementar la lógica para manejar la cancelación
         setNombre('');
         setApellido('');
         setTelefono('');
