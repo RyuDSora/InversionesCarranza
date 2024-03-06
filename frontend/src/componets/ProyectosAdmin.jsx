@@ -5,16 +5,20 @@ import { Button, Modal, Form,Image  } from 'react-bootstrap';
 import { BsPlus } from 'react-icons/bs';
 import { FaEdit,FaTrash } from 'react-icons/fa';
 
+import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 import IMGP from '../imgs/imagenX.png';
 import IMG1 from '../imgs/CasaAthems.jpg'
 import IMG2 from '../imgs/diseño1.jpg'
 import IMG3 from '../imgs/diseño2.jpg'
 
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
+const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
 
 function ProyectosAdmin(params) {
     let [Servicios,setServicios] = useState([]);
-    const [btnSelected,setBtnSelected] = useState([true]);
+    const [ShowService, setShowService]= useState(1); 
+    const [Proyectos,setProyectos]= useState([]);
+    const [btnSelected, setBtnSelected] = useState(1);
     const [show, setShow] = useState(false);
     const [ProyectoName,setProyectoName] = useState('');
     const [servicioSeleccionado, setServicioSeleccionado] = useState('');
@@ -23,30 +27,85 @@ function ProyectosAdmin(params) {
     const [ProyectoLsIMG,setProyectoLsIMG] = useState([]);
     const [previewURL, setPreviewURL] = useState('');
     const [previewURLs, setPreviewURLs] = useState([]);
-
-
-
-    var lore = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, fugit suscipit! Doloribus, laudantium, harum amet voluptates non nulla veniam quis cupiditate ut delectus dolor? Alias quisquam corporis architecto laudantium illo!'
+    const [estado,setEstado]= useState(false);
     /////// de prueba
-    const [IdP,setIdp] = useState(46);
-    const [NameP, setNameP] = useState('Casa 123');
-    const [DescriP, setDescriP] 
-    = useState('Se construyó la casa... '+lore+' '+lore+' '+lore+' '+lore);
-    const [ImagP, setImgP] = useState(IMGP);
-    const [lsImgP, setlsImgP] = useState([IMG1, IMG2, IMG3]);
+    const [ImagP/*, setImgP*/] = useState(IMGP);
+    const [lsImgP/*, setlsImgP*/] = useState([IMG1, IMG2, IMG3]);
     /////////////////////////////////
+    
+    useEffect(() => {
+        const service = async () => {
+            try {
+                const response = await axios.get(URIServicios);
+                const serviciosData = response.data.filter(
+                    servicio => servicio.servicio_padre === null);
+                setServicios(serviciosData);
+                
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        service();
+    }, []);
+
+    useEffect(() => {
+        const Projew = async () => {
+            try {
+                const response = await axios.get(URIProyectos);
+                const ProyectoData = response.data.filter(
+                    proye => proye.categoria_servicio === ShowService);
+                
+                setProyectos(ProyectoData);
+            } catch (error) {
+                console.log(error);
+                
+            }
+        }
+    
+        Projew();
+        setEstado(false);
+    }, [estado,ShowService]);
+    
+    /////////////////////////////////////////////
     const handleShow = () => setShow(true);
 
-    const handleSubmit = (event) => {
-    event.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
     // Aquí puedes agregar la lógica para enviar el formulario
-    console.log(ProyectoName);
-    console.log(servicioSeleccionado);
-    console.log(ProyectoDescripcion);
-    console.log(ProyectoIMG);
-    console.log(ProyectoLsIMG);
-    setShow(false);
+        try {
+            //se agregara la imagen principal a la base de datos y se recuperara su id
+            var servis = null; //variable para saber el id de servicio
+            //var idImgP = null; //variable para recuperar el id de la imagen principal
+            var proyectoaddid= null;//variable para recuperar el id del proyecto guardado
+
+            for (let index = 0; index < Servicios.length; index++) {
+                if (servicioSeleccionado===Servicios[index].nombre_servicio) {servis = Servicios[index].id;}
+            }
+
+            const proyectoAdd = {
+                "nombreProyecto":ProyectoName,
+                "categoria_servicio":servis,
+                "descripcion_proyecto":ProyectoDescripcion,
+                "img_principal":1
+            }
+             const response = await axios.post(URIProyectos,proyectoAdd);
+             setEstado(true);
+             proyectoaddid = response.data.id;
+             console.log(proyectoaddid);
+        } catch (error) {
+            console.error('Error al realizar la solicitud HTTP:', error);
+        }
+        setShow(false);
+        setProyectoName('');setServicioSeleccionado('');setProyectoDescripcion('');
+        setProyectoIMG(null);setProyectoLsIMG([]);
     };
+
+
+
+
+
+
+
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
         setProyectoIMG(selectedFile);
@@ -73,23 +132,21 @@ function ProyectosAdmin(params) {
         setProyectoLsIMG([])
         setPreviewURLs([])
         setShow(false)
-    }
-
-    useEffect(() => {
-        const service = async () => {
-            try {
-                const response = await axios.get(URIServicios);
-                const serviciosData = response.data.filter(
-                    servicio => servicio.servicio_padre === null);
-                setServicios(serviciosData);
-                
-            } catch (err) {
-                console.log(err);
-            }
+    };
+    /* eslint-disable no-restricted-globals */
+    const deletedProyecto = (id) => {
+        const confirmacion = confirm("¿Estás seguro que deseas borrar este proyecto?");
+        if (confirmacion) {
+            const response = axios.delete(URIProyectos+id).then(resp => {setEstado(true)})
         }
-        service();
-    }, []); 
-
+    }; 
+    /* eslint-enable no-restricted-globals */
+    
+    function Seccion(params) { 
+        setShowService(params);
+        setBtnSelected(params);
+    }
+    
     return (
         <Container>
             <div className='p-2'><span className='h5'>Nuestros Proyectos</span></div>
@@ -97,38 +154,38 @@ function ProyectosAdmin(params) {
                 <div className="d-flex justify-content-around bg-inCa rounded-top-4">
                     {Servicios.map(serv => (
                     <div key={serv.nombre_servicio} id={serv.nombre_servicio+'/'+serv.id}>
-                        <div className={`${btnSelected[serv.id-1] ? 'border-bottom border-primary border-4': ''} px-3 py-1 d-flex align-items-center`} >
-                        <a className="nav-link  text-center" href={'#section'+serv.id}>{serv.nombre_servicio}</a>
+                        <div className={`${btnSelected === serv.id ? 'border-bottom border-primary border-4': ''} px-3 py-1 d-flex align-items-center`} >
+                        <button className='btn text-center btn-outline-light text-dark' onClick={()=>{Seccion(serv.id)}}><span>{serv.nombre_servicio}</span></button>
                     </div>
                     </div>
                     ))}
                 </div>
             </div>
             <div className='mb-3 bg-inCa rounded-bottom-4'>
-                {/*esta es la plantilla*/}
-                <div className='pt-3 shadow-lg p-3 my-2'>
+                { Proyectos.map(proye=>(
+                    <div key={proye.id+proye.nombreProyecto+proye.categoria_servicio+proye.descripcion_proyecto} className='pt-3 shadow-lg p-3 my-2'>
                     <div className='row'>
                         <div className='col-sm-10'>
                             <div className='row m-2'>
-                                <div className='col-sm-3'><span>ID: {IdP}</span></div>
-                                <div className='col-sm-9' ><span title='Nombre Proyecto'>{NameP}</span></div>
+                                <div className='col-sm-3'><span>ID: {proye.id}</span></div>
+                                <div className='col-sm-9' ><span title='Nombre Proyecto'>{proye.nombreProyecto}</span></div>
                             </div>
                         </div>
                         
                         <div className='col-sm-2'>
                             <div className='d-flex justify-content-center m-2'>
                                 <div className='px-1' title='Editar'><button type="button" className='btn btn-warning rounded-5'><FaEdit size={12}/></button></div>
-                                <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5'><FaTrash size={12}/></button></div>
+                                <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5' onClick={() => deletedProyecto(proye.id)}><FaTrash size={12}/></button></div>
                             </div>
                         </div>
                     </div>
                     <div className='row py-2'>
                         <div className='col-sm-3 d-flex align-items-center' >
-                            <img src={ImagP} alt="casa" className='w-100' title={'Imagen Principal: '+NameP}/>
+                            <img src={proye.img_principal ? 'https://img.freepik.com/vector-gratis/escena-dibujos-animados-sitio-construccion-edificios_1308-105248.jpg' : IMGPrueba} alt="casa" className='w-100' title={'Imagen Principal: '+proye.nombreProyecto}/>
                         </div>
                         <div className='col-sm-9'>
                             <div>
-                                <div ><p>{DescriP}</p></div>
+                                <div ><p>{proye.descripcion_proyecto}</p></div>
                             </div>
                             <div className='d-flex flex-wrap'>
                                 {lsImgP.map(imagep => (
@@ -138,105 +195,7 @@ function ProyectosAdmin(params) {
                         </div>
                     </div>
                 </div>
-
-                {/*aqui solo copiare*/}
-                <div className='pt-3 shadow-lg p-3 my-2'>
-                    <div className='row'>
-                        <div className='col-sm-10'>
-                            <div className='row m-2'>
-                                <div className='col-sm-3'><span>ID: {IdP}</span></div>
-                                <div className='col-sm-9' ><span title='Nombre Proyecto'>{NameP}</span></div>
-                            </div>
-                        </div>
-                        
-                        <div className='col-sm-2'>
-                            <div className='d-flex justify-content-center m-2'>
-                                <div className='px-1' title='Editar'><button type="button" className='btn btn-warning rounded-5'><FaEdit size={12}/></button></div>
-                                <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5'><FaTrash size={12}/></button></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='row py-2'>
-                        <div className='col-sm-3 d-flex align-items-center' >
-                            <img src={ImagP} alt="casa" className='w-100' title={'Imagen Principal: '+NameP}/>
-                        </div>
-                        <div className='col-sm-9'>
-                            <div>
-                                <div ><p>{DescriP}</p></div>
-                            </div>
-                            <div className='d-flex flex-wrap'>
-                                {lsImgP.map(imagep => (
-                                    <img key={imagep} src={imagep} alt='img' className='px-2' style={{maxWidth:100,maxHeight:100}}/>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='pt-3 shadow-lg p-3 my-2'>
-                    <div className='row'>
-                        <div className='col-sm-10'>
-                            <div className='row m-2'>
-                                <div className='col-sm-3'><span>ID: {IdP}</span></div>
-                                <div className='col-sm-9' ><span title='Nombre Proyecto'>{NameP}</span></div>
-                            </div>
-                        </div>
-                        
-                        <div className='col-sm-2'>
-                            <div className='d-flex justify-content-center m-2'>
-                                <div className='px-1' title='Editar'><button type="button" className='btn btn-warning rounded-5'><FaEdit size={12}/></button></div>
-                                <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5'><FaTrash size={12}/></button></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='row py-2'>
-                        <div className='col-sm-3 d-flex align-items-center' >
-                            <img src={ImagP} alt="casa" className='w-100' title={'Imagen Principal: '+NameP}/>
-                        </div>
-                        <div className='col-sm-9'>
-                            <div>
-                                <div ><p>{DescriP}</p></div>
-                            </div>
-                            <div className='d-flex flex-wrap'>
-                                {lsImgP.map(imagep => (
-                                    <img key={imagep} src={imagep} alt='img' className='px-2' style={{maxWidth:100,maxHeight:100}}/>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='pt-3 shadow-lg p-3 my-2'>
-                    <div className='row'>
-                        <div className='col-sm-10'>
-                            <div className='row m-2'>
-                                <div className='col-sm-3'><span>ID: {IdP}</span></div>
-                                <div className='col-sm-9' ><span title='Nombre Proyecto'>{NameP}</span></div>
-                            </div>
-                        </div>
-                        
-                        <div className='col-sm-2'>
-                            <div className='d-flex justify-content-center m-2'>
-                                <div className='px-1' title='Editar'><button type="button" className='btn btn-warning rounded-5'><FaEdit size={12}/></button></div>
-                                <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5'><FaTrash size={12}/></button></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='row py-2'>
-                        <div className='col-sm-3 d-flex align-items-center' >
-                            <img src={ImagP} alt="casa" className='w-100' title={'Imagen Principal: '+NameP}/>
-                        </div>
-                        <div className='col-sm-9'>
-                            <div>
-                                <div ><p>{DescriP}</p></div>
-                            </div>
-                            <div className='d-flex flex-wrap'>
-                                {lsImgP.map(imagep => (
-                                    <img key={imagep} src={imagep} alt='img' className='px-2' style={{maxWidth:100,maxHeight:100}}/>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+                ))}
             </div>
             <Button
                 title='Agregar Proyecto'
@@ -262,7 +221,7 @@ function ProyectosAdmin(params) {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicSelect">
                             <Form.Label>Servicio</Form.Label>
-                            <Form.Select onChange={(e) => setServicioSeleccionado(e.target.value)} value={servicioSeleccionado}>
+                            <Form.Select onChange={(e) => {setServicioSeleccionado(e.target.value)}} value={servicioSeleccionado}>
                             <option value="">Seleccione...</option>
                             {Servicios.map(serv => (
                             <option key={serv.nombre_servicio}>{serv.nombre_servicio}</option>

@@ -6,6 +6,7 @@ import db from "./database/db.js";
 import usuarioRoutes from "./routes/UsuarioRoutes.js";
 import proyectosRealizados from "./routes/ProyectosRealizadoRoutes.js"
 import serviciosOfrecidos  from "./routes/ServiciosOfrecidosRoutes.js";
+import Imagenes  from "./routes/ImagenesRoutes.js";
 
 
 const app = express()
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use('/usuarios', usuarioRoutes)
 app.use('/proyectosrealizados', proyectosRealizados)
 app.use('/ServiciosOfrecidos', serviciosOfrecidos)
+app.use('/imagenes', Imagenes)
 
 app.use
 

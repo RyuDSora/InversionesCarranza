@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/esm/Container';
 import {Carousel, Button, Spinner, Modal } from 'react-bootstrap';
 
 //estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
+import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 import PR0 from '../imgs/proyectIMG.jpg';
 import PR1 from '../imgs/proyectIMG1.jpg';
 import PR2 from '../imgs/proyectIMG2.jpg';
@@ -20,17 +21,8 @@ export default function Projects(params) {
     let [Servicios,setServicios] = useState([]); //aqui se guardaran los servicios padre 1,2,3
     let [Proyectos, setProyectos] = useState([]);//aqui se guardaran todos los proyectos
     let [Prxser, setPrxser] = useState([]) //aqui se guardaran los proyectos segun su categoria(servicio)
-    const [lsImg, setLsImg] = useState([]);
-    const img = [];
-    img[0]={img:PR0}
-    img[1]={img:PR1}
-    img[2]={img:PR2}
-    img[3]={img:PR3}    
+    const [lsImg/*, setLsImg*/] = useState([{img:PR0},{img:PR1},{img:PR2},{img:PR3}]);
     
-    useEffect(()=>{
-        setLsImg(img)
-        console.log(lsImg);
-    },[])
     //variable booleana que servira para indicar si esta cargando, esto cuando no le lleguen datos desde el server
     const [mostrarCargando, setMostrarCargando] = useState(true); 
     //variable para ordenar los proyectos por orden de servicio
@@ -51,7 +43,6 @@ export default function Projects(params) {
         }
     
         service();
-        console.log(Servicios);
     }, []); 
 
     //efecto para pedir los proyectos al servidor,este solo se ejecutara una vez desde que se carga la pagina
@@ -123,39 +114,49 @@ export default function Projects(params) {
 }
 
 function Cont(ids, servicio, url2, PJ, lsImg) {
-    let element;
-    for (let index = 0; index < PJ.length; index++) {
-        element = PJ[index];
-       if(element.proyectosDelServicio.length===0){
-        console.log('vacio');
-       };
-        
-    }
+    
+    let array = PJ[ids-1].proyectosDelServicio
+    
+    
+   
     return (
         <div className='my-2 py-3 '>
-            <div className='text-start h5 ps-4 ms-2'><span>{servicio}</span></div>
+            <div className='text-start h5 ps-4 ms-2'><span className='h4'>{servicio}</span></div>
             <div className='row'>
-                {element.proyectosDelServicio.length === 0 ? (
-                    <div>No hay proyectos</div>
-                ) : (
-                    <>
-                        {PJ.map(Proye => (Proye.id === ids &&
-                            Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
-                                <div className='col-sm-3'>
-                                    <div key={Proye.id+Pas} >
-                                    <Project name={Pas.nombreProyecto} image={PR2} id={Pas.id} lsImg={lsImg}/>
-                                    </div>
-                                </div>
-                            ))
-                        ))}
-                        <div className='col-sm-3'>{More(ids, url2)}</div>
-                    </>
-                )}
+                {array.length === 0 ? 
+                    (<div><span className='h6'>No hay proyectos de {servicio}</span></div>) : 
+                    (<>
+                    {array.length < 3 ? 
+                        (<>
+                            {PJ.map(Proye => (Proye.id === ids &&
+                                    Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
+                                        <div className='col-sm-3'>
+                                            <div key={Proye.id+Pas} >
+                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? Pas.img_principal : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
+                                            </div>
+                                        </div>
+                                    ))
+                            ))}
+                        </>):
+                        (<>
+                            {PJ.map(Proye => (Proye.id === ids &&
+                                    Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
+                                        <div className='col-sm-3'>
+                                            <div key={Proye.id+Pas} >
+                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'https://img.freepik.com/vector-gratis/escena-dibujos-animados-sitio-construccion-edificios_1308-105248.jpg' : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
+                                            </div>
+                                        </div>
+                                    ))
+                            ))}
+                            <div className='col-sm-3'>{More(ids, url2)}</div>
+                        </>)}
+                    </>)}
             </div>
         </div>
     );
     
 }
+
 function Project({ name, image, id,lsImg}) {
     const [show, setShow] = useState(false);
     const [index, setIndex] = useState(0);

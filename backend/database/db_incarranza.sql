@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS `imagenes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `descricion` VARCHAR(45) NOT NULL,
-  `tipo` VARCHAR(5) NOT NULL,
-  `archivo` BLOB NOT NULL,
+  `tipo` VARCHAR(15) NOT NULL,
+  `archivo` LONGBLOB NOT NULL,
   `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
@@ -67,18 +67,25 @@ CREATE TABLE IF NOT EXISTS `servicios` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nombre_servicio` VARCHAR(45) NOT NULL,
   `detalle_servicio` VARCHAR(500) NOT NULL,
-  `servicio_padre` INT ,
-  `img_principal` BLOB NOT NULL,
+  `servicio_padre` INT NULL,
+  `img_principal` INT NULL,
   `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_servicios_servicios_idx` (`servicio_padre` ASC) VISIBLE,
+  INDEX `fk_servicios_imagenes1_idx` (`img_principal` ASC) VISIBLE,
   CONSTRAINT `fk_servicios_servicios`
     FOREIGN KEY (`servicio_padre`)
     REFERENCES `servicios` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_servicios_imagenes1`
+    FOREIGN KEY (`img_principal`)
+    REFERENCES `imagenes` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
 
 
 -- -----------------------------------------------------
@@ -88,18 +95,26 @@ CREATE TABLE IF NOT EXISTS `proyectos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nombreProyecto` VARCHAR(45) NOT NULL,
   `descripcion_proyecto` VARCHAR(500) NOT NULL,
-  `img_principal` BLOB NOT NULL,
+  `img_principal` INT NULL,
   `categoria_servicio` INT NOT NULL,
   `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_proyectos_servicios1_idx` (`categoria_servicio` ASC) VISIBLE,
+  INDEX `fk_proyectos_imagenes1_idx` (`img_principal` ASC) VISIBLE,
   CONSTRAINT `fk_proyectos_servicios1`
     FOREIGN KEY (`categoria_servicio`)
     REFERENCES `servicios` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_proyectos_imagenes1`
+    FOREIGN KEY (`img_principal`)
+    REFERENCES `imagenes` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+  
 ENGINE = InnoDB;
+
 
 
 -- -----------------------------------------------------
@@ -133,7 +148,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 insert into usuarios (rol,nombre, apellido, telefono,correo, contasenia, fechaNacimiento) values 
 (1,"Eduar","Carranza","11111111","correo_admin@incarranza.com","principal","1992-09-22"), 
-(2,"Paco","Lopez","12514145","correo_cliente@incarranza.com","1234","1988-01-12"); 
+(2,"Paco","Lopez","12514145","correo_cliente@incarranza.com","1234","1988-01-12");
+insert into imagenes (nombre,descricion,tipo,archivo) VALUES
+(img1,"vacio","image/jpg","/nohayimagenaun") 
 
 -- * El rol nos sirve para identificar si es admin o cliente, para esto usaremos lo siguente 1 = admin y 2 = cliente*/
 -- Admin ya que su rol es 1
