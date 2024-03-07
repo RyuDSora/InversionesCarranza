@@ -24,6 +24,7 @@ import MasProyectos       from "./componets/MasProjectos.jsx";
 import ProyectosAdmin     from "./componets/ProyectosAdmin.jsx";
 import AgregarAdministrador from './componets/AgregarAdministrador.jsx';
 import AgregarServicioAdmin from './componets/AgregarServicioAdmin.jsx';
+import  Usuarios  from "./componets/Usuarios.jsx";
 
 
 function App() {
@@ -61,7 +62,7 @@ function App() {
                 <Route path="/EditPr" element={ <ProyectosAdmin/>} />
                 <Route path="/AgregarAdministrador" element={ <AgregarAdministrador/>} />
                 <Route path="/AgregarServicioAdmin" element={ <AgregarServicioAdmin/>} />
-                
+                <Route path="/Users" element={ <Usuarios/>} />
               </Routes>
             </div>
           </BrowserRouter>
