@@ -38,15 +38,7 @@ export default function NavBarIC() {
     if( URLactual === '/Signup')    {setregister(true)}
 
 
-    if(!localStorage.getItem('session')){
-      if(!sessionStorage.getItem('session')){}else{
-        setUser(true); 
-        setUserL(decryptValue(Cookies.get('User'), encryptionKey));
-        setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
-        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===1){setAdmin(true)};  
-        }
-    }else
-    { 
+    if(Cookies.get('session')){
       setUser(true); 
       setUserL(decryptValue(Cookies.get('User'), encryptionKey));
       setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
@@ -85,7 +77,7 @@ export default function NavBarIC() {
                 <img src={perfil} alt="perfil-img" style={{width:'30px', paddingRight:'5px'}}/>
                 {UserL}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu >
                 <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${UserId}`}} >Mi Perfil</Dropdown.Item>
                 {Admin ? /*comprobamo si es administrador: si lo es mostrara la siguiente lista*/  (<>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/AgregarAdministrador`}} >Agregar Admin</Dropdown.Item>
@@ -93,8 +85,10 @@ export default function NavBarIC() {
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/AgregarServicioAdmin`}} >Editar Servicios</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>
                 </>):(<></>)}
-                <Dropdown.Item onClick={()=>{ localStorage.removeItem('session');
-                                              sessionStorage.removeItem('session');
+                <Dropdown.Item onClick={()=>{ Cookies.remove('session');
+                                              Cookies.remove('User');
+                                              Cookies.remove('UserId');
+                                              Cookies.remove('UserRol');
                                               window.location.href = '/';}}>
                   Cerrar Sesion
                 </Dropdown.Item>

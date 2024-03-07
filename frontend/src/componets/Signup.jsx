@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from "react-bootstrap/esm/Container";
+
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const CompRegistro = () => {
+    const navigate = useNavigate();
+    useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[])
     const [rol, setRol] = useState(2);
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');

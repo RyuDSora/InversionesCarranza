@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import CryptoJS from 'crypto-js';
 
 export default function Login() {
   const navigate = useNavigate();
+  useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[])
   const encryptionKey = 'mysecretkey';
   const encryptValue = (value, key) => {
     return CryptoJS.AES.encrypt(value.toString(), key).toString();
@@ -19,6 +20,7 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState("");
 
   const URI = 'http://' + window.location.hostname + ':8000/usuarios/';
+  
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -52,10 +54,10 @@ export default function Login() {
 
         if (usuarioExistente && usuarioExistente.contasenia === password) {
           if (rememberMe) {
-            Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey),{expires:365});
-            Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey),{expires:365});
-            Cookies.set('User',encryptValue(usuarioExistente.nombre + ' ' + usuarioExistente.apellido, encryptionKey),{expires:365});
-            Cookies.set('session',true,{expires:365});
+            Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey),{expires:30});
+            Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey),{expires:30});
+            Cookies.set('User',encryptValue(usuarioExistente.nombre + ' ' + usuarioExistente.apellido, encryptionKey),{expires:30});
+            Cookies.set('session',true,{expires:30});
           } else {
             Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey));
             Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey));

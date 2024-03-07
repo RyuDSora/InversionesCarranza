@@ -5,15 +5,16 @@ import {Carousel, Button, Spinner, Modal } from 'react-bootstrap';
 
 //estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
-import PR0 from '../imgs/proyectIMG.jpg';
-import PR1 from '../imgs/proyectIMG1.jpg';
-import PR2 from '../imgs/proyectIMG2.jpg';
-import PR3 from '../imgs/proyectIMG4.jpg';
+//import PR0 from '../imgs/proyectIMG.jpg';
+//import PR1 from '../imgs/proyectIMG1.jpg';
+//import PR2 from '../imgs/proyectIMG2.jpg';
+//import PR3 from '../imgs/proyectIMG4.jpg';
 
 
 //urls para el pedido al servidor
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
 const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
+const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';
 
 //funcion principal
 export default function Projects(params) {
@@ -21,12 +22,14 @@ export default function Projects(params) {
     let [Servicios,setServicios] = useState([]); //aqui se guardaran los servicios padre 1,2,3
     let [Proyectos, setProyectos] = useState([]);//aqui se guardaran todos los proyectos
     let [Prxser, setPrxser] = useState([]) //aqui se guardaran los proyectos segun su categoria(servicio)
-    const [lsImg/*, setLsImg*/] = useState([{img:PR0},{img:PR1},{img:PR2},{img:PR3}]);
+    const [lsImg, setLsImg] = useState([]);
+    
     
     //variable booleana que servira para indicar si esta cargando, esto cuando no le lleguen datos desde el server
     const [mostrarCargando, setMostrarCargando] = useState(true); 
     //variable para ordenar los proyectos por orden de servicio
     const Proyectosxservicios = [];
+
 
     //efecto para pedir los servicios padre al servidor,este solo se ejecutara una vez desde que se carga la pagina
     useEffect(() => {
@@ -49,8 +52,10 @@ export default function Projects(params) {
     useEffect(() => {
         const Projew = async () => {
             try {
-                const response1 = await axios.get(URIProyectos);
-                setProyectos(response1.data);
+                await fetch('http://'+window.location.hostname+':8000/images/get')
+                const response = await axios.get(URIProyectos);
+                setProyectos(response.data);
+                
             } catch (error) {
                 console.log(error);
                 
@@ -58,8 +63,9 @@ export default function Projects(params) {
         }
     
         Projew();
+        
     }, []);
-    
+
     //efecto para llamar los proyectos relacionados a cierto servicio, 
     //este se ejecutara cada vez que se da un parametro diferente de servicio o proyecto
     useEffect(() => {
@@ -113,7 +119,7 @@ export default function Projects(params) {
 
 }
 
-function Cont(ids, servicio, url2, PJ, lsImg) {
+function Cont(ids, servicio, url2, PJ, lsmImg) {
     
     let array = PJ[ids-1].proyectosDelServicio
     
@@ -132,7 +138,7 @@ function Cont(ids, servicio, url2, PJ, lsImg) {
                                     Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
                                         <div className='col-sm-3'>
                                             <div key={Proye.id+Pas} >
-                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
+                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} id={Pas.id}/>
                                             </div>
                                         </div>
                                     ))
@@ -142,8 +148,8 @@ function Cont(ids, servicio, url2, PJ, lsImg) {
                             {PJ.map(Proye => (Proye.id === ids &&
                                     Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
                                         <div className='col-sm-3'>
-                                            <div key={Proye.id+Pas} >
-                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} id={Pas.id} lsImg={lsImg}/>
+                                            <div key={Proye.id+' '+Pas.nombre+Pas.descripcion_proyecto+Pas.img_principal} >
+                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} descripcion={Pas.descripcion_proyecto} id={Pas.id} />
                                             </div>
                                         </div>
                                     ))
@@ -157,13 +163,31 @@ function Cont(ids, servicio, url2, PJ, lsImg) {
     
 }
 
-function Project({ name, image, id,lsImg}) {
+function Project({ name, image, descripcion ,id}) {
     const [show, setShow] = useState(false);
     const [index, setIndex] = useState(0);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
+    const [listaimgxproyecto, setListaImgxProyecto] = useState([]);
+
+    useEffect(()=>{
+        const service = async () => {
+            try {
+                await fetch('http://'+window.location.hostname+':8000/images/get')
+                const response = await axios.get(URIPRXIMG);
+                const serviciosData = response.data.filter(
+                    servicio => servicio.idproyecto === id);
+                setListaImgxProyecto(serviciosData);
+                
+            } catch (err) {
+                console.log(err);
+            }
+        }
     
+        service();
+        
+    },[])
     
     return (
         <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
@@ -185,14 +209,20 @@ function Project({ name, image, id,lsImg}) {
                 </Modal.Header>
                 <Modal.Body>
                     <Carousel activeIndex={index} onSelect={handleSelect}>
-                        {lsImg.map(Imagen => (
-                                <Carousel.Item key={Imagen}>
-                                    <img alt='img' src={Imagen.img} style={{ height: '400px', width: '100%' }}/>
+                        {listaimgxproyecto===0 ? (<><img src={IMGPrueba} alt="img" style={{ height: '400px', width: '100%' }}/></>):(
+                            <>
+                            
+                            {listaimgxproyecto.map(Imagen => (
+                                <Carousel.Item key={Imagen.id+' '+'http://'+window.location.hostname+':8000/'+Imagen.idimagen+'inca.jpg'}>
+                                    {console.log(Imagen.idimagen)}
+                                    <img alt='img' src={'http://'+window.location.hostname+':8000/'+Imagen.idimagen+'inca.jpg'} style={{ height: '400px', width: '100%' }}/>
                                 </Carousel.Item>
                             )
+                            )}
+                            </>
                         )}
                     </Carousel>
-                    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo itaque facere iusto, dignissimos molestias, officiis voluptas incidunt tenetur debitis quisquam a nam fugiat velit, qui repellat possimus corrupti. Provident, ipsum?</div>
+                    <div><p>{descripcion}</p></div>
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="primary" onClick={handleClose} >
