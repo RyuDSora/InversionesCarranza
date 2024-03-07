@@ -4,6 +4,9 @@ import Container from 'react-bootstrap/esm/Container';
 import { Button, Modal, Form,Image,InputGroup, FormControl   } from 'react-bootstrap';
 import { BsPlus } from 'react-icons/bs';
 import { FaEdit,FaTrash } from 'react-icons/fa';
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
+import Stop from './Stop.jsx'
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 
@@ -12,6 +15,15 @@ const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizad
 const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';
 
 function ProyectosAdmin(params) {
+
+    const encryptionKey = 'mysecretkey';
+    const decryptValue = (encryptedValue, key) => {
+      const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    };
+
+    ///comprobacion de ruta
+    
     
     let [Servicios,setServicios] = useState([]);   //variable para los servicios principales
     const [ShowService, setShowService]= useState(1); //variable para saber que pestaña de servicio esta activa 
@@ -223,6 +235,12 @@ function ProyectosAdmin(params) {
         setShowService(params);
         setBtnSelected(params);
     }
+
+   
+    if(!Cookies.get('session')){return Stop(false)}else{
+        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
+    }
+   
     return (
         <Container>
             <div className='p-2'><span className='h5'>Nuestros Proyectos</span></div>
