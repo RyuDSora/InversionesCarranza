@@ -11,6 +11,7 @@ import usuarioRoutes from "./routes/UsuarioRoutes.js";
 import proyectosRealizados from "./routes/ProyectosRealizadoRoutes.js";
 import serviciosOfrecidos  from "./routes/ServiciosOfrecidosRoutes.js";
 import ProyeHasImagenes  from "./routes/ProyeHasImagenRoutes.js";
+import Imagenes from './routes/ImagenesRoutes.js'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -27,7 +28,7 @@ app.use('/usuarios', usuarioRoutes)
 app.use('/proyectosrealizados', proyectosRealizados)
 app.use('/ServiciosOfrecidos', serviciosOfrecidos)
 app.use('/proyehasimage',ProyeHasImagenes)
-//app.use('/imagenes', Imagenes)
+app.use('/imagenes', Imagenes)
 
 app.use(myconn(mysql,{
    host:'localhost',

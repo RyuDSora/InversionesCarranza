@@ -5,11 +5,6 @@ import {Carousel, Button, Spinner, Modal } from 'react-bootstrap';
 
 //estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
-//import PR0 from '../imgs/proyectIMG.jpg';
-//import PR1 from '../imgs/proyectIMG1.jpg';
-//import PR2 from '../imgs/proyectIMG2.jpg';
-//import PR3 from '../imgs/proyectIMG4.jpg';
-
 
 //urls para el pedido al servidor
 const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
@@ -21,14 +16,13 @@ export default function Projects(params) {
     //variables de estado
     let [Servicios,setServicios] = useState([]); //aqui se guardaran los servicios padre 1,2,3
     let [Proyectos, setProyectos] = useState([]);//aqui se guardaran todos los proyectos
-    let [Prxser, setPrxser] = useState([]) //aqui se guardaran los proyectos segun su categoria(servicio)
-    const [lsImg, setLsImg] = useState([]);
+    //const [lsImg, setLsImg] = useState([]);
     
     
     //variable booleana que servira para indicar si esta cargando, esto cuando no le lleguen datos desde el server
     const [mostrarCargando, setMostrarCargando] = useState(true); 
     //variable para ordenar los proyectos por orden de servicio
-    const Proyectosxservicios = [];
+    //const Proyectosxservicios = [];
 
 
     //efecto para pedir los servicios padre al servidor,este solo se ejecutara una vez desde que se carga la pagina
@@ -52,30 +46,16 @@ export default function Projects(params) {
     useEffect(() => {
         const Projew = async () => {
             try {
-                await fetch('http://'+window.location.hostname+':8000/images/get')
+                //await fetch('http://'+window.location.hostname+':8000/images/get')
                 const response = await axios.get(URIProyectos);
                 setProyectos(response.data);
                 
             } catch (error) {
                 console.log(error);
-                
             }
         }
-    
         Projew();
-        
     }, []);
-
-    //efecto para llamar los proyectos relacionados a cierto servicio, 
-    //este se ejecutara cada vez que se da un parametro diferente de servicio o proyecto
-    useEffect(() => {
-        Servicios.forEach(servicio => {
-            const proyectosDelServicio = Proyectos.filter(proyecto => proyecto.categoria_servicio === servicio.id);
-            Proyectosxservicios.push({id:servicio.id,proyectosDelServicio});
-        });
-        Prxser = setPrxser(Proyectosxservicios);
-    
-    }, [Servicios, Proyectos]);
     
     //contador
     useEffect(() => {
@@ -105,9 +85,9 @@ export default function Projects(params) {
                             </div>
                         ) : 
                         (//si encuentra servicios
-                            Servicios.map(Serv => (
-                                <div key={Serv.id+'p'+Serv.nombre_servicio+'k'}>
-                                    {Cont(Serv.id, Serv.nombre_servicio, '/Proyectos/' + Serv.nombre_servicio, Prxser,lsImg)}
+                            Servicios.map((Serv,index) => (
+                                <div key={'S-'+index}>
+                                    {Cont(Serv.id, Serv.nombre_servicio, '/Proyectos/' + Serv.nombre_servicio,Proyectos)}
                                 </div>
                             ))
                         )}
@@ -119,42 +99,41 @@ export default function Projects(params) {
 
 }
 
-function Cont(ids, servicio, url2, PJ, lsmImg) {
+function Cont(ServiceId, ServiceName, ServiceUrl,LSProyectos) {
+    let qwerty = [];
     
-    let array = PJ[ids-1].proyectosDelServicio
-    
-    
-   
+    if(LSProyectos.length>0){
+        LSProyectos.map(proyecto => {
+            if (proyecto.categoria_servicio===ServiceId) {
+                qwerty.push(proyecto)
+            }
+            return null;
+        })
+    }
+
     return (
         <div className='my-2 py-3 '>
-            <div className='text-start h5 ps-4 ms-2'><span className='h4'>{servicio}</span></div>
+            <div className='text-start h5 ps-4 ms-2'><span className='h4'>{ServiceName}</span></div>
             <div className='row'>
-                {array.length === 0 ? 
-                    (<div><span className='h6'>No hay proyectos de {servicio}</span></div>) : 
+                {qwerty === 0 ? 
+                    (<div><span className='h6'>No hay proyectos de {ServiceName}</span></div>) : 
                     (<>
-                    {array.length < 3 ? 
+                    {qwerty.length < 3 ? 
                         (<>
-                            {PJ.map(Proye => (Proye.id === ids &&
-                                    Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
-                                        <div className='col-sm-3'>
-                                            <div key={Proye.id+Pas} >
-                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} id={Pas.id}/>
-                                            </div>
-                                        </div>
-                                    ))
-                            ))}
+                            {qwerty.map((Proye,index2) => (
+                                    <div className='col-sm-3' key={'PS-'+ServiceName+'-'+index2+'/'}>
+                                            <Project PROYECTTO={Proye} />
+                                    </div>
+                                    ))}
                         </>):
                         (<>
-                            {PJ.map(Proye => (Proye.id === ids &&
-                                    Proye.proyectosDelServicio.slice(0, 3).map(Pas => (
-                                        <div className='col-sm-3'>
-                                            <div key={Proye.id+' '+Pas.nombre+Pas.descripcion_proyecto+Pas.img_principal} >
-                                                <Project name={Pas.nombreProyecto} image={Pas.img_principal ? 'http://'+window.location.hostname+':8000/'+Pas.img_principal+'inca.jpg' : IMGPrueba} descripcion={Pas.descripcion_proyecto} id={Pas.id} />
-                                            </div>
-                                        </div>
-                                    ))
-                            ))}
-                            <div className='col-sm-3'>{More(ids, url2)}</div>
+                            {qwerty.slice(0,3).map((Proye,index3) => (
+                                    <div className='col-sm-3' key={'PS-'+ServiceName+'-'+index3}>
+                                       <Project PROYECTTO={Proye} /> 
+                                    </div>
+                                    
+                                    ))}
+                            <div className='col-sm-3'>{More(ServiceId, ServiceUrl)}</div>
                         </>)}
                     </>)}
             </div>
@@ -163,7 +142,7 @@ function Cont(ids, servicio, url2, PJ, lsmImg) {
     
 }
 
-function Project({ name, image, descripcion ,id}) {
+function Project({PROYECTTO}) {
     const [show, setShow] = useState(false);
     const [index, setIndex] = useState(0);
     const handleClose = () => setShow(false);
@@ -171,29 +150,37 @@ function Project({ name, image, descripcion ,id}) {
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
     const [listaimgxproyecto, setListaImgxProyecto] = useState([]);
 
-    useEffect(()=>{
-        const service = async () => {
+   useEffect(()=>{
+        const lista = async () => {
             try {
-                await fetch('http://'+window.location.hostname+':8000/images/get')
                 const response = await axios.get(URIPRXIMG);
-                const serviciosData = response.data.filter(
-                    servicio => servicio.idproyecto === id);
-                setListaImgxProyecto(serviciosData);
+                const imgsss = response.data;
+                let X = [];
+                if(imgsss.length>0){
+                    imgsss.map(
+                        I => {
+                            if (I.idproyecto===PROYECTTO.id) {
+                                X.push(I);
+                            }
+                            return null;
+                        }
+                    )
+                }
+                setListaImgxProyecto(X);
                 
             } catch (err) {
                 console.log(err);
             }
         }
     
-        service();
-        
-    },[])
+        lista();
+    },[PROYECTTO.id])
     
     return (
         <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
-            <div className='p-2'><span className='h6'>{name}</span></div>
+            <div className='p-2'><span className='h6'>{PROYECTTO.nombreProyecto}</span></div>
             <div className='px-3'>
-                <img src={image} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
+                <img src={PROYECTTO.img_principal ? 'http://'+window.location.hostname+':8000/'+PROYECTTO.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -205,24 +192,23 @@ function Project({ name, image, descripcion ,id}) {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{name}</Modal.Title>
+                    <Modal.Title>{PROYECTTO.nombreProyecto}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Carousel activeIndex={index} onSelect={handleSelect}>
-                        {listaimgxproyecto===0 ? (<><img src={IMGPrueba} alt="img" style={{ height: '400px', width: '100%' }}/></>):(
-                            <>
-                            
-                            {listaimgxproyecto.map(Imagen => (
-                                <Carousel.Item key={Imagen.id+' '+'http://'+window.location.hostname+':8000/'+Imagen.idimagen+'inca.jpg'}>
-                                    {console.log(Imagen.idimagen)}
-                                    <img alt='img' src={'http://'+window.location.hostname+':8000/'+Imagen.idimagen+'inca.jpg'} style={{ height: '400px', width: '100%' }}/>
-                                </Carousel.Item>
-                            )
-                            )}
-                            </>
-                        )}
-                    </Carousel>
-                    <div><p>{descripcion}</p></div>
+                    {listaimgxproyecto.length>0 ? 
+                    (<Carousel activeIndex={index} onSelect={handleSelect}>
+                        {listaimgxproyecto.map((Q , index)=>(
+                            <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
+                                <img alt='img' src={'http://'+window.location.hostname+':8000/'+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>):
+                    (<Carousel activeIndex={index} onSelect={handleSelect}>
+                        <Carousel.Item >
+                            <img alt='img' src={IMGPrueba} style={{ height: '300px', width: '100%' }}/>
+                        </Carousel.Item>
+                    </Carousel>)}
+                    <div><p>{PROYECTTO.descripcion_proyecto}</p></div>
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="primary" onClick={handleClose} >

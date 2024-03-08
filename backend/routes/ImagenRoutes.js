@@ -32,7 +32,7 @@ const fileUpload = multer({
     storage: diskstorage
 }).single('image')
 
-router.get('/imagenes/', (req, res) => {
+router.get('/images/', (req, res) => {
     res.send('Welcome to my image app')
 })
 

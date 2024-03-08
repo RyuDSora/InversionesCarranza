@@ -24,7 +24,7 @@ export const GuardarImgXProj = async (req, res) => {
 export const DeleteProyecthasImagen = async (req, res) => {
     try {
         const deletedRowCount = await ProjectHasImagenModels.destroy({
-            where: { idproyecto: req.params.id }
+            where: { id: req.params.id }
         });
         if (deletedRowCount === 0) {
             res.status(404).json({ message: 'No se encontró nada para eliminar' });
