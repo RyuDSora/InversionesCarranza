@@ -49,8 +49,12 @@ export default function MasProyectos() {
 
         fetchData();
         //recupero el nombre del servicio
-        servicios.map(Ser => {if (Ser.id===id) {setServName(Ser.nombre_servicio);return null}})
-    }, [id]);
+        servicios.map(Ser => {
+            if (Ser.id===id) {
+                setServName(Ser.nombre_servicio)}
+                return null
+            })
+    }, [id,servicios]);
 
     return (
         <Container>

@@ -9,7 +9,7 @@ const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const CompRegistro = () => {
     const navigate = useNavigate();
-    useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[])
+    useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[navigate])
     const [rol, setRol] = useState(2);
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');

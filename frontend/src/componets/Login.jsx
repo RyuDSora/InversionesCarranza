@@ -7,7 +7,7 @@ import CryptoJS from 'crypto-js';
 
 export default function Login() {
   const navigate = useNavigate();
-  useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[])
+  useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[navigate])
   const encryptionKey = 'mysecretkey';
   const encryptValue = (value, key) => {
     return CryptoJS.AES.encrypt(value.toString(), key).toString();

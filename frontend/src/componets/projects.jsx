@@ -61,7 +61,7 @@ export default function Projects(params) {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setMostrarCargando(false);
-        }, 200); // 200 milisegundos (0.2 segundos) de retraso antes de mostrar el spinner
+        }, 100); // 200 milisegundos (0.2 segundos) de retraso antes de mostrar el spinner
         return () => clearTimeout(timeout);
     }, []);
 

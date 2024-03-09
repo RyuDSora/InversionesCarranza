@@ -4,32 +4,34 @@ import Container from 'react-bootstrap/esm/Container';
 import { Button, Modal, Form,Image,InputGroup/*, FormControl   */} from 'react-bootstrap';
 import { BsPlus } from 'react-icons/bs';
 import { FaEdit,FaTrash,FaArrowRight } from 'react-icons/fa';
-import Cookies from 'js-cookie';
-import CryptoJS from 'crypto-js';
-import Stop from './Stop.jsx'
 
-import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
+/////////////////////////////////////////////////
+import Cookies from 'js-cookie';//////////leer cookies
+import CryptoJS from 'crypto-js';/////////encriptar y desencriptar datos
+import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
-const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
-const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
-const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';
+import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png' ///imagen para mostrar si un proyecto no tiene una imagen principal
+
+const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';  //url de servicos
+const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/'; //url de proyectos  
+const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';       //url de las imagenes complementarias de proyectos
 
 function ProyectosAdmin(params) {
 
+    //importante para desencripatar el rol de usuario de las cookie
     const encryptionKey = 'mysecretkey';
     const decryptValue = (encryptedValue, key) => {
       const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
       return bytes.toString(CryptoJS.enc.Utf8);
     };
+    //////////////////////////////////////////////////////////
 
-    ///comprobacion de ruta
-    
-    
     let [Servicios,setServicios] = useState([]);   //variable para los servicios principales
     const [ShowService, setShowService]= useState(1); //variable para saber que pestaña de servicio esta activa 
     const [Proyectos,setProyectos]= useState([]);  //variable para guardar los proyectos segun el servicio seleccionado
     const [btnSelected, setBtnSelected] = useState(1);//variable...
-    
+    ////////////////////////////////////////////////
+    ///Modal para agregar proyectos
     const [ProyectoName,setProyectoName] = useState(''); //variable para el nombre del proyecto +
     const [servicioSeleccionado, setServicioSeleccionado] = useState(''); //variable para el servicio seleccionado +
     const [ProyectoDescripcion, setProyectoDescripcion ]= useState(''); //variable para la descripcion +
@@ -79,13 +81,26 @@ function ProyectosAdmin(params) {
     const [IdPE,setIdPE] = useState(1)
 
     const as = proyectoNameE+ProyectoDescripcionE+ImagenE+previewURLE
-    console.log(as);
-
+    console.log(as)
+    
     useEffect(()=>{
         const resp = async () =>{
             try {
-                const response = await axios.get(URIProyectos+IdPE);
-                setPP(response.data);        
+                
+                const p = await axios.get(URIProyectos);
+                const esta = p.data.filter(proye => proye.id === IdPE)
+                const SS = async () =>{
+                    if (esta.length!==0) {
+                        try {
+                            const response = await axios.get(URIProyectos+IdPE);
+                            setPP(response.data);
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                } 
+                SS();
+                        
             } catch (error) {
                 console.log(error);
             }
@@ -96,6 +111,7 @@ function ProyectosAdmin(params) {
             return null
         }
         )
+        
         setEp(false)
     },[Ep,IdPE,PP.categoria_servicio,Servicios])
 
@@ -287,7 +303,7 @@ function ProyectosAdmin(params) {
         setBtnSelected(params);
     }
 
-   
+   ///comprobacion de ruta
     if(!Cookies.get('session')){return Stop(false)}else{
         if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
     }
@@ -297,8 +313,8 @@ function ProyectosAdmin(params) {
             <div className='p-2'><span className='h5'>Nuestros Proyectos</span></div>
             <div>
                 <div className="row bg-inCa rounded-top-4">
-                    {Servicios.map(serv => (
-                    <div key={serv.nombre_servicio} id={serv.nombre_servicio+'/'+serv.id} className='col-sm d-flex justify-content-center'>
+                    {Servicios.map((serv,index) => (
+                    <div key={'Ser'+serv.nombre_servicio+'/'+index} id={serv.nombre_servicio+'/'+serv.id} className='col-sm d-flex justify-content-center'>
                         <div className={`${btnSelected === serv.id ? 'border-bottom border-primary border-4': ''} px-3 py-1 d-flex align-items-center`} >
                         <button className='btn text-center btn-outline-light text-dark' onClick={()=>{Seccion(serv.id)}}><span>{serv.nombre_servicio}</span></button>
                     </div>
@@ -307,52 +323,50 @@ function ProyectosAdmin(params) {
                 </div>
             </div>
             <div className='mb-3 bg-inCa rounded-bottom-4' id='tb'>
-                { Proyectos.map(proye=>(
-                    <div key={proye.id+proye.nombreProyecto+proye.categoria_servicio+proye.descripcion_proyecto} className='pt-3 shadow-lg p-3 my-2 rounded-4' >
-                    <div className='row'>
-                        <div className='col-sm-10'>
-                            <div className='row m-2'>
-                                <div className='col-sm-3'><span>ID: {proye.id}</span></div>
-                                <div className='col-sm-9' ><span title='Nombre Proyecto'>{proye.nombreProyecto}</span></div>
+                { Proyectos.map((proye,index)=>(
+                    <div key={'PRE'+proye.nombreProyecto+'/'+proye.categoria_servicio+'/'+index} className='pt-3 shadow-lg p-3 my-2 rounded-4' >
+                        <div className='row'>
+                            <div className='col-sm-10'>
+                                <div className='row m-2'>
+                                    <div className='col-sm-3'><span>ID: {proye.id}</span></div>
+                                    <div className='col-sm-9' ><span title='Nombre Proyecto'>{proye.nombreProyecto}</span></div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div className='col-sm-2'>
-                            <div className='d-flex justify-content-center m-2'>
-                                <div className='px-1' title='Editar'><button type="button" className='btn btn-warning rounded-5' onClick={() => openModalEdit(proye.id)}><FaEdit size={12}/></button></div>
-                                <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5' onClick={() => deletedProyecto(proye.id)}><FaTrash size={12}/></button></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='row py-2'>
-                        <div className='col-sm-3 d-flex align-items-center bg-light rounded-3' >
-                            <img src={proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba} 
-                                 alt="casa" 
-                                 className='w-100 rounded-3' 
-                                 title={'Imagen Principal: '+proye.nombreProyecto}
-                                 onClick={() => openModal(proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba)}/>
-                        </div>
-                        <div className='col-sm-9'>
-                            <div>
-                                <div ><p>{proye.descripcion_proyecto}</p></div>
-                            </div>
-                            <div className='d-flex overflow-x-auto max-width-100'>
 
-                                {lsImgP.map(imagep => (imagep.idproyecto===proye.id ?
-                                    (<div key={imagep.idproyecto+' '+imagep.idimagen+' '} className='px-2 m-2'><img  
-                                    src={'http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg'} 
-                                    alt='img' 
-                                    className='rounded-1' 
-                                    style={{maxWidth:100,maxHeight:100}}
-                                    onClick={() => openModal('http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg')}
-                              /></div>):(<></>)
-                                ))}
+                            <div className='col-sm-2'>
+                                <div className='d-flex justify-content-center m-2'>
+                                    <div className='px-1' title='Editar'><button type="button" className='btn btn-warning rounded-5' onClick={() => openModalEdit(proye.id)}><FaEdit size={12}/></button></div>
+                                    <div className='px-1' title='Borrar'><button type="button" className='btn btn-danger rounded-5' onClick={() => deletedProyecto(proye.id)}><FaTrash size={12}/></button></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='row py-2'>
+                            <div className='col-sm-3 d-flex align-items-center bg-light rounded-3' >
+                                <img src={proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba} 
+                                     alt="casa" 
+                                     className='w-100 rounded-3' 
+                                     title={'Imagen Principal: '+proye.nombreProyecto}
+                                     onClick={() => openModal(proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba)}/>
+                            </div>
+                            <div className='col-sm-9'>
+                                <div ><p>{proye.descripcion_proyecto}</p></div>
+                                <div className='d-flex overflow-x-auto max-width-100'>
+                                    {lsImgP.map((imagep,index) => (imagep.idproyecto===proye.id ?
+                                        (<div key={'IP/'+imagep.idproyecto+'/IM/'+imagep.idimagen+'/index/'+index} className='px-2 m-2'><img  
+                                        src={'http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg'} 
+                                        alt='img' 
+                                        className='rounded-1' 
+                                        style={{maxWidth:100,maxHeight:100}}
+                                        onClick={() => openModal('http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg')}
+                                  /></div>):(<></>)
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 ))}
             </div>
+            {/**Boton flotante para agregar proyectos*/}
             <Button
                 title='Agregar Proyecto'
                 className='rounded-5 p-2'
@@ -361,10 +375,11 @@ function ProyectosAdmin(params) {
                 onClick={handleShow}>
                     <BsPlus size={24}/>
             </Button>
-            
+            {/**Modal para agregar proyectos*/}
             <Modal show={show} onHide={handleCancel} 
                 backdrop="static"
-                keyboard={false}>
+                keyboard={false}
+                >
                 <Modal.Header closeButton>
                     <Modal.Title>Agregar un nuevo proyecto</Modal.Title>
                 </Modal.Header>
@@ -380,8 +395,8 @@ function ProyectosAdmin(params) {
                             <Form.Label>Servicio *</Form.Label>
                             <Form.Select onChange={(e) => {setServicioSeleccionado(e.target.value)}} value={servicioSeleccionado}>
                             <option value="">Seleccione...</option>
-                            {Servicios.map(serv => (
-                            <option key={serv.nombre_servicio}>{serv.nombre_servicio}</option>
+                            {Servicios.map((serv,index) => (
+                            <option key={'S/'+serv.nombre_servicio+'/'+index}>{serv.nombre_servicio}</option>
                             ))}
                             </Form.Select>
                         </Form.Group>
@@ -419,6 +434,7 @@ function ProyectosAdmin(params) {
                     </Form>
                 </Modal.Body>
             </Modal>
+            {/**Modal para ver Imagenes "ampliadas" */}
             <Modal show={showModal} onHide={closeModal} dialogClassName="modal-dialog-centered" centered>
               <Modal.Body>
                 {selectedImage && <img src={selectedImage} alt="Imagen seleccionada" style={{ width: '100%' }} className='rounded-3 mb-2 mt-1'/>}
@@ -426,13 +442,15 @@ function ProyectosAdmin(params) {
                   Cerrar
                 </Button></div>
               </Modal.Body>
-            </Modal>
+            </Modal> 
+            {/**Modal para editar Proyectos*/}
             <Modal show={ShowEdit} onHide={handleCancelEdit} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title >Editar Proyecto <FaArrowRight size={18}/> ( {PP.id} )</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form className="mb-3 mt-3">
+                        {/**Editar Nombre: si cambia el nuevo valor estara en la varable ProyectoNameE*/}
                       <Form.Floating className="mb-3">
                         <Form.Control
                           type="text"
@@ -444,6 +462,7 @@ function ProyectosAdmin(params) {
                         />
                         <label htmlFor="proyectoname">Nombre</label>
                       </Form.Floating>
+                      {/**editar servicio: este no cambia pero su valor esta almacenado en*/}
                       <Form.Floating className="mb-3">
                         <Form.Control
                           type="text"

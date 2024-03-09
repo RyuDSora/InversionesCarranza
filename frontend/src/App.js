@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
 import "./App.css";
+import {Polices, Term, WeAre} from './componets/Extras.jsx'
 import FooterIC           from "./componets/FooterIC.jsx";
 import CompRegistro       from "./componets/Signup.jsx";
 import Login              from './componets/Login.jsx'
@@ -25,7 +26,6 @@ import ProyectosAdmin     from "./componets/ProyectosAdmin.jsx";
 import AgregarAdministrador from './componets/AgregarAdministrador.jsx';
 import AgregarServicioAdmin from './componets/AgregarServicioAdmin.jsx';
 import Usuarios             from "./componets/Usuarios.jsx";
-
 import MasServicios      from "./componets/MasServicios.jsx";
 import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
 
@@ -66,6 +66,9 @@ function App() {
                 <Route path="/AgregarAdministrador" element={ <AgregarAdministrador/>} />
                 <Route path="/AgregarServicioAdmin" element={ <AgregarServicioAdmin/>} />
                 <Route path="/Users" element={ <Usuarios/>} />
+                <Route path="/Polices" element={ <Polices/>} />
+                <Route path="/Term" element={ <Term/>} />
+                <Route path="/WeAre" element={ <WeAre/>} />
               </Routes>
             </div>
           </BrowserRouter>

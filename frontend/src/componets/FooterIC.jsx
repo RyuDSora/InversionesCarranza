@@ -19,7 +19,7 @@ function FooterIC() {
                     </div>
                 </div>
                 <hr className="clearfix w-100 d-md-none pb-0"/>
-                <div className="col mb-md-0 mb-3" style={{fontSize:'small'}}>
+                <div className="col mb-md-0" style={{fontSize:'small'}}>
                     <span className="text-uppercase h6">contactanos</span>
                     <ul className="list-unstyled">
                         <li><span>+504 31956103</span></li>
@@ -27,17 +27,17 @@ function FooterIC() {
                         <li><span>Tegucigalpa, Honduras</span></li>
                     </ul>
                     <div className="row mx-auto" style={{width:'45%'}}>
-                        <div className="col px-0">
+                        <div className="col-4 px-0">
                             <a href="https://www.facebook.com/profile.php?id=100089128535630">
                                 <img src={fblogo} alt="fb logo" style={{width:'50px'}}/>
                             </a>
                         </div>
-                        <div className="col px-0">
+                        <div className="col-4 px-0">
                             <a href="https://www.instagram.com/inversionescarranza/">
                                 <img src={Insta} alt="inst logo" style={{width:'50px'}}/>
                             </a>
                         </div>
-                        <div className="col px-0">
+                        <div className="col-4 px-0">
                             <a href="https://wa.me/31956103">
                                 <img src={whats} alt="wh logo" style={{width:'50px'}}/>
                             </a>
@@ -45,8 +45,9 @@ function FooterIC() {
                     </div>
                 </div>
             </div>
-            <div className="footer-copyright text-start py-1 " style={{fontSize:'xx-small',paddingLeft:'195px'}}>© 2024 Copyright:
-                <a href="/"> IS802-1900-1-2024</a>
+            <div className="d-flex justify-content-center my-1" style={{fontSize:'xx-small'}}>
+                <p>© 2024 Copyright:
+                <a href="/WeAre"> IS802-1900-1-2024</a> puedes leer nuestros <a href="/Term">Terminos y Condiciones</a> y nuestras <a href="/Polices">Politicas de Privacidad</a></p>
             </div>
         </Container>
     );
