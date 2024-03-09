@@ -1,47 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Modal, Form, Image } from 'react-bootstrap';
+import { Button, Modal, Form, Image, Container } from 'react-bootstrap';
 import { BsPlus, BsPencil, BsTrash } from 'react-icons/bs';
+
+import Cookies from 'js-cookie';//////////leer cookies
+import CryptoJS from 'crypto-js';/////////encriptar y desencriptar datos
+import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
 
 const URIServicios = 'http://' + window.location.hostname + ':8000/ServiciosOfrecidos/';
 
 function ServiciosAdmin() {
-    const [servicios, setServicios] = useState([]); // Variable para los servicios principales
-    const [showModal, setShowModal] = useState(false); // Variable para mostrar o esconder la modal de agregar/editar servicio
-    const [servicioSeleccionado, setServicioSeleccionado] = useState(null); // Variable para el servicio seleccionado
-    const [servicioName, setServicioName] = useState(''); // Variable para el nombre del servicio
-    const [servicioDescripcion, setServicioDescripcion] = useState(''); // Variable para la descripción del servicio
-    const [servicioIMG, setServicioIMG] = useState(null); // Variable para la imagen principal del servicio
-    const [previewURL, setPreviewURL] = useState(''); // Variable para la vista previa de la imagen
-    const [editMode, setEditMode] = useState(false); // Variable para indicar si se está editando un servicio
-    const [SubService, setSubService] = useState(false); // Variable para indicar si el servicio es un subservicio
+
+        //importante para desencripatar el rol de usuario de las cookie
+        const encryptionKey = 'mysecretkey';
+        const decryptValue = (encryptedValue, key) => {
+          const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
+          return bytes.toString(CryptoJS.enc.Utf8);
+        };
 
 
-    // Función para manejar el cambio de archivo de imagen principal
-    const handleFileChange = (event) => {
-        const selectedFile = event.target.files[0];
-        setServicioIMG(selectedFile);
-        setPreviewURL(URL.createObjectURL(selectedFile));
-    };
-
-    // Función para cerrar el modal de agregar/editar servicio
-    const handleCloseModal = () => {
-        setShowModal(false);
-        setServicioName('');
-        setServicioDescripcion('');
-        setServicioIMG(null);
-        setPreviewURL('');
-        setEditMode(false);
-        setServicioSeleccionado(null);
-    };
-
-    // Función para abrir el modal de agregar servicio
-    const handleAddService = () => {
-        setShowModal(true);
-        setEditMode(false);
-    };
+    const [servicios, setServicios] = useState([]); 
+    const [showModal, setShowModal] = useState(false); 
+    const [servicioSeleccionado, setServicioSeleccionado] = useState(null); 
+    const [servicioName, setServicioName] = useState(''); 
+    const [servicioDescripcion, setServicioDescripcion] = useState(''); 
+    const [servicioIMG, setServicioIMG] = useState(null); 
+    const [previewURL, setPreviewURL] = useState(''); 
+    const [editMode, setEditMode] = useState(false); 
+    const [subService, setSubService] = useState(false); 
 
     const handleEditService = (servicio) => {
         setServicioSeleccionado(servicio);
@@ -49,15 +37,37 @@ function ServiciosAdmin() {
         setEditMode(true);
         setServicioName(servicio.nombre_servicio);
         setServicioDescripcion(servicio.detalle_servicio);
-        // Verifica si el servicio tiene un servicio padre
-        if (servicio.servicio_padre) {
-            setSubService(true); // Si tiene un servicio padre, establece SubService en true
-        } else {
-            setSubService(false); // Si no tiene un servicio padre, establece SubService en false
-        }
+        setPreviewURL(''); // Se restablece la vista previa de la imagen
+        setSubService(servicio.servicio_padre !== null); // Verifica si el servicio tiene un servicio padre
+    };
+    
+
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        setServicioIMG(selectedFile);
+        setPreviewURL(URL.createObjectURL(selectedFile));
     };
 
-    // Función para enviar el formulario de agregar/editar servicio
+    const handleCloseModal = () => {
+        setShowModal(false);
+        resetForm();
+    };
+
+    const resetForm = () => {
+        setServicioName('');
+        setServicioDescripcion('');
+        setServicioIMG(null);
+        setPreviewURL('');
+        setEditMode(false);
+        setServicioSeleccionado(null);
+        setSubService(false);
+    };
+
+    const handleAddService = () => {
+        setShowModal(true);
+        setEditMode(false);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -66,86 +76,70 @@ function ServiciosAdmin() {
                 return;
             }
 
-            // Sube la imagen principal
             const formDataImagen = new FormData();
             formDataImagen.append('image', servicioIMG);
-            const responseImagen = await fetch('http://' + window.location.hostname + ':8000/images/post', {
-                method: 'POST',
-                body: formDataImagen
-            });
-            const dataImagen = await responseImagen.json();
-            const idIMGPrincipal = dataImagen.id;
+            const responseImagen = await axios.post('http://' + window.location.hostname + ':8000/images/post', formDataImagen);
+            const idIMGPrincipal = responseImagen.data.id;
 
-            let formDataServicio = new FormData();
-            formDataServicio.append('nombre_servicio', servicioName);
-            formDataServicio.append('detalle_servicio', servicioDescripcion);
-            formDataServicio.append('img_principal', idIMGPrincipal);
-            formDataServicio.append('sevicio_padre', SubService);
+            const formDataServicio = {
+                nombre_servicio: servicioName,
+                detalle_servicio: servicioDescripcion,
+                img_principal: idIMGPrincipal,
+                servicio_padre: subService ? servicioSeleccionado.id : null
+            };
 
             if (editMode) {
-                // Modo de edición
                 await axios.put(URIServicios + servicioSeleccionado.id + '/', formDataServicio);
-                // Actualiza el estado de los servicios
-                const updatedServices = servicios.map(servicio => {
-                    if (servicio.id === servicioSeleccionado.id) {
-                        return { ...servicio, nombre_servicio: servicioName, detalle_servicio: servicioDescripcion, sevicio_padre: SubService };
-                    }
-                    return servicio;
-                });
-                setServicios(updatedServices);
             } else {
-                // Modo de creación
-                const responseServicio = await axios.post(URIServicios, formDataServicio);
-                const nuevoServicio = responseServicio.data;
-                setServicios([...servicios, nuevoServicio]);
+                await axios.post(URIServicios, formDataServicio);
             }
 
-            handleCloseModal(); // Cierra el modal después de enviar el formulario
+            fetchServicios(); 
+            handleCloseModal(); 
         } catch (error) {
             console.error('Error al enviar el formulario:', error);
         }
     };
 
-
-
     useEffect(() => {
-        // Cargar la lista de servicios desde el servidor al iniciar
-        const fetchServicios = async () => {
-            try {
-                const response = await axios.get(URIServicios);
-                setServicios(response.data);
-            } catch (error) {
-                console.error('Error al cargar los servicios:', error);
-            }
-        };
         fetchServicios();
     }, []);
 
-    // Función para eliminar un servicio
+    const fetchServicios = async () => {
+        try {
+            const response = await axios.get(URIServicios);
+            setServicios(response.data);
+        } catch (error) {
+            console.error('Error al cargar los servicios:', error);
+        }
+    };
+
     const handleDeleteService = async (servicioId) => {
         try {
             await axios.delete(URIServicios + servicioId);
-            // Actualizar el estado de los servicios eliminando el servicio con el ID correspondiente
-            const updatedServices = servicios.filter(servicio => servicio.id !== servicioId);
-            setServicios(updatedServices);
+            fetchServicios();
         } catch (error) {
             console.error('Error al eliminar el servicio:', error);
         }
     };
+
+       ///comprobacion de ruta
+       if(!Cookies.get('session')){return Stop(false)}else{
+        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     return (
-        <div>
+        <Container className='bg-inCa my-3'>
             {/* Encabezado */}
-            <h2>{editMode ? `Editar Servicio - ${servicioName}` : 'Servicios'}</h2>
-
-            {servicios && (
-                <p>Servicio : {servicios.nombre_servicio}</p>
-            )}
-
-            {/* Botón para abrir el modal de agregar servicio */}
-            <Button variant="primary" onClick={handleAddService}>
-                <BsPlus /> Agregar Servicio
-            </Button>
+            <div className='d-flex flex-column mb-3'>
+                <span className='h2'>Servicios</span>
+                {/* Botón para abrir el modal de agregar servicio */}
+                <div className='d-flex justify-content-center'>
+                    <Button variant="primary" onClick={handleAddService} >
+                        <BsPlus /> Agregar Servicio
+                    </Button>
+                </div>
+            </div>
 
             {/* Modal para agregar o editar servicio */}
             <Modal show={showModal} onHide={handleCloseModal}>
@@ -188,17 +182,17 @@ function ServiciosAdmin() {
                             <Form.Check
                                 type="checkbox"
                                 label="Subservicio"
-                                checked={SubService}
+                                checked={subService}
                                 onChange={(e) => setSubService(e.target.checked)}
                             />
                         </Form.Group>
-                        {SubService && (
+                        {subService && (
                             <Form.Group controlId="formSubServicio">
                                 <Form.Label>Servicio Principal</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    value={SubService}  // Cambiado a SubService en lugar de servicioSeleccionado.servicio_padre.id
-                                    onChange={(e) => setSubService(e.target.value)}
+                                    value={servicioSeleccionado ? servicioSeleccionado.id : ""}
+                                    onChange={(e) => setServicioSeleccionado(servicios.find(servicio => servicio.id === parseInt(e.target.value)))}
                                 >
                                     <option value="">Selecciona un servicio principal</option>
                                     {servicios.map(servicio => (
@@ -222,10 +216,11 @@ function ServiciosAdmin() {
             </Modal>
 
             {/* Lista de servicios */}
-            <div>
+            <div >
                 <table className="table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Imagen</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
@@ -234,8 +229,9 @@ function ServiciosAdmin() {
                         </tr>
                     </thead>
                     <tbody>
-                        {servicios.map(servicio => (
-                            <tr key={servicio.id}>
+                        {servicios.map((servicio,index) => (
+                            <tr key={servicio.id+'/'+index}>
+                                <td>{servicio.id}</td>
                                 <td>
                                     <Image
                                         src={servicio.img_principal ? 'http://' + window.location.hostname + ':8000/' + servicio.img_principal + 'inca.jpg' : IMGPrueba}
@@ -246,7 +242,7 @@ function ServiciosAdmin() {
                                 </td>
                                 <td>{servicio.nombre_servicio}</td>
                                 <td>{servicio.detalle_servicio}</td>
-                                <td>{servicio.servicio_padre ? servicio.servicio_padre.nombre_servicio : 'N/A'}</td>
+                                <td>{servicio.servicio_padre ? servicio.servicio_padre : 'N/A'}</td>
                                 <td>
                                     <Button variant="primary" onClick={() => handleEditService(servicio)}>
                                         <BsPencil />
@@ -260,11 +256,8 @@ function ServiciosAdmin() {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </Container>
     );
 }
 
 export default ServiciosAdmin;
-
-
-

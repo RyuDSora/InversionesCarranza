@@ -4,10 +4,21 @@ import axios from 'axios';
 import Container from "react-bootstrap/Container"; // Importar correctamente Container
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';/////////encriptar y desencriptar datos
+import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
 const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const AgregarAdministrador = () => {
+
+        
+        //importante para desencripatar el rol de usuario de las cookie
+        const encryptionKey = 'mysecretkey';
+        const decryptValue = (encryptedValue, key) => {
+          const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
+          return bytes.toString(CryptoJS.enc.Utf8);
+        };
+
     const navigate = useNavigate();
     useEffect(() => {
         try {
@@ -108,6 +119,11 @@ const AgregarAdministrador = () => {
         setCcontasenia('');
         setFechaNacimiento('');
     };
+
+       ///comprobacion de ruta
+       if(!Cookies.get('session')){return Stop(false)}else{
+        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
+    }
 
     return (
         <Container>
