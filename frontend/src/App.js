@@ -24,8 +24,10 @@ import MasProyectos       from "./componets/MasProjectos.jsx";
 import ProyectosAdmin     from "./componets/ProyectosAdmin.jsx";
 import AgregarAdministrador from './componets/AgregarAdministrador.jsx';
 import AgregarServicioAdmin from './componets/AgregarServicioAdmin.jsx';
-import  Usuarios  from "./componets/Usuarios.jsx";
+import Usuarios             from "./componets/Usuarios.jsx";
 
+import MasServicios      from "./componets/MasServicios.jsx";
+import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
 
 function App() {
 
@@ -54,7 +56,8 @@ function App() {
                 <Route path="/Construccion" element={<Construccion />} />
                 <Route path="/Remodelaciones" element={<Remodelaciones />} />
                 <Route path="/DisenoPlanos" element={<DisenoPlanos />} />
-
+                <Route path="/Mas-Servicios/:idServicioPadre" element={<MasServicios />} />
+                <Route path="/ServiciosAdmin" element={ <ServiciosAdmin/>} />
 
                 <Route path="/Proyectos" element={ <Projects/> } />
                 <Route path="/Proyectos/:Id" element={ <MasProyectos/>} />

@@ -82,7 +82,7 @@ export default function NavBarIC() {
                 {Admin ? /*comprobamo si es administrador: si lo es mostrara la siguiente lista*/  (<>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/AgregarAdministrador`}} >Agregar Admin</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/Users`}} >Ver Usuarios</Dropdown.Item>
-                  <Dropdown.Item onClick={ ()=>{window.location.href = `/AgregarServicioAdmin`}} >Editar Servicios</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{window.location.href = `/ServiciosAdmin`}} >Editar Servicios</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>
                 </>):(<></>)}
                 <Dropdown.Item onClick={()=>{ Cookies.remove('session');

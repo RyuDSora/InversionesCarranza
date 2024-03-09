@@ -1,61 +1,112 @@
-import React, { useState } from 'react';
-import { Form, Button, ButtonGroup, Container, Row, Col, Table } from 'react-bootstrap';
-import Card from 'react-bootstrap/Card';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Card, Form, Button, ButtonGroup, Table } from 'react-bootstrap';
+import axios from 'axios';
+import Container from "react-bootstrap/Container"; // Importar correctamente Container
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
-function AgregarAdministrador() {
+const URI = 'http://'+window.location.hostname+':8000/usuarios/';
+
+const AgregarAdministrador = () => {
+    const navigate = useNavigate();
+    useEffect(() => {
+        try {
+            if (Cookies.get('session')) {
+                navigate('/AgregarAdministrador');
+            }
+        } catch (error) {
+            console.error('Error en useEffect:', error);
+        }
+    }, []);
+    const [rol, setRol] = useState(1);
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
+    const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
+    const [contasenia, setContasenia] = useState('');
+    const [Ccontasenia, setCcontasenia] = useState('');
     const [fechaNacimiento, setFechaNacimiento] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [nombreValido, setNombreValido] = useState(true);
-    const [apellidoValido, setApellidoValido] = useState(true);
-    const [telefonoValido, setTelefonoValido] = useState(true);
-    const [fechaNacimientoValido, setFechaNacimientoValido] = useState(true);
-    const [emailValido, setEmailValido] = useState(true);
-    const [passwordValido, setPasswordValido] = useState(true);
     const [error, setError] = useState('');
 
-    // Nueva variable de estado para la lista de administradores
-    const [administradores, setAdministradores] = useState([]);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+        // Validar campos no vacíos
+        if (!nombre || !apellido || !correo || !telefono || !contasenia || !fechaNacimiento) {
+            setError('Por favor, complete todos los campos.');
+            return;
+        }
 
-        const nombreValido = nombre.trim() !== '' && !/\d/.test(nombre);
-        const apellidoValido = apellido.trim() !== '' && !/\d/.test(apellido);
-        const telefonoValido = telefono.trim() !== '' && /^\d+$/.test(telefono);
-        const fechaNacimientoValido = fechaNacimiento.trim() !== '';
-        const emailValido = email.includes('@');
-        const passwordValido = password.length >= 8;
-    
-        setNombreValido(nombreValido);
-        setApellidoValido(apellidoValido);
-        setTelefonoValido(telefonoValido);
-        setFechaNacimientoValido(fechaNacimientoValido);
-        setEmailValido(emailValido);
-        setPasswordValido(passwordValido);
-    
-        if (nombreValido && apellidoValido && telefonoValido && fechaNacimientoValido && emailValido && passwordValido) {
-            if (administradores.some(admin => admin.email === email)) {
-                setError('Correo duplicado, ingresa otro correo.');
-            } else {
-                // Agregar el nuevo administrador a la lista
-                setAdministradores([...administradores, { nombre, apellido, telefono, fechaNacimiento, email, password }]);
-                setError('');
+        // Validar formato de correo electrónico
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.(com|es|net)$/;
+        if (!emailRegex.test(correo)) {
+            setError('Por favor, ingrese un correo electrónico válido (Gmail o Yahoo).');
+            return;
+        }
+
+        // Validar que el teléfono contenga solo números
+        const phoneRegex = /^\d{8}$/;
+        if (!phoneRegex.test(telefono)) {
+            setError('Por favor, ingrese solo números en el campo de teléfono.');
+            return;
+        }
+
+        // Validar formato de contraseña
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
+        if (!passwordRegex.test(contasenia)) {
+            setError('La contraseña debe tener al menos una letra mayúscula y un número, y debe tener al menos 6 caracteres.');
+            return;
+        }
+
+        // Validar que las contraseñas coincidan
+        if (Ccontasenia !== contasenia) {
+            setError('Las contraseñas no coinciden.');
+            return;
+        }
+
+        try {
+            const response = await axios.get(`${URI}?correo=${correo}`);
+            const usuariosRegistrados = response.data;
+
+            // Verificar si algún usuario tiene el mismo correo electrónico
+            const usuarioExistente = usuariosRegistrados.find(usuario => usuario.correo === correo);
+            if (usuarioExistente) {
+                setError('Este correo electrónico ya está en uso. Por favor, elija otro.');
+                return;
             }
+
+            // Si no hay usuarios con el mismo correo, proceder con el registro
+            await axios.post(URI, {
+                rol: rol,
+                nombre: nombre,
+                apellido: apellido,
+                correo: correo,
+                telefono: telefono,
+                contasenia: contasenia,
+                fechaNacimiento: fechaNacimiento
+            });
+
+            // Mostrar mensaje de éxito con alert
+            alert('Usuario registrado exitosamente, ya puede iniciar sesión');
+
+            // Redirigir al usuario a la página principal
+            // sessionStorage.setItem('User', nombre+' '+apellido);
+            window.location.href = '/login';  // Redirige al usuario a la página principal
+        } catch (error) {
+            console.error('Error al realizar la solicitud HTTP:', error);
+            setError('Se produjo un error al intentar registrar al usuario. Por favor, inténtelo de nuevo más tarde.');
         }
     };
 
+    // Función para limpiar los campos del formulario
     const handleCancel = () => {
         setNombre('');
         setApellido('');
+        setCorreo('');
         setTelefono('');
+        setContasenia('');
+        setCcontasenia('');
         setFechaNacimiento('');
-        setEmail('');
-        setPassword('');
-        setError('');
     };
 
     return (
@@ -69,33 +120,31 @@ function AgregarAdministrador() {
                             <Form onSubmit={handleSubmit} className="mt-5">
                                 <Form.Group controlId="formNombre">
                                     <Form.Label>Nombre</Form.Label>
-                                    <Form.Control type="text" value={nombre} onChange={e => setNombre(e.target.value)} isInvalid={!nombreValido} />
-                                    <Form.Control.Feedback type="invalid">Por favor, introduce un nombre válido sin números.</Form.Control.Feedback>
+                                    <Form.Control type="text" value={nombre} onChange={e => setNombre(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group controlId="formApellido">
                                     <Form.Label>Apellido</Form.Label>
-                                    <Form.Control type="text" value={apellido} onChange={e => setApellido(e.target.value)} isInvalid={!apellidoValido} />
-                                    <Form.Control.Feedback type="invalid">Por favor, introduce un apellido válido sin números.</Form.Control.Feedback>
+                                    <Form.Control type="text" value={apellido} onChange={e => setApellido(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group controlId="formTelefono">
                                     <Form.Label>Teléfono</Form.Label>
-                                    <Form.Control type="text" value={telefono} onChange={e => setTelefono(e.target.value)} isInvalid={!telefonoValido} />
-                                    <Form.Control.Feedback type="invalid">Por favor, introduce un número de teléfono válido.</Form.Control.Feedback>
+                                    <Form.Control type="text" value={telefono} onChange={e => setTelefono(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group controlId="formFechaNacimiento">
                                     <Form.Label>Fecha de Nacimiento</Form.Label>
-                                    <Form.Control type="date" value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} isInvalid={!fechaNacimientoValido} />
-                                    <Form.Control.Feedback type="invalid">Por favor, introduce una fecha de nacimiento válida.</Form.Control.Feedback>
+                                    <Form.Control type="date" value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group controlId="formEmail">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control type="text" value={email} onChange={e => setEmail(e.target.value)} isInvalid={!emailValido} />
-                                    <Form.Control.Feedback type="invalid">Por favor, introduce un email válido.</Form.Control.Feedback>
+                                    <Form.Control type="text" value={correo} onChange={e => setCorreo(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group controlId="formPassword">
                                     <Form.Label>Contraseña</Form.Label>
-                                    <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} isInvalid={!passwordValido} />
-                                    <Form.Control.Feedback type="invalid">La contraseña debe tener al menos 8 caracteres.</Form.Control.Feedback>
+                                    <Form.Control type="password" value={contasenia} onChange={e => setContasenia(e.target.value)} />
+                                </Form.Group>
+                                <Form.Group controlId="formConfirmPassword">
+                                    <Form.Label>Confirmar Contraseña</Form.Label>
+                                    <Form.Control type="password" value={Ccontasenia} onChange={e => setCcontasenia(e.target.value)} />
                                 </Form.Group>
                                 <br />
                                 <ButtonGroup className="d-flex justify-content-between">
@@ -124,7 +173,8 @@ function AgregarAdministrador() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {administradores.map((admin, index) => (
+                                {/* Aquí debes iterar sobre la lista de administradores */}
+                                {/* {administradores.map((admin, index) => (
                                     <tr key={index}>
                                         <td>{admin.nombre}</td>
                                         <td>{admin.apellido}</td>
@@ -133,7 +183,7 @@ function AgregarAdministrador() {
                                         <td>{admin.email}</td>
                                         <td>{admin.password}</td>
                                     </tr>
-                                ))}
+                                ))} */}
                             </tbody>
                         </Table>
                     </div>
