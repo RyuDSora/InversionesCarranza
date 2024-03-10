@@ -24,7 +24,9 @@ function ServiciosAdmin() {
     const [servicios, setServicios] = useState([]); 
     const [showModal, setShowModal] = useState(false); 
     const [servicioSeleccionado, setServicioSeleccionado] = useState(null); 
-    const [servicioName, setServicioName] = useState(''); 
+    const [servicioId,setServicioID] = useState(null)
+    const [servicioName, setServicioName] = useState('');
+    const [servicioPadre,setServicioPadre] = useState(null) 
     const [servicioDescripcion, setServicioDescripcion] = useState(''); 
     const [servicioIMG, setServicioIMG] = useState(null); 
     const [previewURL, setPreviewURL] = useState(''); 
@@ -32,10 +34,13 @@ function ServiciosAdmin() {
     const [subService, setSubService] = useState(false); 
 
     const handleEditService = (servicio) => {
+
         setServicioSeleccionado(servicio);
+        setServicioID(servicio.id);
         setShowModal(true);
         setEditMode(true);
         setServicioName(servicio.nombre_servicio);
+        setServicioPadre(servicio.servicio_padre);
         setServicioDescripcion(servicio.detalle_servicio);
         setPreviewURL(''); // Se restablece la vista previa de la imagen
         setSubService(servicio.servicio_padre !== null); // Verifica si el servicio tiene un servicio padre
@@ -89,7 +94,10 @@ function ServiciosAdmin() {
             };
 
             if (editMode) {
-                await axios.put(URIServicios + servicioSeleccionado.id + '/', formDataServicio);
+                if (!subService) {
+                    delete formDataServicio.servicio_padre;
+                }
+                await axios.put(URIServicios + servicioId + '/', formDataServicio);
             } else {
                 await axios.post(URIServicios, formDataServicio);
             }
@@ -107,21 +115,26 @@ function ServiciosAdmin() {
 
     const fetchServicios = async () => {
         try {
+            await fetch('http://'+window.location.hostname+':8000/images/get');
             const response = await axios.get(URIServicios);
             setServicios(response.data);
         } catch (error) {
             console.error('Error al cargar los servicios:', error);
         }
     };
-
+    /* eslint-disable no-restricted-globals */
     const handleDeleteService = async (servicioId) => {
-        try {
-            await axios.delete(URIServicios + servicioId);
-            fetchServicios();
-        } catch (error) {
-            console.error('Error al eliminar el servicio:', error);
+        const confirmacion = confirm("¿Estás seguro que deseas borrar este proyecto?");
+        if (confirmacion) {
+            try {
+                await axios.delete(URIServicios + servicioId);
+                fetchServicios();
+            } catch (error) {
+                console.error('Error al eliminar el servicio:', error);
+            }    
         }
     };
+    /* eslint-enable no-restricted-globals */
 
        ///comprobacion de ruta
        if(!Cookies.get('session')){return Stop(false)}else{
@@ -195,10 +208,12 @@ function ServiciosAdmin() {
                                     onChange={(e) => setServicioSeleccionado(servicios.find(servicio => servicio.id === parseInt(e.target.value)))}
                                 >
                                     <option value="">Selecciona un servicio principal</option>
-                                    {servicios.map(servicio => (
-                                        <option key={servicio.id} value={servicio.id}>
-                                            {servicio.nombre_servicio}
-                                        </option>
+                                    {servicios.map((servicio,index) => (
+                                        !servicio.servicio_padre && (
+                                            <option key={servicio.id} value={servicio.id}>
+                                                {servicio.nombre_servicio}
+                                            </option>
+                                        )
                                     ))}
                                 </Form.Control>
                             </Form.Group>
