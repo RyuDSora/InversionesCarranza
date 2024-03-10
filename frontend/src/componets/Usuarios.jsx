@@ -18,6 +18,7 @@ function Usuarios() {
   const [roleFilter, setRoleFilter] = useState('Todos');
   const [editingUser, setEditingUser] = useState(null);
   const [editedUser, setEditedUser] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Extraído la URL de la API a una constante para evitar la repetición
   const API_URL = `http://${window.location.hostname}:8000/usuarios/`;
@@ -53,6 +54,14 @@ function Usuarios() {
     if (roleFilter === 'Administradores' && persona.rol === 1) return true;
     if (roleFilter === 'Clientes' && persona.rol !== 1) return true;
     return false;
+  }).filter(persona => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return persona.nombre.toLowerCase().includes(lowerCaseSearchTerm) ||
+      persona.apellido.toLowerCase().includes(lowerCaseSearchTerm) ||
+      persona.telefono.toLowerCase().includes(lowerCaseSearchTerm) ||
+      persona.correo.toLowerCase().includes(lowerCaseSearchTerm) ||
+      persona.fechaNacimiento.toLowerCase().includes(lowerCaseSearchTerm) ||
+      (persona.rol === 1 ? 'administrador' : 'cliente').includes(lowerCaseSearchTerm);
   });
 
   if(!Cookies.get('session')){return Stop(false)}else{
@@ -66,6 +75,10 @@ function Usuarios() {
   const handleEditClick = (user) => {
     setEditingUser(user.id);
     setEditedUser(user);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const handleEditChange = (event, field) => {
@@ -108,7 +121,7 @@ function Usuarios() {
       </div>
       <div className='mb-3'>
         <div className="input-group mb-3 w-75 mx-auto">
-          <input type="text" className="form-control" placeholder="Buscar"/>
+          <input type="text" className="form-control" placeholder="Buscar" onChange={handleSearchChange}/>
           <button className="btn btn-success" type="submit"><FaSearch /></button>
         </div>
       </div>
