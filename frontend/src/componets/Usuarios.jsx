@@ -43,26 +43,40 @@ function Usuarios() {
   };
 
   // Mejorado la lógica de clasificación y filtrado para que sea más legible
-  const sortedData = [...personas].sort((a, b) => {
+  const filteredAndSortedData = [...personas].map(persona => {
+    if (persona.id === 1) {
+      // Reemplaza los detalles del usuario con ID=1 con 'Oculto'
+      return {
+        ...persona,
+        nombre: '*********',
+        apellido: '*********',
+        telefono: '*********',
+        correo: '*********',
+        fechaNacimiento: '*********',
+        Rol: '*********'
+      };
+    }
+    return persona;
+  }).sort((a, b) => {
     if (a[sortedField] < b[sortedField]) return isAscending ? -1 : 1;
     if (a[sortedField] > b[sortedField]) return isAscending ? 1 : -1;
     return 0;
   });
 
-  const filteredData = sortedData.filter(persona => {
+  const filteredData = filteredAndSortedData.filter(persona => {
     if (roleFilter === 'Todos') return true;
     if (roleFilter === 'Administradores' && persona.rol === 1) return true;
     if (roleFilter === 'Clientes' && persona.rol !== 1) return true;
     return false;
-  }).filter(persona => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    return persona.nombre.toLowerCase().includes(lowerCaseSearchTerm) ||
-      persona.apellido.toLowerCase().includes(lowerCaseSearchTerm) ||
-      persona.telefono.toLowerCase().includes(lowerCaseSearchTerm) ||
-      persona.correo.toLowerCase().includes(lowerCaseSearchTerm) ||
-      persona.fechaNacimiento.toLowerCase().includes(lowerCaseSearchTerm) ||
-      (persona.rol === 1 ? 'administrador' : 'cliente').includes(lowerCaseSearchTerm);
-  });
+    }).filter(persona => {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      return persona.nombre.toLowerCase().includes(lowerCaseSearchTerm) ||
+        persona.apellido.toLowerCase().includes(lowerCaseSearchTerm) ||
+        persona.telefono.toLowerCase().includes(lowerCaseSearchTerm) ||
+        persona.correo.toLowerCase().includes(lowerCaseSearchTerm) ||
+        persona.fechaNacimiento.toLowerCase().includes(lowerCaseSearchTerm) ||
+        (persona.rol === 1 ? 'administrador' : 'cliente').includes(lowerCaseSearchTerm);
+    });
 
   if(!Cookies.get('session')){return Stop(false)}else{
     if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
@@ -73,6 +87,9 @@ function Usuarios() {
   };
 
   const handleEditClick = (user) => {
+    if (user.id === 1) {
+      return; // No permitir la edición del usuario con ID=1
+    }
     setEditingUser(user.id);
     setEditedUser(user);
   };
@@ -101,6 +118,10 @@ function Usuarios() {
     .catch((error) => {
       console.error('Error:', error);
     });
+  };
+
+  const handleCancelClick = () => {
+    setEditingUser(null);
   };
 
   return (
@@ -240,17 +261,29 @@ function Usuarios() {
           persona.rol===1 ? 'Administrador':'Cliente'
         )}
       </td>
-      <td>
-        {editingUser === persona.id ? (
-          <Button variant="success" onClick={handleUpdateClick}>
-            Actualizar
-          </Button>
-        ) : (
-          <Button variant="primary" onClick={() => handleEditClick(persona)}>
-            Editar
-          </Button>
-        )}
-      </td>
+      <td className="d-flex align-items-center">
+  {editingUser === persona.id ? (
+    <>
+      <Button variant="success" className="mr-2" onClick={handleUpdateClick}>
+        Actualizar
+      </Button>
+      <Button variant="danger" onClick={handleCancelClick}>
+        Cancelar
+      </Button>
+    </>
+  ) : (
+    persona.rol === 1 ? (
+      <Button variant="secondary" disabled>
+        Editar
+      </Button>
+    ) : (
+      <Button variant="primary" onClick={() => handleEditClick(persona)}>
+        Editar
+      </Button>
+    )
+  )}
+</td>
+
     </tr>
   ))}
 </tbody>
