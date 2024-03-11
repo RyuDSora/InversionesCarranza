@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import Candado from '../imgs/candado-abierto.png';
+import CryptoJS from 'crypto-js';
 
 export default function CambiarContrasenia(props) {
     const [password, setPassword] = useState('');
@@ -49,10 +50,15 @@ export default function CambiarContrasenia(props) {
     
             // Verificar si se encontró un usuario con el correo proporcionado
             if (usuarioExistente) {
+
+
+                // Encriptar la contraseña antes de enviarla al servidor
+                const encryptedPassword = CryptoJS.AES.encrypt(password, 'mysecretkey').toString();
+
                 // Realizar una solicitud PUT para actualizar la contraseña del usuario
                 const updateResponse = await axios.put(`http://`+window.location.hostname+`:8000/usuarios/${usuarioExistente.id}`, {
                     ...usuarioExistente,  // Mantener los datos del usuario excepto la contraseña
-                    contasenia: password,  // Actualizar la contraseña
+                    contasenia: encryptedPassword,  // Actualizar la contraseña encriptada
                 });
     
                 // Verificar si la contraseña se actualizó correctamente

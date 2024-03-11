@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Form, Button, ButtonGroup, Table } from 'react-bootstrap';
 import axios from 'axios';
-import Container from "react-bootstrap/Container"; // Importar correctamente Container
+import Container from "react-bootstrap/Container";
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';/////////encriptar y desencriptar datos
-import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
+import CryptoJS from 'crypto-js';
+import Stop from './Stop.jsx'; // Importa correctamente el componente Stop
 
 const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const AgregarAdministrador = () => {
-
         
-        //importante para desencripatar el rol de usuario de las cookie
-        const encryptionKey = 'mysecretkey';
-        const decryptValue = (encryptedValue, key) => {
-          const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-          return bytes.toString(CryptoJS.enc.Utf8);
-        };
+    // Importante para desencriptar el rol de usuario de las cookies
+    const encryptionKey = 'mysecretkey';
+    const decryptValue = (encryptedValue, key) => {
+        const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
+        return bytes.toString(CryptoJS.enc.Utf8);
+    };
 
     const navigate = useNavigate();
     useEffect(() => {
@@ -29,6 +28,7 @@ const AgregarAdministrador = () => {
             console.error('Error en useEffect:', error);
         }
     }, []);
+
     const [rol, setRol] = useState(1);
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
@@ -86,6 +86,9 @@ const AgregarAdministrador = () => {
                 return;
             }
 
+            // Encriptar la contraseña antes de enviarla al servidor
+            const encryptedPassword = CryptoJS.AES.encrypt(contasenia, 'mysecretkey').toString();
+
             // Si no hay usuarios con el mismo correo, proceder con el registro
             await axios.post(URI, {
                 rol: rol,
@@ -93,7 +96,7 @@ const AgregarAdministrador = () => {
                 apellido: apellido,
                 correo: correo,
                 telefono: telefono,
-                contasenia: contasenia,
+                contasenia: encryptedPassword, // Se envía la contraseña encriptada
                 fechaNacimiento: fechaNacimiento
             });
 
@@ -101,7 +104,6 @@ const AgregarAdministrador = () => {
             alert('Usuario registrado exitosamente, ya puede iniciar sesión');
 
             // Redirigir al usuario a la página principal
-            // sessionStorage.setItem('User', nombre+' '+apellido);
             window.location.href = '/login';  // Redirige al usuario a la página principal
         } catch (error) {
             console.error('Error al realizar la solicitud HTTP:', error);
@@ -120,9 +122,13 @@ const AgregarAdministrador = () => {
         setFechaNacimiento('');
     };
 
-       ///comprobacion de ruta
-       if(!Cookies.get('session')){return Stop(false)}else{
-        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
+    ///comprobacion de ruta
+    if (!Cookies.get('session')) {
+        return <Stop false />;
+    } else {
+        if (+decryptValue(Cookies.get('UserRol'), encryptionKey) === 2) {
+            return <Stop true />;
+        }
     }
 
     return (
@@ -174,37 +180,10 @@ const AgregarAdministrador = () => {
                                 <br /> <br />
                             </Form>
                         </Card.Body>
-                    </Card>
-                    <h2 className="text-center mt-5">Lista de nuevos Administradores</h2>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Table striped bordered hover className="mt-5">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Teléfono</th>
-                                    <th>Fecha de Nacimiento</th>
-                                    <th>Email</th>
-                                    <th>Contraseña</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* Aquí debes iterar sobre la lista de administradores */}
-                                {/* {administradores.map((admin, index) => (
-                                    <tr key={index}>
-                                        <td>{admin.nombre}</td>
-                                        <td>{admin.apellido}</td>
-                                        <td>{admin.telefono}</td>
-                                        <td>{admin.fechaNacimiento}</td>
-                                        <td>{admin.email}</td>
-                                        <td>{admin.password}</td>
-                                    </tr>
-                                ))} */}
-                            </tbody>
-                        </Table>
-                    </div>
+                    </Card> 
+
                 </Col>
-            </Row>
+            </Row> <br/> <br/>
         </Container>
     );
 }

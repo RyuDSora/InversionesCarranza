@@ -59,6 +59,10 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+ALTER TABLE `usuarios` MODIFY COLUMN `contasenia` VARCHAR(60) NOT NULL;
+
+UPDATE usuarios SET contasenia = 'U2FsdGVkX187Se7m7qHWgwDmW372K0EiuYrBRHBZJQc='
+WHERE nombre = 'Eduar';
 
 -- -----------------------------------------------------
 -- Table `servicios`

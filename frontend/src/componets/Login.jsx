@@ -12,6 +12,15 @@ export default function Login() {
   const encryptValue = (value, key) => {
     return CryptoJS.AES.encrypt(value.toString(), key).toString();
   };
+
+    // Función para desencriptar la contraseña
+    const decryptionKey = 'mysecretkey';
+    const decryptValue = (encryptedValue, key) => {
+      const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    };
+  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -52,7 +61,10 @@ export default function Login() {
         const usuariosRegistrados = response.data;
         const usuarioExistente = usuariosRegistrados.find(usuario => usuario.correo === email);
 
-        if (usuarioExistente && usuarioExistente.contasenia === password) {
+        // Desencriptar la contraseña almacenada
+        const decryptedPassword = decryptValue(usuarioExistente.contasenia, decryptionKey);
+
+        if (usuarioExistente && decryptedPassword === password) {
           if (rememberMe) {
             Cookies.set('UserId',encryptValue(usuarioExistente.id, encryptionKey),{expires:30});
             Cookies.set('UserRol',encryptValue(usuarioExistente.rol, encryptionKey),{expires:30});

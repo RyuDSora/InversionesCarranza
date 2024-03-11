@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from "react-bootstrap/esm/Container";
+import CryptoJS from 'crypto-js';
 
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -67,6 +68,9 @@ const CompRegistro = () => {
                 return;
             }
 
+            // Encriptar la contraseña antes de enviarla al servidor
+            const encryptedPassword = CryptoJS.AES.encrypt(contasenia, 'mysecretkey').toString();
+
             // Si no hay usuarios con el mismo correo, proceder con el registro
             await axios.post(URI, {
                 rol: rol,
@@ -74,12 +78,14 @@ const CompRegistro = () => {
                 apellido: apellido,
                 correo: correo,
                 telefono: telefono,
-                contasenia: contasenia,
+                contasenia: encryptedPassword,
                 fechaNacimiento: fechaNacimiento
             });
 
             // Mostrar mensaje de éxito con alert
             alert('Usuario registrado exitosamente, ya puede iniciar sesion');
+
+
 
             // Redirigir al usuario a la página principal
             //sessionStorage.setItem('User', nombre+' '+apellido);
