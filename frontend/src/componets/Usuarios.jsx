@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/esm/Container';
-import { FaSearch } from 'react-icons/fa'
+import { FaEdit,FaSearch,FaTimes,FaCheck} from 'react-icons/fa'
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
 import Stop from './Stop.jsx'
@@ -265,20 +265,20 @@ function Usuarios() {
   {editingUser === persona.id ? (
     <>
       <Button variant="success" className="mr-2" onClick={handleUpdateClick}>
-        Actualizar
+        <FaCheck />
       </Button>
       <Button variant="danger" onClick={handleCancelClick}>
-        Cancelar
+        <FaTimes />
       </Button>
     </>
   ) : (
     persona.rol === 1 ? (
       <Button variant="secondary" disabled>
-        Editar
+        <FaEdit/>
       </Button>
     ) : (
       <Button variant="primary" onClick={() => handleEditClick(persona)}>
-        Editar
+        <FaEdit/>
       </Button>
     )
   )}
