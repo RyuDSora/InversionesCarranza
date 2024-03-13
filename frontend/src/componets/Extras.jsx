@@ -117,7 +117,7 @@ export const WeAre = () => {
             <div className="p-2 m-2 text-start">
                 <div>
                     <span>Universidad Nacional Autónoma de Honduras UNAH. Facultad de Ingeniería. Departamento de  Ingeniería en Sistemas.</span>
-                    <p>Este es un proyecto que surje para la clase Ingeniería del Software IS-802 Sección 1900. I-2024. Bajo la guia de la Ingeniera Andrea</p>
+                    <p>Este es un proyecto que surje para la clase Ingeniería del Software IS-802 Sección 1900. I-2024. Bajo la guia de la Ingeniera Andrea Lisbeth Martinez Lorenzana.</p>
                     <span>Nuestro Grupo lo integran:</span>
                     <ul className="">
                         <li className="list-group-item d-flex justify-content-between align-items-center">º Anibal Johan Godinez Cortez     <span className="badge bg-primary rounded-pill ms-2">20121014166</span></li>

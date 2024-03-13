@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import Candado from '../imgs/candado-abierto.png';
-import CryptoJS from 'crypto-js';
+import { encryptionKey,encryptValue } from "./hashes.jsx";
+import { useNavigate } from 'react-router-dom';
+import { URIUsuarios } from "./Urls.jsx";
 
 export default function CambiarContrasenia(props) {
+    const navigate = useNavigate()
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -44,7 +47,7 @@ export default function CambiarContrasenia(props) {
 
         try {
             // Realizar una solicitud GET a la API para obtener al usuario por su correo electrónico
-            const response = await axios.get(`http://`+window.location.hostname+`:8000/usuarios?correo=${email}`);
+            const response = await axios.get(URIUsuarios+`?correo=${email}`);
             const usuarios = response.data;
             const usuarioExistente = usuarios.find(usuario => usuario.correo === email);
     
@@ -53,10 +56,10 @@ export default function CambiarContrasenia(props) {
 
 
                 // Encriptar la contraseña antes de enviarla al servidor
-                const encryptedPassword = CryptoJS.AES.encrypt(password, 'mysecretkey').toString();
+                const encryptedPassword = encryptValue(password, encryptionKey);
 
                 // Realizar una solicitud PUT para actualizar la contraseña del usuario
-                const updateResponse = await axios.put(`http://`+window.location.hostname+`:8000/usuarios/${usuarioExistente.id}`, {
+                const updateResponse = await axios.put(URIUsuarios+usuarioExistente.id, {
                     ...usuarioExistente,  // Mantener los datos del usuario excepto la contraseña
                     contasenia: encryptedPassword,  // Actualizar la contraseña encriptada
                 });
@@ -66,7 +69,7 @@ export default function CambiarContrasenia(props) {
                     // Mostrar mensaje de éxito
                     alert('Contraseña cambiada exitosamente.');
                     // Redirigir al usuario a la página principal
-                    window.location.href = '/';
+                    navigate ('/login');
                 }
             } else {
                 setError('');

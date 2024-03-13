@@ -2,24 +2,13 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
 import { useNavigate } from 'react-router-dom';
+import { URIUsuarios } from "./Urls.jsx";
+import { encryptValue,encryptionKey,decryptValue } from "./hashes.jsx";
 import Cookies from 'js-cookie';
-import CryptoJS from 'crypto-js';
 
 export default function Login() {
   const navigate = useNavigate();
   useEffect(()=>{if(Cookies.get('session')){navigate('/');}},[navigate])
-  const encryptionKey = 'mysecretkey';
-  const encryptValue = (value, key) => {
-    return CryptoJS.AES.encrypt(value.toString(), key).toString();
-  };
-
-    // Función para desencriptar la contraseña
-    const decryptionKey = 'mysecretkey';
-    const decryptValue = (encryptedValue, key) => {
-      const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-      return bytes.toString(CryptoJS.enc.Utf8);
-    };
-  
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,8 +16,6 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  const URI = 'http://' + window.location.hostname + ':8000/usuarios/';
   
 
   const handleEmailChange = (e) => {
@@ -57,12 +44,12 @@ export default function Login() {
       }
 
       if (email && password) {
-        const response = await axios.get(`${URI}?correo=${encodeURIComponent(email)}`);
+        const response = await axios.get(`${URIUsuarios}?correo=${encodeURIComponent(email)}`);
         const usuariosRegistrados = response.data;
         const usuarioExistente = usuariosRegistrados.find(usuario => usuario.correo === email);
 
         // Desencriptar la contraseña almacenada
-        const decryptedPassword = decryptValue(usuarioExistente.contasenia, decryptionKey);
+        const decryptedPassword = decryptValue(usuarioExistente.contasenia, encryptionKey);
 
         if (usuarioExistente && decryptedPassword === password) {
           if (rememberMe) {

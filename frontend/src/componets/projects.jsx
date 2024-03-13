@@ -1,34 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Container from 'react-bootstrap/esm/Container';
-import {Carousel, Button, Spinner, Modal } from 'react-bootstrap';
+import {Carousel, Button, Spinner, Modal, Container } from 'react-bootstrap';
 
 //estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 
 //urls para el pedido al servidor
-const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
-const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
-const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';
+import { URIServicios,URIProyectos,URIPRXIMG,URIImagenGet,URIViewImagen } from "./Urls.jsx";
 
 //funcion principal
 export default function Projects(params) {
     //variables de estado
-    let [Servicios,setServicios] = useState([]); //aqui se guardaran los servicios padre 1,2,3
+    let [Servicios,setServicios] = useState([]); //aqui se guardaran las categorias de servicios
     let [Proyectos, setProyectos] = useState([]);//aqui se guardaran todos los proyectos
-    //const [lsImg, setLsImg] = useState([]);
     
     
     //variable booleana que servira para indicar si esta cargando, esto cuando no le lleguen datos desde el server
     const [mostrarCargando, setMostrarCargando] = useState(true); 
-    //variable para ordenar los proyectos por orden de servicio
-    //const Proyectosxservicios = [];
+
 
 
     //efecto para pedir los servicios padre al servidor,este solo se ejecutara una vez desde que se carga la pagina
     useEffect(() => {
         const service = async () => {
             try {
+                await axios.get(URIImagenGet)
                 const response = await axios.get(URIServicios);
                 const serviciosData = response.data.filter(
                     servicio => servicio.servicio_padre === null);
@@ -61,7 +57,7 @@ export default function Projects(params) {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setMostrarCargando(false);
-        }, 100); // 200 milisegundos (0.2 segundos) de retraso antes de mostrar el spinner
+        }, 100); // 100 milisegundos (0.2 segundos) de retraso antes de mostrar el spinner
         return () => clearTimeout(timeout);
     }, []);
 
@@ -180,7 +176,7 @@ function Project({PROYECTTO}) {
         <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
             <div className='p-2'><span className='h6'>{PROYECTTO.nombreProyecto}</span></div>
             <div className='px-3'>
-                <img src={PROYECTTO.img_principal ? 'http://'+window.location.hostname+':8000/'+PROYECTTO.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
+                <img src={PROYECTTO.img_principal ? URIViewImagen+PROYECTTO.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -199,7 +195,7 @@ function Project({PROYECTTO}) {
                     (<Carousel activeIndex={index} onSelect={handleSelect}>
                         {listaimgxproyecto.map((Q , index)=>(
                             <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                                <img alt='img' src={'http://'+window.location.hostname+':8000/'+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
+                                <img alt='img' src={URIViewImagen+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
                             </Carousel.Item>
                         ))}
                     </Carousel>):

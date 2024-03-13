@@ -2,21 +2,24 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import Candado from '../imgs/candado-abierto.png';
+import { URIUsuarios } from "./Urls.jsx";
+import { useNavigate } from 'react-router-dom';
 
 export default function RecuperarLanding() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
 
     const handleSolicitud = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`http://`+window.location.hostname+`:8000/usuarios?correo=${email}`);
+            const response = await axios.get(URIUsuarios+`?correo=${email}`);
             const usuarios = response.data;
             const usuarioExistente = usuarios.find(usuario => usuario.correo === email);
 
             if (usuarioExistente) {
                 // Redirigir al usuario a la página de cambio de contraseña, pasando el correo como parámetro
-                window.location.href = `/CambiarContrasenia?correo=${email}&nombre=${usuarioExistente.nombre}`;
+                navigate(`/CambiarContrasenia?correo=${email}&nombre=${usuarioExistente.nombre}`);
             } else {
                 setError('El correo electrónico proporcionado no está registrado');
             }

@@ -1,21 +1,31 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Container from 'react-bootstrap/esm/Container';
+import {Spinner, Container} from 'react-bootstrap';
+import { useParams } from 'react-router-dom'; // Importa el hook useParams para obtener los parámetros de la URL
+import { Link,useNavigate } from 'react-router-dom';
+import { URIUsuarios } from "./Urls.jsx";
+import { encryptionKey,decryptValue } from "./hashes.jsx";
+import Cookies from 'js-cookie';
+
 import BGImg from '../imgs/bgimg.jpg';
 import Iperfil from '../imgs/perfil.png';
-import { useParams } from 'react-router-dom'; // Importa el hook useParams para obtener los parámetros de la URL
-import { Link } from 'react-router-dom';
 
 
 export default function Perfil() {
+  const navigate = useNavigate();
   const { userId } = useParams(); // Obtiene el userId de los parámetros de la URL
   const [usuario, setUsuario] = useState(null);
+  var IsPerfil = false;
+
+  
 
   useEffect(() => {
     const fetchUsuarioData = async () => {
+      
       try {
+        
         // Realiza una solicitud GET para obtener la información del usuario desde la base de datos utilizando el userId obtenido de la URL
-        const response = await axios.get(`http://`+window.location.hostname+`:8000/usuarios/${userId}`);
+        const response = await axios.get(URIUsuarios+userId);
         setUsuario(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -26,8 +36,13 @@ export default function Perfil() {
   }, [userId]); // Asegúrate de incluir userId en la lista de dependencias para que se vuelva a cargar cuando cambie
 
   if (!usuario) {
-    return <p>Cargando información del usuario...</p>;
+    return <div>
+      Cargando información del usuario...
+      <br />
+      <Spinner animation="border" variant="primary" />
+      </div>;
   }
+  
 
    // Formatear la fecha de nacimiento para eliminar la parte de la hora
    const fechaNacimientoSinHora = new Date(usuario.fechaNacimiento).toISOString().split('T')[0];
@@ -39,9 +54,14 @@ export default function Perfil() {
     const nombre = usuario.nombre;
   
     // Redirigir a la página CambiarContrasenia con los parámetros en la URL
-    window.location.href = `/CambiarContrasenia?correo=${email}&nombre=${nombre}`;
+    navigate(`/CambiarContrasenia?correo=${email}&nombre=${nombre}`);
   };
-
+  if(Cookies.get('session')){
+    if(+decryptValue(Cookies.get('UserId'), encryptionKey)===usuario.id){
+      IsPerfil=true
+    }
+  }
+  
   return (
     <Container className="my-2">
       <div className="border rounded-3 bg-light">
@@ -91,7 +111,7 @@ export default function Perfil() {
           </form>
         </div>
         <hr />
-        <div id="foot_perfil">
+        <div id="foot_perfil" style={IsPerfil ? { display: 'block'}:{display:'none' }} >
           <Link to={`/EditarPerfil/${userId}`} className="btn btn-primary me-2">Editar Perfil</Link>
 
           <button onClick={handleCambiarContrasenia} className="btn btn-primary me-2">Cambiar Contraseña</button>

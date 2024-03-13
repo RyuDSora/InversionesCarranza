@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Form, Button, ButtonGroup, Table } from 'react-bootstrap';
+import { Row, Col, Card, Form, Button, ButtonGroup, Container} from 'react-bootstrap';
 import axios from 'axios';
-import Container from "react-bootstrap/Container";
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
+import { encryptionKey, encryptValue,decryptValue } from "./hashes.jsx";
 import Stop from './Stop.jsx'; // Importa correctamente el componente Stop
+import { URIUsuarios } from "./Urls.jsx";
 
-const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const AgregarAdministrador = () => {
-        
-    // Importante para desencriptar el rol de usuario de las cookies
-    const encryptionKey = 'mysecretkey';
-    const decryptValue = (encryptedValue, key) => {
-        const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-        return bytes.toString(CryptoJS.enc.Utf8);
-    };
-
     const navigate = useNavigate();
     useEffect(() => {
         try {
@@ -76,7 +67,7 @@ const AgregarAdministrador = () => {
         }
 
         try {
-            const response = await axios.get(`${URI}?correo=${correo}`);
+            const response = await axios.get(`${URIUsuarios}?correo=${correo}`);
             const usuariosRegistrados = response.data;
 
             // Verificar si algún usuario tiene el mismo correo electrónico
@@ -87,10 +78,10 @@ const AgregarAdministrador = () => {
             }
 
             // Encriptar la contraseña antes de enviarla al servidor
-            const encryptedPassword = CryptoJS.AES.encrypt(contasenia, 'mysecretkey').toString();
+            const encryptedPassword = encryptValue(contasenia, encryptionKey);
 
             // Si no hay usuarios con el mismo correo, proceder con el registro
-            await axios.post(URI, {
+            await axios.post(URIUsuarios, {
                 rol: rol,
                 nombre: nombre,
                 apellido: apellido,
@@ -104,7 +95,7 @@ const AgregarAdministrador = () => {
             alert('Usuario registrado exitosamente, ya puede iniciar sesión');
 
             // Redirigir al usuario a la página principal
-            window.location.href = '/login';  // Redirige al usuario a la página principal
+            navigate('/')  // Redirige al usuario a la página principal
         } catch (error) {
             console.error('Error al realizar la solicitud HTTP:', error);
             setError('Se produjo un error al intentar registrar al usuario. Por favor, inténtelo de nuevo más tarde.');
@@ -124,10 +115,10 @@ const AgregarAdministrador = () => {
 
     ///comprobacion de ruta
     if (!Cookies.get('session')) {
-        return <Stop false />;
+        return Stop (false,'Administrador');
     } else {
         if (+decryptValue(Cookies.get('UserRol'), encryptionKey) === 2) {
-            return <Stop true />;
+            return Stop (true,'Administrador');
         }
     }
 

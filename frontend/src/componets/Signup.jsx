@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from "react-bootstrap/esm/Container";
-import CryptoJS from 'crypto-js';
-
+import { encryptionKey,encryptValue} from "./hashes.jsx";
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { URIUsuarios } from "./Urls.jsx";
 
-const URI = 'http://'+window.location.hostname+':8000/usuarios/';
 
 const CompRegistro = () => {
     const navigate = useNavigate();
@@ -58,7 +57,7 @@ const CompRegistro = () => {
         }
 
         try {
-            const response = await axios.get(`${URI}?correo=${correo}`);
+            const response = await axios.get(`${URIUsuarios}?correo=${correo}`);
             const usuariosRegistrados = response.data;
 
             // Verificar si algún usuario tiene el mismo correo electrónico
@@ -69,10 +68,10 @@ const CompRegistro = () => {
             }
 
             // Encriptar la contraseña antes de enviarla al servidor
-            const encryptedPassword = CryptoJS.AES.encrypt(contasenia, 'mysecretkey').toString();
+            const encryptedPassword = encryptValue(contasenia, encryptionKey);
 
             // Si no hay usuarios con el mismo correo, proceder con el registro
-            await axios.post(URI, {
+            const user = await axios.post(URIUsuarios, {
                 rol: rol,
                 nombre: nombre,
                 apellido: apellido,
@@ -81,15 +80,15 @@ const CompRegistro = () => {
                 contasenia: encryptedPassword,
                 fechaNacimiento: fechaNacimiento
             });
-
+            console.log(user.data);
             // Mostrar mensaje de éxito con alert
             alert('Usuario registrado exitosamente, ya puede iniciar sesion');
 
-
-
-            // Redirigir al usuario a la página principal
-            //sessionStorage.setItem('User', nombre+' '+apellido);
-            window.location.href = '/login';  // Redirige al usuario a la página principal
+            Cookies.set('UserId',encryptValue(user.data.id, encryptionKey));
+            Cookies.set('UserRol',encryptValue(rol, encryptionKey));
+            Cookies.set('User',encryptValue(nombre + ' ' + apellido, encryptionKey));
+            Cookies.set('session',true);
+            navigate('/');  // Redirige al usuario a la página principal
         } catch (error) {
             console.error('Error al realizar la solicitud HTTP:', error);
             setError('Se produjo un error al intentar registrar al usuario. Por favor, inténtelo de nuevo más tarde.');

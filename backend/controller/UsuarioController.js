@@ -28,9 +28,10 @@ export const getUsuario = async (req, res) => {
 // Crear un registro 
 export const createUsuario = async (req, res) => {
     try {
-        await UsuarioModel.create(req.body);
+        const user = await UsuarioModel.create(req.body);
         res.json({
-            "message": "¡Ha sido registrdo correctamente!"
+            "message": "¡Ha sido registrdo correctamente!",
+            "id":user.id
         });
     } catch (error) {
         res.json({ message: error.message });

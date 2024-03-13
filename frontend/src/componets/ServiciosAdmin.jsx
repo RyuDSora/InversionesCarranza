@@ -3,23 +3,15 @@ import axios from 'axios';
 import { Button, Modal, Form, Image, Container } from 'react-bootstrap';
 import { BsPlus, BsPencil, BsTrash } from 'react-icons/bs';
 
+import { encryptionKey,decryptValue } from "./hashes.jsx";
 import Cookies from 'js-cookie';//////////leer cookies
-import CryptoJS from 'crypto-js';/////////encriptar y desencriptar datos
 import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
 
-const URIServicios = 'http://' + window.location.hostname + ':8000/ServiciosOfrecidos/';
+import { URIServicios,URIImagenGet,URIImagenPost,URIViewImagen } from "./Urls.jsx";
 
 function ServiciosAdmin() {
-
-        //importante para desencripatar el rol de usuario de las cookie
-        const encryptionKey = 'mysecretkey';
-        const decryptValue = (encryptedValue, key) => {
-          const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-          return bytes.toString(CryptoJS.enc.Utf8);
-        };
-
 
     const [servicios, setServicios] = useState([]); 
     const [showModal, setShowModal] = useState(false); 
@@ -34,8 +26,10 @@ function ServiciosAdmin() {
     const [subService, setSubService] = useState(false); 
 
     const handleEditService = (servicio) => {
-
+        
+        setSubService(false)
         setServicioSeleccionado(servicio);
+        
         setServicioID(servicio.id);
         setShowModal(true);
         setEditMode(true);
@@ -43,7 +37,7 @@ function ServiciosAdmin() {
         setServicioPadre(servicio.servicio_padre);
         setServicioDescripcion(servicio.detalle_servicio);
         setPreviewURL(''); // Se restablece la vista previa de la imagen
-        setSubService(servicio.servicio_padre !== null); // Verifica si el servicio tiene un servicio padre
+        //setSubService(servicio.servicio_padre !== null); // Verifica si el servicio tiene un servicio padre
     };
     
 
@@ -83,7 +77,7 @@ function ServiciosAdmin() {
 
             const formDataImagen = new FormData();
             formDataImagen.append('image', servicioIMG);
-            const responseImagen = await axios.post('http://' + window.location.hostname + ':8000/images/post', formDataImagen);
+            const responseImagen = await axios.post(URIImagenPost, formDataImagen);
             const idIMGPrincipal = responseImagen.data.id;
 
             const formDataServicio = {
@@ -115,7 +109,7 @@ function ServiciosAdmin() {
 
     const fetchServicios = async () => {
         try {
-            await fetch('http://'+window.location.hostname+':8000/images/get');
+            await fetch(URIImagenGet);
             const response = await axios.get(URIServicios);
             setServicios(response.data);
         } catch (error) {
@@ -124,7 +118,7 @@ function ServiciosAdmin() {
     };
     /* eslint-disable no-restricted-globals */
     const handleDeleteService = async (servicioId) => {
-        const confirmacion = confirm("¿Estás seguro que deseas borrar este proyecto?");
+        const confirmacion = confirm("¿Estás seguro que deseas borrar este Servicio?");
         if (confirmacion) {
             try {
                 await axios.delete(URIServicios + servicioId);
@@ -249,7 +243,7 @@ function ServiciosAdmin() {
                                 <td>{servicio.id}</td>
                                 <td>
                                     <Image
-                                        src={servicio.img_principal ? 'http://' + window.location.hostname + ':8000/' + servicio.img_principal + 'inca.jpg' : IMGPrueba}
+                                        src={servicio.img_principal ? URIViewImagen + servicio.img_principal + 'inca.jpg' : IMGPrueba}
                                         alt="Servicio"
                                         thumbnail
                                         style={{ width: 100, height: 'auto' }}

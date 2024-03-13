@@ -5,25 +5,16 @@ import { FaEdit,FaTrash,FaArrowRight,FaPlus } from 'react-icons/fa';
 
 /////////////////////////////////////////////////
 import Cookies from 'js-cookie';//////////leer cookies
-import CryptoJS from 'crypto-js';/////////encriptar y desencriptar datos
+import { encryptionKey,decryptValue } from "./hashes.jsx";
 import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png' ///imagen para mostrar si un proyecto no tiene una imagen principal
-
-const URIDeleteImagen = 'http://'+window.location.hostname+':8000/imagenes/'; 
-const URIImagen    = 'http://'+window.location.hostname+':8000/images/post';          //url para imagenes 
-const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';  //url de servicos
-const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/'; //url de proyectos  
-const URIPRXIMG    = 'http://'+window.location.hostname+':8000/proyehasimage/';       //url de las imagenes complementarias de proyectos
+import {  URIServicios,URIProyectos,URIPRXIMG,URIImagenPost,URIImagenGet,URIDeleteImagen,URIViewImagen} from "./Urls.jsx";
+      
 
 function ProyectosAdmin(params) {
 
-    //importante para desencripatar el rol de usuario de las cookie
-    const encryptionKey = 'mysecretkey';
-    const decryptValue = (encryptedValue, key) => {
-      const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-      return bytes.toString(CryptoJS.enc.Utf8);
-    };
+    
     //////////////////////////////////////////////////////////
 
     let [Servicios,setServicios] = useState([]);                         //variable para los servicios principales
@@ -65,8 +56,6 @@ function ProyectosAdmin(params) {
      const [ShowEdit, setShowEdit] = useState(false);
      const [Ep,setEp] = useState(false)
      const [listaBorrar, setlistaBorrar]=useState([])
-     //const [IdPE,setIdPE] = useState(1)
-     //const [checkI,setCheckI] = useState(false)
 
     /////////////////////////////////
     //cancelacion de Modals
@@ -104,7 +93,7 @@ function ProyectosAdmin(params) {
                 imag =>{ 
                     const formdatas = new FormData()
                     formdatas.append('image', imag)
-                    fetch(URIImagen, {
+                    fetch(URIImagenPost, {
                     method: 'POST',
                     body: formdatas
                     })
@@ -140,7 +129,7 @@ function ProyectosAdmin(params) {
             //guarda la img_principal y recupera el id en la variable idIMGPrincipal
             const formdata = new FormData()
             formdata.append('image', ProyectoIMG)
-            await fetch(URIImagen, {method: 'POST',body: formdata})
+            await fetch(URIImagenPost, {method: 'POST',body: formdata})
             .then(res => res.json()).then(data => {
             idIMGPrincipal = data.id;})
             .catch(err => {console.error(err)})
@@ -243,7 +232,7 @@ function ProyectosAdmin(params) {
                     //guarda la img_principal y recupera el id en la variable idIMGPrincipal
                     const formdata = new FormData()
                     formdata.append('image', ProyectoIMG)
-                    await fetch(URIImagen, {method: 'POST',body: formdata})
+                    await fetch(URIImagenPost, {method: 'POST',body: formdata})
                     .then(res => res.json()).then(data => {
                         idIMGPrincipal = data.id;})
                     .catch(err => {console.error(err)})
@@ -329,7 +318,7 @@ function ProyectosAdmin(params) {
     useEffect(() => {                           /////////////////////////////////
         const Projew = async () => {
             try {
-                await fetch('http://'+window.location.hostname+':8000/images/get')
+                await fetch(URIImagenGet)
                 const response = await axios.get(URIProyectos);
                 const ProyectoData = response.data.filter(
                     proye => proye.categoria_servicio === ShowService);
@@ -462,22 +451,22 @@ function ProyectosAdmin(params) {
                         </div>
                         <div className='row py-2'>
                             <div className='col-sm-3 d-flex align-items-center bg-light rounded-3' >
-                                <img src={proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba} 
+                                <img src={proye.img_principal ? URIViewImagen+proye.img_principal+'inca.jpg' : IMGPrueba} 
                                      alt="casa" 
                                      className='w-100 rounded-3' 
                                      title={'Imagen Principal: '+proye.nombreProyecto}
-                                     onClick={() => openModal(proye.img_principal ? 'http://'+window.location.hostname+':8000/'+proye.img_principal+'inca.jpg' : IMGPrueba)}/>
+                                     onClick={() => openModal(proye.img_principal ? URIViewImagen+proye.img_principal+'inca.jpg' : IMGPrueba)}/>
                             </div>
                             <div className='col-sm-9'>
                                 <div id={'desc'+proye.is}><p>{proye.descripcion_proyecto}</p></div>
                                 <div className='d-flex overflow-x-auto max-width-100'>
                                     {lsImgP.map((imagep,index) => (imagep.idproyecto===proye.id ?
                                         (<div key={'IP/'+imagep.idproyecto+'/IM/'+imagep.idimagen+'/index/'+index} className='px-2 m-2'><img  
-                                        src={'http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg'} 
+                                        src={URIViewImagen+imagep.idimagen+'inca.jpg'} 
                                         alt='img' 
                                         className='rounded-1' 
                                         style={{maxWidth:100,maxHeight:100}}
-                                        onClick={() => openModal('http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg')}
+                                        onClick={() => openModal(URIViewImagen+imagep.idimagen+'inca.jpg')}
                                   /></div>):(<></>)
                                     ))}
                                 </div>
@@ -611,7 +600,7 @@ function ProyectosAdmin(params) {
                         <hr />
                         <Form.Floating className="mb-3">
                           <div className='mb-2 d-flex justify-content-center pt-5'>
-                            {PP.img_principal ? (<img src={'http://'+window.location.hostname+':8000/'+PP.img_principal+'inca.jpg'} style={{width:100}} alt=''/>):(<>No Image</>)}
+                            {PP.img_principal ? (<img src={URIViewImagen+PP.img_principal+'inca.jpg'} style={{width:100}} alt=''/>):(<>No Image</>)}
                           </div>
                           <label htmlFor="proyectoImg">Imagen/Foto Principal</label>
                         </Form.Floating>
@@ -638,7 +627,7 @@ function ProyectosAdmin(params) {
                             <div className='d-flex overflow-x-auto max-width-100'>
                                     {ImgLsPP.map((imagep,index) => 
                                         (<div key={'LSD/'+index} className='px-2 m-2'>
-                                            <img src={'http://'+window.location.hostname+':8000/'+imagep.idimagen+'inca.jpg'} 
+                                            <img src={URIViewImagen+imagep.idimagen+'inca.jpg'} 
                                                 alt='img' className='rounded-1' style={{maxWidth:100,maxHeight:100}}/>
                                         </div>)
                                     )}
@@ -663,7 +652,7 @@ function ProyectosAdmin(params) {
                                   <div key={'TH/'+index} className='px-2 m-2'>
                                     <div className='d-flex justify-content-center '><Button className='m-2 btn btn-danger' onClick={()=>{quitarElemento(url)}}><FaTrash/></Button></div>
                                     {url.id ? 
-                                    (<img src={'http://'+window.location.hostname+':8000/'+url.idimagen+'inca.jpg'} style={{width:100}} alt=''/>)
+                                    (<img src={URIViewImagen+url.idimagen+'inca.jpg'} style={{width:100}} alt=''/>)
                                     :(<img src={url} style={{maxWidth:100,maxHeight:100}} className='rounded-1' />)}
                                   </div>
                                 ))}

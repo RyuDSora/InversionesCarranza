@@ -7,10 +7,11 @@ import { Dropdown } from "react-bootstrap";
 import "../App.css";
 import perfil from '../imgs/perfil.png';
 import Cookies from 'js-cookie';
-import CryptoJS from 'crypto-js';
-import { } from 'react-router-dom';
+import { encryptionKey,decryptValue } from "./hashes.jsx";
+import { useNavigate } from 'react-router-dom';
 
 export default function NavBarIC() {
+  const navigate = useNavigate();
   const [Admin,setAdmin] = useState(false);//verificar si es administrador
   const [user,setUser] = useState(false);//variable para comprobar un login
   const [UserL,setUserL] = useState('');//nombre de usuario
@@ -22,12 +23,6 @@ export default function NavBarIC() {
   const [register,setregister]=useState(false);  
 
   var URLactual = window.location.pathname;
-  //desencriptar cookies
-  const encryptionKey = 'mysecretkey';
-  const decryptValue = (encryptedValue, key) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  };
 
   //recuperar datos
   useEffect(()=>{
@@ -80,16 +75,16 @@ export default function NavBarIC() {
               <Dropdown.Menu >
                 <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${UserId}`}} >Mi Perfil</Dropdown.Item>
                 {Admin ? /*comprobamo si es administrador: si lo es mostrara la siguiente lista*/  (<>
-                  <Dropdown.Item onClick={ ()=>{window.location.href = `/AgregarAdministrador`}} >Agregar Admin</Dropdown.Item>
-                  <Dropdown.Item onClick={ ()=>{window.location.href = `/Users`}} >Ver Usuarios</Dropdown.Item>
-                  <Dropdown.Item onClick={ ()=>{window.location.href = `/ServiciosAdmin`}} >Editar Servicios</Dropdown.Item>
-                  <Dropdown.Item onClick={ ()=>{window.location.href = `/EditPr`}} >Editar Proyectos</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{navigate(`/AgregarAdministrador`)}} >Agregar Admin</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{navigate(`/Users`)}} >Ver Usuarios</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{navigate(`/ServiciosAdmin`)}} >Editar Servicios</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{navigate(`/EditPr`)}} >Editar Proyectos</Dropdown.Item>
                 </>):(<></>)}
                 <Dropdown.Item onClick={()=>{ Cookies.remove('session');
                                               Cookies.remove('User');
                                               Cookies.remove('UserId');
                                               Cookies.remove('UserRol');
-                                              window.location.href = '/';}}>
+                                              navigate('/');window.location.reload();}}>
                   Cerrar Sesion
                 </Dropdown.Item>
               </Dropdown.Menu>

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
-const URIServicios = 'http://' + window.location.hostname + ':8000/ServiciosOfrecidos/';
+import { URIServicios,URIViewImagen } from "./Urls.jsx";
+
 
 function MasServicios() {
   const [serviciosHijo, setServiciosHijo] = useState([]);
@@ -26,9 +27,8 @@ function MasServicios() {
 
     fetchServiciosHijo();
   }, [idServicioPadre]);
-
   if (!Array.isArray(serviciosHijo) || serviciosHijo.length === 0 || !servicioPadre) {
-    return <div>No se pudieron cargar los servicios.</div>;
+    return (<div>No se encontraron servicios relacionado a este servicio.</div>);
   }
 
   return (
@@ -40,14 +40,11 @@ function MasServicios() {
         {serviciosHijo.map(servicioHijo => (
           <div className="col-md-6 mb-4" key={servicioHijo.id}>
             <div className="card border-primary h-100">
-              <img className="card-img-top img-fluid" src={servicioHijo.img_principal ? 'http://' + window.location.hostname + ':8000/' + servicioHijo.img_principal + 'inca.jpg' : IMGPrueba} alt="Imagen de servicio" />
+              <img className="card-img-top img-fluid" src={servicioHijo.img_principal ? URIViewImagen + servicioHijo.img_principal + 'inca.jpg' : IMGPrueba} alt="Imagen de servicio" />
               <div className="card-body">
                 <h2 className="card-title text-primary">{servicioHijo.nombre_servicio}</h2>
                 <p className="card-text">{servicioHijo.detalle_servicio}</p>
               </div>
-             {/* <div className="card-footer bg-transparent border-primary text-right">
-                <a href="#" className="btn btn-primary">Ver más</a>
-        </div>*/}
             </div>
           </div>
         ))}

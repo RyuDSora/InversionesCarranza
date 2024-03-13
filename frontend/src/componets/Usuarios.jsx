@@ -4,27 +4,20 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/esm/Container';
 import { FaEdit,FaSearch,FaTimes,FaCheck} from 'react-icons/fa'
 import Cookies from 'js-cookie';
-import CryptoJS from 'crypto-js';
+import { URIUsuarios } from "./Urls.jsx";   // Extraído la URL de la API a una constante para evitar la repetición
+import { encryptionKey,decryptValue } from "./hashes.jsx";
 import Stop from './Stop.jsx'
 
 function Usuarios() {
-  const encryptionKey = 'mysecretkey';
-  const decryptValue = (encryptedValue, key) => {
-      const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
-      return bytes.toString(CryptoJS.enc.Utf8);
-  };
-
+  
   const [personas, setPersonas] = useState([]);
   const [roleFilter, setRoleFilter] = useState('Todos');
   const [editingUser, setEditingUser] = useState(null);
   const [editedUser, setEditedUser] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Extraído la URL de la API a una constante para evitar la repetición
-  const API_URL = `http://${window.location.hostname}:8000/usuarios/`;
-
   useEffect(() => {
-    fetch(API_URL)
+    fetch(URIUsuarios)
         .then(response => response.json())
         .then(data => setPersonas(data))
         .catch(error => console.error('Error:', error));
@@ -78,8 +71,8 @@ function Usuarios() {
         (persona.rol === 1 ? 'administrador' : 'cliente').includes(lowerCaseSearchTerm);
     });
 
-  if(!Cookies.get('session')){return Stop(false)}else{
-    if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
+  if(!Cookies.get('session')){return Stop(false,'Administrador')}else{
+    if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true,'Administrador')}
   }
 
   const handleRoleFilterChange = (event) => {
@@ -103,7 +96,7 @@ function Usuarios() {
   };
 
   const handleUpdateClick = () => {
-    fetch(API_URL + editedUser.id, {
+    fetch(URIUsuarios + editedUser.id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

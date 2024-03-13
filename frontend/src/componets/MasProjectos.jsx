@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Container  from 'react-bootstrap/Container';
-import Carousel from 'react-bootstrap/Carousel';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import {Container,Carousel, Button,Modal } from 'react-bootstrap';
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
+import { URIServicios,URIProyectos,URIPRXIMG,URIViewImagen,URIImagenGet } from "./Urls.jsx";
 
-const URIServicios = 'http://'+window.location.hostname+':8000/ServiciosOfrecidos/';
-const URIProyectos = 'http://'+window.location.hostname+':8000/proyectosrealizados/';
-const URIPRXIMG = 'http://'+window.location.hostname+':8000/proyehasimage/';
 
 export default function MasProyectos() {
     const [servicios, setServicios] = useState([]);
@@ -19,6 +14,7 @@ export default function MasProyectos() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                await axios.get(URIImagenGet);
                 //recupero los servicios padre de la base de datos
                 const responseServicios = await axios.get(URIServicios);
                 const serviciosData = responseServicios.data.filter(
@@ -102,7 +98,7 @@ function Project({ proyecto }) {
         <div style={{ backgroundColor: 'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
             <div className='p-2'><span className='h6'>{proyecto.nombreProyecto}</span></div>
             <div className='px-3'>
-                <img src={proyecto.img_principal ? 'http://'+window.location.hostname+':8000/'+proyecto.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{ height:'385px' }}/>
+                <img src={proyecto.img_principal ? URIViewImagen+proyecto.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{ height:'385px' }}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -121,7 +117,7 @@ function Project({ proyecto }) {
                     (<Carousel activeIndex={index} onSelect={handleSelect}>
                         {listaimgxproyecto.map((Q , index) => (
                             <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                                <img alt='img' src={'http://'+window.location.hostname+':8000/'+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
+                                <img alt='img' src={URIViewImagen+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
                             </Carousel.Item>
                         ))}
                     </Carousel>):
