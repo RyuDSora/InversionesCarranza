@@ -11,7 +11,12 @@ import usuarioRoutes from "./routes/UsuarioRoutes.js";
 import proyectosRealizados from "./routes/ProyectosRealizadoRoutes.js";
 import serviciosOfrecidos  from "./routes/ServiciosOfrecidosRoutes.js";
 import ProyeHasImagenes  from "./routes/ProyeHasImagenRoutes.js";
+import routes from './routes/ImagenRoutes.js' //<-----------------------
 import Imagenes from './routes/ImagenesRoutes.js'
+import CalificacionesRoutes from "./routes/CalificacionesRoutes.js";
+import EstadosRoutes from "./routes/EstadosRoutes.js";
+import ReseniasRoutes from "./routes/ReseniasRoutes.js";
+import SolicitudeRoutes from "./routes/SolicitudeRoutes.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -29,6 +34,10 @@ app.use('/proyectosrealizados', proyectosRealizados)
 app.use('/ServiciosOfrecidos', serviciosOfrecidos)
 app.use('/proyehasimage',ProyeHasImagenes)
 app.use('/imagenes', Imagenes)
+app.use('./calificaciones',CalificacionesRoutes)
+app.use('./estados',EstadosRoutes)
+app.use('./resenias',ReseniasRoutes)
+app.use('./solicitudes',SolicitudeRoutes)
 
 app.use(myconn(mysql,{
    host:'localhost',
@@ -38,7 +47,7 @@ app.use(myconn(mysql,{
    database:'db_incarranza'
 }))
 app.use(express.static(path.join(__dirname,'../../bdimages')))
-import routes from './routes/ImagenRoutes.js'
+
 app.use(routes)
 
 try {

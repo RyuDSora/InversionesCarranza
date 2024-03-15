@@ -159,3 +159,117 @@ insert into imagenes (nombre,descricion,tipo,archivo) VALUES
 -- * El rol nos sirve para identificar si es admin o cliente, para esto usaremos lo siguente 1 = admin y 2 = cliente*/
 -- Admin ya que su rol es 1
 -- Cliente ya que su rol es 2
+
+
+-----------------------------------------------------------
+--tabla estados
+-----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `estados` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nombre_estado` VARCHAR(45) NOT NULL,
+  `descripcion` VARCHAR(400) NOT NULL,
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+INSERT INTO estados (nombre_estado,descripcion)
+VALUES ('Enviado','Primer estado de una solicitud hecha por un cliente, en caso de estar en este estado el cliente aun puede hacer cambios e incluso borrar su solicitud'),
+       ('En Proceso','Segundo estado, es cuando el administrador ha visto la solicitud y esta en el proceso de platica y verificaciones con el cliente, aqui no podra hacer cambios el clientes'),
+       ('Aprobado','si la solicitud es aprobada por inversiones carranza y el cliente tambien da su aprobacion pasara al estado de aprobado'),
+       ('Desaprobado', 'En caso de no llegar a un acuerdo la solicitud quedaria desaprobada');
+
+-----------------------------------------------------------
+-- tabla para solicitudes
+-----------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `solicitudes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_cliente` INT NOT NULL,
+  `categoria_servicio` INT NOT NULL,
+  `id_estado` int NOT NULL,
+  `descripcion_solicitud` VARCHAR(1000) NOT NULL,
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_solicitudes_servicios1_idx` (`categoria_servicio` ASC) VISIBLE,
+  INDEX `fk_solicitudes_usuarios_idx` (`id_cliente` ASC) VISIBLE,
+  INDEX `fk_solicitudes_estados_idx` (`id_estado` asc) VISIBLE,
+  CONSTRAINT `fk_solicitudes_servicios1`
+    FOREIGN KEY (`categoria_servicio`)
+    REFERENCES `servicios` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_solicitudes_usuarios`
+    FOREIGN KEY (`id_cliente`)
+    REFERENCES `usuarios` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_solicitudes_estados`
+    FOREIGN KEY (`id_estado`)
+    REFERENCES `estados` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  
+ENGINE = InnoDB;
+
+
+----------------------------------------------------------
+---+-tabla calificaciones
+----------------------------------------------------------
+--en la variable calificaciones se guardaran valores desde 0-10 con puntos decimales como 0.0 5.5, 7.5 o 10.0
+
+CREATE TABLE IF NOT EXISTS `calificaciones` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `idProyecto` INT NOT NULL,
+  `idUsuario` INT NOT NULL,
+  `calificacion` DECIMAL(3, 1) NOT NULL, 
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_calificaciones_proyectos_idx` (`idProyecto` ASC) VISIBLE,
+  INDEX `fk_calificaciones_usuarios_idx` (`idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_calificaciones_proyectos`
+    FOREIGN KEY (`idProyecto`)
+    REFERENCES `proyectos` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_calificaciones_usuarios`
+    FOREIGN KEY (`idUsuario`)
+    REFERENCES `usuarios` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  
+ENGINE = InnoDB;
+
+--SELECT AVG(calificacion) from calificaciones WHERE `idProyecto`=16;
+--INSERT INTO calificaciones (idProyecto,idUsuario,calificacion)
+--      VALUES (16,2,10.0),
+--             (23,2,7.5),
+--             (24,2,9.0),
+--             (25,2,0.0);
+------------------------------------------------------------------
+--tabla reseñas
+------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `resenias` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `idProyecto` INT NOT NULL,
+  `idUsuario` INT NOT NULL,
+  `resenia_proyecto` VARCHAR(500) NOT NULL,
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_resenias_proyectos_idx` (`idProyecto` ASC) VISIBLE,
+  INDEX `fk_resenias_usuarios_idx` (`idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_resenias_proyectos`
+    FOREIGN KEY (`idProyecto`)
+    REFERENCES `proyectos` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_resenias_usuarios`
+    FOREIGN KEY (`idUsuario`)
+    REFERENCES `usuarios` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  
+ENGINE = InnoDB;
