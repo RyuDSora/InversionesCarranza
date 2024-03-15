@@ -3,7 +3,6 @@ import { SaveResenia, DeleteResenia, GetAllResenias, GetResenia, UpdateResenia }
 
 const router = express.Router();
 
-//Routas del Usuario//
 router.get('/', GetAllResenias);
 router.get('/:id', GetResenia);
 router.post('/', SaveResenia);

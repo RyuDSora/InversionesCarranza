@@ -3,7 +3,7 @@ import { GetAllProjHasImg,GuardarImgXProj,DeleteProyecthasImagen} from '../contr
 
 const router = express.Router();
 
-//Routas del Usuario//
+
 router.get('/', GetAllProjHasImg);
 router.post('/', GuardarImgXProj);
 //router.put('/:id', UpdateImagen);

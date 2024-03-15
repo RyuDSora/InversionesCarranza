@@ -3,7 +3,6 @@ import { SaveSolicitud, DeleteSolicitud, GetAllSolicitudes, GetSolicitud, Update
 
 const router = express.Router();
 
-//Routas del Usuario//
 router.get('/', GetAllSolicitudes);
 router.get('/:id', GetSolicitud);
 router.post('/', SaveSolicitud);

@@ -3,7 +3,6 @@ import { SaveCalification, DeleteCalification, GetAllCalifications, GetCalificat
 
 const router = express.Router();
 
-//Routas del Usuario//
 router.get('/', GetAllCalifications);
 router.get('/:id', GetCalification);
 router.post('/', SaveCalification);

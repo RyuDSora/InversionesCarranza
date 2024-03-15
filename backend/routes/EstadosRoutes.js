@@ -3,7 +3,7 @@ import { SaveState, DeleteState, GetAllState, GetState, UpdateState } from '../c
 
 const router = express.Router();
 
-//Routas del Usuario//
+
 router.get('/', GetAllState);
 router.get('/:id', GetState);
 router.post('/', SaveState);
