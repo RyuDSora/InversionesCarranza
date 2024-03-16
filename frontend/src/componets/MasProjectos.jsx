@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
+//import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import {Container,Carousel, Button,Modal } from 'react-bootstrap';
+import { FaStar} from 'react-icons/fa'
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
-import { URIServicios,URIProyectos,URIPRXIMG,URIViewImagen,URIImagenGet } from "./Urls.jsx";
+import { URIServicios,URIProyectos,URIPRXIMG,URIViewImagen,URIImagenGet,URICalificacion } from "./Urls.jsx";
 
 
 export default function MasProyectos() {
     const [servicios, setServicios] = useState([]);
     const [proyectos, setProyectos] = useState([]);
-    const [id, setId] = useState('');
+    var id ;
     const [servName, setServName] = useState('');
+    
+    const cadena = window.location.pathname;
+    const expresionRegular = /\d+$/;
+    if (expresionRegular.test(cadena)) {
+        const ultimosCaracteres = cadena.match(expresionRegular)[0];
+        id = parseInt(ultimosCaracteres);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,15 +30,6 @@ export default function MasProyectos() {
                     servicio => servicio.servicio_padre === null
                 );
                 setServicios(serviciosData);
-                
-                //recupero el id de la categoria de servicio de la URL
-                const cadena = window.location.pathname;
-                const expresionRegular = /\d+$/;
-                if (expresionRegular.test(cadena)) {
-                    const ultimosCaracteres = cadena.match(expresionRegular)[0];
-                    setId(parseInt(ultimosCaracteres));
-                }
-                
                 //recupero los proyectos pertenecientes a la categoria del servicio
                 if (id !== '') {
                     const responseProyectos = await axios.get(URIProyectos);
@@ -50,7 +50,30 @@ export default function MasProyectos() {
                 setServName(Ser.nombre_servicio)}
                 return null
             })
-    }, [id,servicios]);
+    }, [id]);
+
+    useEffect(()=>{
+        proyectos.map(
+            proyecto=>{
+                const Calificacion = async() =>{
+                    try {
+                        const response = await axios.get(URICalificacion+proyecto.id);
+                        const Promedio = response.data;
+                        var X = Promedio.promedio_calificacion;
+                        if (!X) {X='0.00'}else{
+                            let ca = X.substring(0, 4);
+                            X = ca;
+                        }
+                        proyecto.calificacion=X
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                Calificacion()
+                return null
+            }
+        )
+    },[proyectos])
 
     return (
         <Container>
@@ -97,6 +120,12 @@ function Project({ proyecto }) {
     return (
         <div style={{ backgroundColor: 'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
             <div className='p-2'><span className='h6'>{proyecto.nombreProyecto}</span></div>
+            <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
+                <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
+                    <FaStar className='me-1 text-primary'/>
+                    <span>{proyecto.calificacion}</span>
+                </span>
+            </div>
             <div className='px-3'>
                 <img src={proyecto.img_principal ? URIViewImagen+proyecto.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{ height:'385px' }}/>
             </div>

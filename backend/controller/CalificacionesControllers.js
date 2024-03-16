@@ -1,3 +1,4 @@
+import { Sequelize,where,Op } from "sequelize";
 import CalificacionModels from "../models/CalificacionModels.js";
 
 export const GetAllCalifications = async (req, res) => {
@@ -9,18 +10,25 @@ export const GetAllCalifications = async (req, res) => {
     }
 };
 
-export const GetCalification = async (req, res) => {
+//devuelve el promedio de la calificaciones para un proyecto similar a:  
+//  SELECT AVG(calificacion) as promedio_calificacion 
+//  FROM calificaciones 
+//  WHERE idProyecto = req.params.id 
+
+export const GetPromedioCalification = async (req, res) => {
     try {
-        const Calification = await CalificacionModels.findAll({
-            where: {
-                id: req.params.id
-            }
+        const promedio = await CalificacionModels.findOne({
+            attributes: [[Sequelize.fn('AVG', Sequelize.col('calificacion')), 'promedio_calificacion']],
+            where: {idProyecto: req.params.id}
         });
-        res.json(Calification[0]);
+        if (promedio === null) {res.json({ promedio_calificacion: 0 });} 
+        else{if (promedio.promedio_calificacion === null) {res.json({ promedio_calificacion: 0 }); // Promedio 0 si no hay calificaciones    
+            }else{res.json(promedio)};
+        }
     } catch (error) {
         res.json({ message: error.message });
     }
-};
+}
 
 export const SaveCalification = async (req, res) => {
     try {

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
+import { FaStar} from 'react-icons/fa'
 import {Carousel, Button, Spinner, Modal, Container } from 'react-bootstrap';
 
 //estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 
 //urls para el pedido al servidor
-import { URIServicios,URIProyectos,URIPRXIMG,URIImagenGet,URIViewImagen } from "./Urls.jsx";
+import { URIServicios,URIProyectos,URIPRXIMG,URIImagenGet,URIViewImagen,URICalificacion } from "./Urls.jsx";
 
 //funcion principal
 export default function Projects(params) {
@@ -42,7 +44,6 @@ export default function Projects(params) {
     useEffect(() => {
         const Projew = async () => {
             try {
-                //await fetch('http://'+window.location.hostname+':8000/images/get')
                 const response = await axios.get(URIProyectos);
                 setProyectos(response.data);
                 
@@ -52,12 +53,35 @@ export default function Projects(params) {
         }
         Projew();
     }, []);
+    useEffect(()=>{
+        //let NuevoProyecto = [];
+        Proyectos.map(
+            proyecto=>{
+                const Calificacion = async() =>{
+                    try {
+                        const response = await axios.get(URICalificacion+proyecto.id);
+                        const Promedio = response.data;
+                        var X = Promedio.promedio_calificacion;
+                        if (!X) {X='0.00'}else{
+                            let ca = X.substring(0, 4);
+                            X = ca;
+                        }
+                        proyecto.calificacion=X
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                Calificacion()
+                return null
+            }
+        )
+    },[Proyectos])
     
     //contador
     useEffect(() => {
         const timeout = setTimeout(() => {
             setMostrarCargando(false);
-        }, 100); // 100 milisegundos (0.2 segundos) de retraso antes de mostrar el spinner
+        }, 50); // 100 milisegundos (0.2 segundos) de retraso antes de mostrar el spinner
         return () => clearTimeout(timeout);
     }, []);
 
@@ -174,7 +198,15 @@ function Project({PROYECTTO}) {
     
     return (
         <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
-            <div className='p-2'><span className='h6'>{PROYECTTO.nombreProyecto}</span></div>
+            <div className='p-2'>
+                <span className='h6'>{PROYECTTO.nombreProyecto}</span>
+            </div>
+            <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
+                <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
+                    <FaStar className='me-1 text-primary'/>
+                    <span>{PROYECTTO.calificacion}</span>
+                </span>
+            </div>
             <div className='px-3'>
                 <img src={PROYECTTO.img_principal ? URIViewImagen+PROYECTTO.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>

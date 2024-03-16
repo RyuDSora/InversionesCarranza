@@ -1,10 +1,10 @@
 import express from 'express';
-import { SaveCalification, DeleteCalification, GetAllCalifications, GetCalification, UpdateCalification } from '../controller/CalificacionesControllers.js';
+import { SaveCalification, DeleteCalification, GetAllCalifications, GetPromedioCalification, UpdateCalification } from '../controller/CalificacionesControllers.js';
 
 const router = express.Router();
 
 router.get('/', GetAllCalifications);
-router.get('/:id', GetCalification);
+router.get('/:id', GetPromedioCalification);
 router.post('/', SaveCalification);
 router.put('/:id', UpdateCalification);
 router.delete('/:id', DeleteCalification);
