@@ -76,10 +76,14 @@ export default function NavBarIC() {
                 <Dropdown.Item onClick={ ()=>{window.location.href = `/Perfil/${UserId}`}} >Mi Perfil</Dropdown.Item>
                 {Admin ? /*comprobamo si es administrador: si lo es mostrara la siguiente lista*/  (<>
                   <Dropdown.Item onClick={ ()=>{navigate(`/AgregarAdministrador`)}} >Agregar Admin</Dropdown.Item>
+                  <Dropdown.Item onClick={ ()=>{navigate(`/solicitudes`)}} >Solicitudes</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{navigate(`/Users`)}} >Ver Usuarios</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{navigate(`/ServiciosAdmin`)}} >Editar Servicios</Dropdown.Item>
                   <Dropdown.Item onClick={ ()=>{navigate(`/EditPr`)}} >Editar Proyectos</Dropdown.Item>
-                </>):(<></>)}
+                </>):(<>
+                {/**opciones cuando ingresa como cliente*/}
+                <Dropdown.Item onClick={ ()=>{navigate(`/mysolicitud`)}} >Mis Solicitudes</Dropdown.Item>
+                </>)}
                 <Dropdown.Item onClick={()=>{ Cookies.remove('session');
                                               Cookies.remove('User');
                                               Cookies.remove('UserId');
