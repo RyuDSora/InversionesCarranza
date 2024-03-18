@@ -1,12 +1,9 @@
-import  express from "express";
+import express from "express";
 import cors from "cors"
-import mysql  from 'mysql2'
-import myconn from 'express-myconnection'
 import path from  'path'
-
-//immportamos la conexion a la DB
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import db from "./database/db.js";
-//importamos nuestro enrutador 
 import usuarioRoutes from "./routes/UsuarioRoutes.js";
 import proyectosRealizados from "./routes/ProyectosRealizadoRoutes.js";
 import serviciosOfrecidos  from "./routes/ServiciosOfrecidosRoutes.js";
@@ -16,14 +13,12 @@ import Calificaciones from "./routes/CalificacionesRoutes.js";
 import Estados from "./routes/EstadosRoutes.js";
 import Resenias from "./routes/ReseniasRoutes.js";
 import Solicitude from "./routes/SolicitudeRoutes.js";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import routes from './routes/ImagenRoutes.js' //<-----------------------
+import routes from './routes/ImagenRoutes.js' 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename)
-
 const PORT = 8000;
+
 const app = express()
 
 app.use(cors())
@@ -38,15 +33,7 @@ app.use('/estados',Estados)
 app.use('/resenias',Resenias)
 app.use('/solicitudes',Solicitude)
 
-app.use(myconn(mysql,{
-   host:'localhost',
-   port:3306,
-   user:'InCarranza',
-   password:'admin',
-   database:'db_incarranza'
-}))
 app.use(express.static(path.join(__dirname,'../../bdimages')))
-
 app.use(routes)
 
 try {
@@ -55,7 +42,6 @@ try {
    } catch (error) {
    console.log(`El error de conexion es: ${error}`);
 }
-//nodemon app, ahora iniciamos aqui la base de datos
 
 app.listen(PORT, ()=> {
    console.log('Server UP runnung in http://localhost:'+PORT)
