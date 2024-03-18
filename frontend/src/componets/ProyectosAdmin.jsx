@@ -413,8 +413,8 @@ function ProyectosAdmin(params) {
 
 
    ///comprobacion de ruta
-    if(!Cookies.get('session')){return Stop(false)}else{
-        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true)}
+    if(!Cookies.get('session')){return Stop(false,'Administrador')}else{
+        if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true,'Administrador')}
     }
    
     return (

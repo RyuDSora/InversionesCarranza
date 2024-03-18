@@ -38,10 +38,6 @@ export default function EditarPerfil() {
     fetchUsuarioData();
   }, [userId]);
   
-  /*if(!Cookies.get('session')){}else{
-    }
-  }*/
-
   if(Cookies.get('session')){
     if (+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true,'Administrador')}
     if (decryptValue(Cookies.get('UserId'),encryptionKey)!==userId) {return Stop(true,'Usuario')}}
@@ -85,7 +81,7 @@ export default function EditarPerfil() {
       console.log("Perfil actualizado correctamente");
       // Guardar los nuevos datos del usuario en localStorage
       if (Cookies.get('session')) {
-        Cookies.set('UserId',Cookies.get('userId'));
+        Cookies.set('UserId',encryptValue(userId,encryptionKey));
         Cookies.set('UserRol',Cookies.get('UserRol'));
         Cookies.set('session',Cookies.get('session'));
         Cookies.set('User',encryptValue(nombre + ' ' + apellido, encryptionKey));
