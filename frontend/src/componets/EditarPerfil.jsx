@@ -39,7 +39,6 @@ export default function EditarPerfil() {
   }, [userId]);
   
   if(Cookies.get('session')){
-    if (+decryptValue(Cookies.get('UserRol'), encryptionKey)===2){return Stop(true,'Administrador')}
     if (decryptValue(Cookies.get('UserId'),encryptionKey)!==userId) {return Stop(true,'Usuario')}}
   else{
     return Stop(false,'Usuario')

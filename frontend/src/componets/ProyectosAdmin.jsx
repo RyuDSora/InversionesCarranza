@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Modal, Form,Image,Container} from 'react-bootstrap';
 import { FaEdit,FaTrash,FaArrowRight,FaPlus } from 'react-icons/fa';
+import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
 
 /////////////////////////////////////////////////
 import Cookies from 'js-cookie';//////////leer cookies
@@ -9,7 +10,7 @@ import { encryptionKey,decryptValue } from "./hashes.jsx";
 import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png' ///imagen para mostrar si un proyecto no tiene una imagen principal
-import {  URIServicios,URIProyectos,URIPRXIMG,URIImagenPost,URIImagenGet,URIDeleteImagen,URIViewImagen} from "./Urls.jsx";
+import {  URIServicios,URIProyectos,URIPRXIMG,URIImagenPost,URIImagenes} from "./Urls.jsx";
       
 
 function ProyectosAdmin(params) {
@@ -168,10 +169,20 @@ function ProyectosAdmin(params) {
                     if (esta.length!==0) {
                         try {
                             const response = await axios.get(URIProyectos+ProyId);
-                            setPP(response.data);
+                            const ProyeData=response.data;
+                            const imageUrl = await fetchImageUrl(ProyeData.img_principal);
+                            setPP({ ...ProyeData, imageUrl }); // Actualizar el estado con el elemento actualizado
+
                             const response1 = await axios.get(URIPRXIMG);
                             const data = response1.data.filter(proye => proye.idproyecto === ProyId);
-                            setImgLsPP(data);
+                            const proyectoWithImages = 
+                                  await Promise.all(data.map(
+                                    async (p) =>{
+                                        const imageUrl = 
+                                            await fetchImageUrl(p.idimagen);
+                                  return {...p, imageUrl};
+                            }));
+                            setImgLsPP(proyectoWithImages);
                             
                         } catch (error) {
                             console.log(error);
@@ -186,15 +197,17 @@ function ProyectosAdmin(params) {
             }
         }
         resp();
+        
+        
+        setEp(false)
+    },[Ep,ProyId,EditLSImag,ImgLsPP])
+    useEffect(()=>{
         Servicios.map(servicio => {
             if(servicio.id===PP.categoria_servicio){setServicioSeleccionado(servicio.nombre_servicio)}
             return null
         }
         )
-        
-        setEp(false)
-    },[Ep,ProyId,PP.categoria_servicio,Servicios,EditLSImag])
-
+    },[PP,Servicios])
     const openModalEdit = (params) => {
         
         //setProyectoDescripcion(PP.descripcion_proyecto);
@@ -257,17 +270,13 @@ function ProyectosAdmin(params) {
             console.log(lss);
             const lsimg = async () =>{
             try {
-                const response = await axios.get(URIPRXIMG);
-                const lis = response.data.filter(pr => pr.idproyecto===IdEditar);
-               
-                //Borrar las imagenes que quito de la lista
                 listaBorrar.map(
                     borrar=>{
                         const BB = async() =>{
                             try {
                                 if (borrar.id) {
                                     await axios.delete(URIPRXIMG+borrar.id)
-                                    await axios.delete(URIDeleteImagen+borrar.idimagen)
+                                    await axios.delete(URIImagenes+borrar.idimagen)
                                 }
                             } catch (error) {
                                 console.log(error);
@@ -277,7 +286,6 @@ function ProyectosAdmin(params) {
                         return null;
                     }
                 )
-                //agregar nuevas imagenes de la lista
                 AddImagenesxProyecto(IdEditar);
             } catch (error) {
                 
@@ -318,15 +326,30 @@ function ProyectosAdmin(params) {
     useEffect(() => {                           /////////////////////////////////
         const Projew = async () => {
             try {
-                await fetch(URIImagenGet)
+                //await fetch(URIImagenGet)
                 const response = await axios.get(URIProyectos);
                 const ProyectoData = response.data.filter(
                     proye => proye.categoria_servicio === ShowService);
+                const proyectoWithImages = 
+                    await Promise.all(ProyectoData.map(
+                      async (p) =>{
+                          const imageUrl = 
+                              await fetchImageUrl(p.img_principal);
+                    return {...p, imageUrl};
+                }));
+                setProyectos(proyectoWithImages);
                 
-                setProyectos(ProyectoData);
 
                const response1 = await axios.get(URIPRXIMG);
-                setlsImgP (response1.data);
+               const ImagenesData = response1.data;
+               const proyectWithImages = 
+                      await Promise.all(ImagenesData.map(
+                        async (p) =>{
+                            const imageUrl = 
+                                await fetchImageUrl(p.idimagen);
+                      return {...p, imageUrl};
+                }));
+                setlsImgP (proyectWithImages);
             } catch (error) {
                 console.log(error);
                 
@@ -433,7 +456,7 @@ function ProyectosAdmin(params) {
             </div>
             <div className='mb-3 bg-inCa rounded-bottom-4' id='tb'>
                 { Proyectos.map((proye,index)=>(
-                    <div key={'PRE'+'/'+index} className='pt-3 shadow-lg p-3 my-2 rounded-4' >
+                    <div key={'PRE/'+index} className='pt-3 shadow-lg p-3 my-2 rounded-4' >
                         <div className='row'>
                             <div className='col-sm-10'>
                                 <div className='row m-2'>
@@ -451,22 +474,22 @@ function ProyectosAdmin(params) {
                         </div>
                         <div className='row py-2'>
                             <div className='col-sm-3 d-flex align-items-center bg-light rounded-3' >
-                                <img src={proye.img_principal ? URIViewImagen+proye.img_principal+'inca.jpg' : IMGPrueba} 
+                                <img src={proye.imageUrl ? proye.imageUrl : IMGPrueba} 
                                      alt="casa" 
                                      className='w-100 rounded-3' 
                                      title={'Imagen Principal: '+proye.nombreProyecto}
-                                     onClick={() => openModal(proye.img_principal ? URIViewImagen+proye.img_principal+'inca.jpg' : IMGPrueba)}/>
+                                     onClick={() => openModal(proye.imageUrl ? proye.imageUrl : IMGPrueba)}/>
                             </div>
                             <div className='col-sm-9'>
-                                <div id={'desc'+proye.is}><p>{proye.descripcion_proyecto}</p></div>
+                                <div id={'desc'+proye.id}><p id={'p'+proye.id}>{proye.descripcion_proyecto}</p></div>
                                 <div className='d-flex overflow-x-auto max-width-100'>
                                     {lsImgP.map((imagep,index) => (imagep.idproyecto===proye.id ?
                                         (<div key={'IP/'+imagep.idproyecto+'/IM/'+imagep.idimagen+'/index/'+index} className='px-2 m-2'><img  
-                                        src={URIViewImagen+imagep.idimagen+'inca.jpg'} 
+                                        src={imagep.imageUrl} 
                                         alt='img' 
                                         className='rounded-1' 
                                         style={{maxWidth:100,maxHeight:100}}
-                                        onClick={() => openModal(URIViewImagen+imagep.idimagen+'inca.jpg')}
+                                        onClick={() => openModal(imagep.imageUrl)}
                                   /></div>):(<></>)
                                     ))}
                                 </div>
@@ -600,7 +623,7 @@ function ProyectosAdmin(params) {
                         <hr />
                         <Form.Floating className="mb-3">
                           <div className='mb-2 d-flex justify-content-center pt-5'>
-                            {PP.img_principal ? (<img src={URIViewImagen+PP.img_principal+'inca.jpg'} style={{width:100}} alt=''/>):(<>No Image</>)}
+                            {PP.imageUrl ? (<img src={PP.imageUrl} style={{width:100}} alt=''/>):(<>No Image</>)}
                           </div>
                           <label htmlFor="proyectoImg">Imagen/Foto Principal</label>
                         </Form.Floating>
@@ -627,7 +650,7 @@ function ProyectosAdmin(params) {
                             <div className='d-flex overflow-x-auto max-width-100'>
                                     {ImgLsPP.map((imagep,index) => 
                                         (<div key={'LSD/'+index} className='px-2 m-2'>
-                                            <img src={URIViewImagen+imagep.idimagen+'inca.jpg'} 
+                                            <img src={imagep.imageUrl} 
                                                 alt='img' className='rounded-1' style={{maxWidth:100,maxHeight:100}}/>
                                         </div>)
                                     )}
@@ -652,8 +675,8 @@ function ProyectosAdmin(params) {
                                   <div key={'TH/'+index} className='px-2 m-2'>
                                     <div className='d-flex justify-content-center '><Button className='m-2 btn btn-danger' onClick={()=>{quitarElemento(url)}}><FaTrash/></Button></div>
                                     {url.id ? 
-                                    (<img src={URIViewImagen+url.idimagen+'inca.jpg'} style={{width:100}} alt=''/>)
-                                    :(<img src={url} style={{maxWidth:100,maxHeight:100}} className='rounded-1' />)}
+                                    (<img src={url.imageUrl} style={{width:100}} alt=''/>)
+                                    :(<img src={url} style={{maxWidth:100,maxHeight:100}} className='rounded-1' alt='I'/>)}
                                   </div>
                                 ))}
                             </div>

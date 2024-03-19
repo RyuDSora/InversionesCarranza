@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors"
-import path from  'path'
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+
 import db from "./database/db.js";
 import usuarioRoutes from "./routes/UsuarioRoutes.js";
 import proyectosRealizados from "./routes/ProyectosRealizadoRoutes.js";
@@ -15,10 +13,7 @@ import Resenias from "./routes/ReseniasRoutes.js";
 import Solicitude from "./routes/SolicitudeRoutes.js";
 import routes from './routes/ImagenRoutes.js' 
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename)
 const PORT = 8000;
-
 const app = express()
 
 app.use(cors())
@@ -33,7 +28,6 @@ app.use('/estados',Estados)
 app.use('/resenias',Resenias)
 app.use('/solicitudes',Solicitude)
 
-app.use(express.static(path.join(__dirname,'../../bdimages')))
 app.use(routes)
 
 try {
@@ -42,7 +36,9 @@ try {
    } catch (error) {
    console.log(`El error de conexion es: ${error}`);
 }
-
+app.get('/', (req, res) => {
+   res.status(200).json('Welcome, your app is success');
+ });
 app.listen(PORT, ()=> {
    console.log('Server UP runnung in http://localhost:'+PORT)
 })

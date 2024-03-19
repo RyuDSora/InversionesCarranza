@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 //import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import {Container,Carousel, Button,Modal } from 'react-bootstrap';
+import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
 import { FaStar} from 'react-icons/fa'
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
-import { URIServicios,URIProyectos,URIPRXIMG,URIViewImagen,URIImagenGet,URICalificacion } from "./Urls.jsx";
+import { URIServicios,URIProyectos,URIPRXIMG,URICalificacion } from "./Urls.jsx";
 
 
 export default function MasProyectos() {
@@ -23,7 +24,6 @@ export default function MasProyectos() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await axios.get(URIImagenGet);
                 //recupero los servicios padre de la base de datos
                 const responseServicios = await axios.get(URIServicios);
                 const serviciosData = responseServicios.data.filter(
@@ -36,7 +36,14 @@ export default function MasProyectos() {
                     const proyectosFiltrados = responseProyectos.data.filter(
                         proyecto => proyecto.categoria_servicio === id
                     );
-                    setProyectos(proyectosFiltrados);
+                    const proyectoWithImages = 
+                      await Promise.all(proyectosFiltrados.map(
+                            async (p) =>{
+                                const imageUrl = 
+                                    await fetchImageUrl(p.img_principal);
+                          return {...p, imageUrl};
+                    }));
+                    setProyectos(proyectoWithImages);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -104,7 +111,15 @@ function Project({ proyecto }) {
             try {
                 const response = await axios.get(URIPRXIMG);
                 const imgsss = response.data.filter(I => I.idproyecto === proyecto.id);
-                setListaImgxProyecto(imgsss);
+                
+                const proyectoWithImages = 
+                      await Promise.all(imgsss.map(
+                        async (p) =>{
+                            const imageUrl = 
+                                await fetchImageUrl(p.idimagen);
+                      return {...p, imageUrl};
+                }));
+                setListaImgxProyecto(proyectoWithImages);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -127,7 +142,7 @@ function Project({ proyecto }) {
                 </span>
             </div>
             <div className='px-3'>
-                <img src={proyecto.img_principal ? URIViewImagen+proyecto.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{ height:'385px' }}/>
+                <img src={proyecto.imageUrl ? proyecto.imageUrl:IMGPrueba} alt="img" className='w-100 border rounded-3' style={{ height:'385px' }}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -146,7 +161,7 @@ function Project({ proyecto }) {
                     (<Carousel activeIndex={index} onSelect={handleSelect}>
                         {listaimgxproyecto.map((Q , index) => (
                             <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                                <img alt='img' src={URIViewImagen+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
+                                <img alt='img' src={Q.imageUrl} style={{ height: '300px', width: '100%' }}/>
                             </Carousel.Item>
                         ))}
                     </Carousel>):

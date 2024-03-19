@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Modal, Form, Image, Container } from 'react-bootstrap';
 import { BsPlus, BsPencil, BsTrash } from 'react-icons/bs';
-
+import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
 import { encryptionKey,decryptValue } from "./hashes.jsx";
 import Cookies from 'js-cookie';//////////leer cookies
 import Stop from './Stop.jsx'/////////////modulo de aviso -->Alto
 
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
 
-import { URIServicios,URIImagenGet,URIImagenPost,URIViewImagen } from "./Urls.jsx";
+import { URIServicios,URIImagenPost} from "./Urls.jsx";
 
 function ServiciosAdmin() {
 
@@ -18,7 +18,6 @@ function ServiciosAdmin() {
     const [servicioSeleccionado, setServicioSeleccionado] = useState(null); 
     const [servicioId,setServicioID] = useState(null)
     const [servicioName, setServicioName] = useState('');
-    const [servicioPadre,setServicioPadre] = useState(null) 
     const [servicioDescripcion, setServicioDescripcion] = useState(''); 
     const [servicioIMG, setServicioIMG] = useState(null); 
     const [previewURL, setPreviewURL] = useState(''); 
@@ -34,10 +33,8 @@ function ServiciosAdmin() {
         setShowModal(true);
         setEditMode(true);
         setServicioName(servicio.nombre_servicio);
-        setServicioPadre(servicio.servicio_padre);
         setServicioDescripcion(servicio.detalle_servicio);
-        setPreviewURL(''); // Se restablece la vista previa de la imagen
-        //setSubService(servicio.servicio_padre !== null); // Verifica si el servicio tiene un servicio padre
+        setPreviewURL(''); 
     };
     
 
@@ -109,9 +106,18 @@ function ServiciosAdmin() {
 
     const fetchServicios = async () => {
         try {
-            await fetch(URIImagenGet);
+            //await fetch(URIImagenGet);
             const response = await axios.get(URIServicios);
-            setServicios(response.data);
+            const serviciosData=response.data;
+            const serviciosWithImages = 
+              await Promise.all(serviciosData.map(
+                  async (servicio) => {
+                    const imageUrl = 
+                        await fetchImageUrl(servicio.img_principal); // Obtener la URL de la imagen
+              return { ...servicio, imageUrl }; // Agregar la URL de la imagen al servicio
+            }));
+            setServicios(serviciosWithImages);
+            
         } catch (error) {
             console.error('Error al cargar los servicios:', error);
         }
@@ -243,7 +249,7 @@ function ServiciosAdmin() {
                                 <td>{servicio.id}</td>
                                 <td>
                                     <Image
-                                        src={servicio.img_principal ? URIViewImagen + servicio.img_principal + 'inca.jpg' : IMGPrueba}
+                                        src={servicio.imageUrl ? servicio.imageUrl: IMGPrueba}
                                         alt="Servicio"
                                         thumbnail
                                         style={{ width: 100, height: 'auto' }}

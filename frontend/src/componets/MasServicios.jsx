@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
-import { URIServicios,URIViewImagen } from "./Urls.jsx";
+import { URIServicios} from "./Urls.jsx";
+import { fetchImageUrl } from './fetchImageUrl';
 
 
 function MasServicios() {
@@ -15,7 +16,14 @@ function MasServicios() {
       try {
         const response = await axios.get(URIServicios);
         const serviciosData = response.data.filter(servicio => servicio.servicio_padre === parseInt(idServicioPadre)); // Filtrar servicios con el mismo ID de servicio padre
-        setServiciosHijo(serviciosData);
+        const serviciosWithImages = 
+              await Promise.all(serviciosData.map(
+                  async (servicio) => {
+                    const imageUrl = 
+                        await fetchImageUrl(servicio.img_principal); 
+              return { ...servicio, imageUrl }; 
+        }));
+        setServiciosHijo(serviciosWithImages);
 
         // Obteniendo detalles del servicio padre
         const servicioPadreResponse = await axios.get(URIServicios + idServicioPadre);
@@ -40,7 +48,7 @@ function MasServicios() {
         {serviciosHijo.map(servicioHijo => (
           <div className="col-md-6 mb-4" key={servicioHijo.id}>
             <div className="card border-primary h-100">
-              <img className="card-img-top img-fluid" src={servicioHijo.img_principal ? URIViewImagen + servicioHijo.img_principal + 'inca.jpg' : IMGPrueba} alt="Imagen de servicio" />
+              <img className="card-img-top img-fluid" src={servicioHijo.imageUrl ? servicioHijo.imageUrl : IMGPrueba} alt="Imagen de servicio" />
               <div className="card-body">
                 <h2 className="card-title text-primary">{servicioHijo.nombre_servicio}</h2>
                 <p className="card-text">{servicioHijo.detalle_servicio}</p>

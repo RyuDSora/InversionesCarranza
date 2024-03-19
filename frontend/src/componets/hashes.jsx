@@ -10,4 +10,3 @@ export const decryptValue = (encryptedValue, key) => {
     const bytes = CryptoJS.AES.decrypt(encryptedValue, key);
     return bytes.toString(CryptoJS.enc.Utf8);
   };
-

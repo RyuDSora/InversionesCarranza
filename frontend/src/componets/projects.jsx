@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
 import { FaStar} from 'react-icons/fa'
 import {Carousel, Button, Spinner, Modal, Container } from 'react-bootstrap';
 
@@ -8,7 +8,7 @@ import {Carousel, Button, Spinner, Modal, Container } from 'react-bootstrap';
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 
 //urls para el pedido al servidor
-import { URIServicios,URIProyectos,URIPRXIMG,URIImagenGet,URIViewImagen,URICalificacion } from "./Urls.jsx";
+import { URIServicios,URIProyectos,URIPRXIMG,URICalificacion } from "./Urls.jsx";
 
 //funcion principal
 export default function Projects(params) {
@@ -26,7 +26,6 @@ export default function Projects(params) {
     useEffect(() => {
         const service = async () => {
             try {
-                await axios.get(URIImagenGet)
                 const response = await axios.get(URIServicios);
                 const serviciosData = response.data.filter(
                     servicio => servicio.servicio_padre === null);
@@ -45,7 +44,15 @@ export default function Projects(params) {
         const Projew = async () => {
             try {
                 const response = await axios.get(URIProyectos);
-                setProyectos(response.data);
+                const proee=response.data;
+                const proyectoWithImages = 
+                      await Promise.all(proee.map(
+                        async (p) =>{
+                            const imageUrl = 
+                                await fetchImageUrl(p.img_principal);
+                      return {...p, imageUrl};
+                }));
+                setProyectos(proyectoWithImages);
                 
             } catch (error) {
                 console.log(error);
@@ -100,7 +107,6 @@ export default function Projects(params) {
                         {Servicios.length === 0 ? 
                         (//si no encuentra ningun servicio mostrara lo siguiente
                             <div className='pb-4 my-2'>
-                                <div className='pb-4 mb-4'><span className='h3'>No hay servicios para mostrar.</span></div>
                                 <Spinner animation="border" variant="primary" />
                             </div>
                         ) : 
@@ -174,27 +180,23 @@ function Project({PROYECTTO}) {
         const lista = async () => {
             try {
                 const response = await axios.get(URIPRXIMG);
-                const imgsss = response.data;
-                let X = [];
-                if(imgsss.length>0){
-                    imgsss.map(
-                        I => {
-                            if (I.idproyecto===PROYECTTO.id) {
-                                X.push(I);
-                            }
-                            return null;
-                        }
-                    )
-                }
-                setListaImgxProyecto(X);
+                const imgsss = response.data.filter(I => I.idproyecto === PROYECTTO.id);
                 
+                const proyectoWithImages = 
+                      await Promise.all(imgsss.map(
+                        async (p) =>{
+                            const imageUrl = 
+                                await fetchImageUrl(p.idimagen);
+                      return {...p, imageUrl};
+                }));
+                setListaImgxProyecto(proyectoWithImages);
             } catch (err) {
                 console.log(err);
             }
         }
     
         lista();
-    },[PROYECTTO.id])
+    },[PROYECTTO])
     
     return (
         <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
@@ -208,7 +210,7 @@ function Project({PROYECTTO}) {
                 </span>
             </div>
             <div className='px-3'>
-                <img src={PROYECTTO.img_principal ? URIViewImagen+PROYECTTO.img_principal+'inca.jpg':IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
+                <img src={PROYECTTO.imageUrl ? PROYECTTO.imageUrl:IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
             <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
                 Detalles
@@ -227,7 +229,7 @@ function Project({PROYECTTO}) {
                     (<Carousel activeIndex={index} onSelect={handleSelect}>
                         {listaimgxproyecto.map((Q , index)=>(
                             <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                                <img alt='img' src={URIViewImagen+Q.idimagen+'inca.jpg'} style={{ height: '300px', width: '100%' }}/>
+                                <img alt='img' src={Q.imageUrl} style={{ height: '300px', width: '100%' }}/>
                             </Carousel.Item>
                         ))}
                     </Carousel>):

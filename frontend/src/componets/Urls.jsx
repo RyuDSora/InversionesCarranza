@@ -7,11 +7,10 @@ var originS = partes[0] + ":" + partes[1];
 
 export const URIServicios    = originS + PuertoBackend + '/ServiciosOfrecidos/';  //url de servicios
 export const URIPRXIMG       = originS + PuertoBackend + '/proyehasimage/';       //url de las imagenes complementarias de proyectos
-export const URIDeleteImagen = originS + PuertoBackend + '/imagenes/';            //borrar imagenes
+export const URIImagenes     = originS + PuertoBackend + '/imagenes/';            //borrar imagenes
 export const URIImagenPost   = originS + PuertoBackend + '/images/post';          //url para imagenes 
-export const URIImagenGet    = originS + PuertoBackend + '/images/get';           //url para imagenes 
+//export const URIImagenGet    = originS + PuertoBackend + '/images/get';           //url para imagenes 
 export const URIProyectos    = originS + PuertoBackend + '/proyectosrealizados/'; //url de proyectos  
-export const URIViewImagen   = originS + PuertoBackend + '/';                     //url para visualizacion de imagenes
 export const URIUsuarios     = originS + PuertoBackend + '/usuarios/'             //url para los usuarios
 export const URICalificacion = originS + PuertoBackend + '/calificaciones/'       //url para las calificaciones
 export const URIEstados      = originS + PuertoBackend + '/estados/'              //url para los Estados de las solicitudes
