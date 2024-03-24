@@ -32,10 +32,15 @@ function Servicios() {
     fetchServicios();
   }, []);
 
-  const handleButtonClick = servicio => {
+  const handleMoreInfoClick = servicio => {
     navigate(`/mas-servicios/${servicio.id}`); // Pasar el ID del servicio padre en la URL
   };
 
+
+  const handleRequestServiceClick = () => {
+    navigate(`/solicitudes`); // Navegar a la ruta de solicitudes
+  };
+  
   return (
     <Container>
       <Container className="py-3 text-center">
@@ -49,7 +54,8 @@ function Servicios() {
               <Card.Body>
                 <Card.Title>{servicio.nombre_servicio}</Card.Title>
                 <Card.Text>{servicio.detalle_servicio}</Card.Text>
-                <Button variant="primary" onClick={() => handleButtonClick(servicio)}>Más información</Button>
+                <Button variant="secondary" onClick={() => handleMoreInfoClick(servicio)}>Más información</Button> <br /><br />
+                <Button variant="primary" onClick={handleRequestServiceClick}>Solicitar Servicio</Button>
               </Card.Body>
             </Card>
           </Col>

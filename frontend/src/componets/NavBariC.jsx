@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import React, { useState, useEffect } from 'react';
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Button } from "react-bootstrap";
 import "../App.css";
 import perfil from '../imgs/perfil.png';
 import Cookies from 'js-cookie';
@@ -93,6 +93,7 @@ export default function NavBarIC() {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            <Button onClick={ ()=>{navigate(`/Solicitudes`)}} className="btn btn-primary">Solicitar Servicio</Button>
           </>):
           (<>
             <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3 order-1' :"mx-3"}>
@@ -107,7 +108,5 @@ export default function NavBarIC() {
     </Navbar>
   );
 }
-
-
 
 

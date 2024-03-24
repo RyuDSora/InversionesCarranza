@@ -23,6 +23,7 @@ import AgregarAdministrador from './componets/AgregarAdministrador.jsx';
 import Usuarios             from "./componets/Usuarios.jsx";
 import MasServicios      from "./componets/MasServicios.jsx";
 import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
+import Solicitudes      from  "./componets/Solicitudes.jsx";
 
 function App() {
 
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/Polices" element={ <Polices/>} />
                 <Route path="/Term" element={ <Term/>} />
                 <Route path="/WeAre" element={ <WeAre/>} />
+                <Route path="/Solicitudes" element={ <Solicitudes/>} />
               </Routes>
             </div>
           </BrowserRouter>
