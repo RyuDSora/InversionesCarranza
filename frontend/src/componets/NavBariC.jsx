@@ -43,7 +43,8 @@ export default function NavBarIC() {
   
   
   return (
-    <Navbar expand="lg" className="pt-0 bg-light ">
+    <>
+    <Navbar expand="lg" className="pt-0 bg-light ">  
       <Container className="px-3 pb-3 pt-3">
         <Navbar.Brand href='/'>
           <img
@@ -93,7 +94,6 @@ export default function NavBarIC() {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            <Button onClick={ ()=>{navigate(`/Solicitudes`)}} className="btn btn-primary">Solicitar Servicio</Button>
           </>):
           (<>
             <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3 order-1' :"mx-3"}>
@@ -106,7 +106,11 @@ export default function NavBarIC() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
+    {user ? (<>{Admin ? (<></>):
+    (<Container>
+      <div className="d-flex justify-content-end mt-1"><Button onClick={ ()=>{navigate(`/Solicitudes`)}} className="btn btn-primary">Solicitar Servicio</Button></div>
+    </Container>)}</>)
+    :(<></>)}
+    </>
+);
 }
-
-
