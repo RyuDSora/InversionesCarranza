@@ -32,7 +32,7 @@ const EditServiciosCliente = ({ solicitudes }) => {
                     <tr>
                         <th>Nombre cliente</th>
                         <th>Teléfono</th>
-                        <th>Mensaje</th>
+                        <th>Detalles</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>

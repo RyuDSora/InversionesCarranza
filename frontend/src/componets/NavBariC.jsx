@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import React, { useState, useEffect } from 'react';
-import { Dropdown, Modal, Button } from "react-bootstrap";
+import { Dropdown, Modal } from "react-bootstrap";
 import "../App.css";
 import perfil from '../imgs/perfil.png';
 import Cookies from 'js-cookie';
@@ -126,14 +126,7 @@ export default function NavBarIC() {
         <Modal.Body>
           <Solicitudes /> {/* Aquí se muestra el formulario de solicitudes */}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
-          </Button>
-        </Modal.Footer>
       </Modal>
-
-
     </Navbar>
   );
 }
