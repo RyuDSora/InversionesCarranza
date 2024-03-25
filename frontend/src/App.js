@@ -24,6 +24,7 @@ import Usuarios             from "./componets/Usuarios.jsx";
 import MasServicios      from "./componets/MasServicios.jsx";
 import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
 import Solicitudes      from  "./componets/Solicitudes.jsx";
+import EditServiciosCliente from './componets/EditServiciosCliente.jsx';
 
 function App() {
 
@@ -68,6 +69,10 @@ function App() {
                 <Route path="/Term" element={ <Term/>} />
                 <Route path="/WeAre" element={ <WeAre/>} />
                 <Route path="/Solicitudes" element={ <Solicitudes/>} />
+
+                {/**Aquí se muestra la tabla de las solicitudes que ha hecho el cliente*/}
+                <Route path="/EditServiciosCliente/" element={ <EditServiciosCliente/>} />
+
               </Routes>
             </div>
           </BrowserRouter>

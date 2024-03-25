@@ -62,18 +62,24 @@ export default function NavBarIC() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
 
-  <Nav.Link href="/" className={home && !requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
-    ¿Quiénes somos?
-  </Nav.Link>
-  <Nav.Link href="/Servicios" className={services && !requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"} id="servicios">
-    Servicios
-  </Nav.Link>
-  {user && !Admin && <Nav.Link onClick={handleShow} className={requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
-            Solicitar Servicio
-          </Nav.Link>}
-  <Nav.Link href="/Proyectos" className={project && !requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
-    Proyectos
-  </Nav.Link>
+  <div style={{display: 'flex'}}>
+    <Nav.Link href="/" className={home && !requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
+      ¿Quiénes somos?
+    </Nav.Link>
+
+    <Nav.Link href="/Servicios" className={services && !requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"} id="servicios">
+      Servicios
+    </Nav.Link>
+
+    <Nav.Link href="/Proyectos" className={project && !requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
+      Proyectos
+    </Nav.Link>
+
+    {user && !Admin && <Nav.Link onClick={handleShow} className={requestService ? 'text-success text-uppercase not-active mx-3' :"mx-3"}>
+      Solicitar Servicio
+    </Nav.Link>}
+  </div>
+
   {user ? 
   (<>
   <Dropdown>
@@ -91,7 +97,7 @@ export default function NavBarIC() {
                   <Dropdown.Item onClick={ ()=>{navigate(`/EditPr`)}} >Editar Proyectos</Dropdown.Item>
                 </>):(<>
                 {/**opciones cuando ingresa como cliente*/}
-                <Dropdown.Item onClick={ ()=>{navigate(`/mysolicitud`)}} >Mis Solicitudes</Dropdown.Item>
+                <Dropdown.Item onClick={ ()=>{navigate(`/EditServiciosCliente`)}} >Mis Solicitudes</Dropdown.Item>
                 </>)}
                 <Dropdown.Item onClick={()=>{ Cookies.remove('session');
                                               Cookies.remove('User');
