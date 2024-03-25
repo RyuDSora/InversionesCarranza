@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Image1 from '../imgs/diseno_planos.jpg'; 
-import Image2 from '../imgs/pintura.jpg'; 
+import Image2 from '../imgs/pintura.jpg';
+import { Card, Button, Form, Row, Col } from 'react-bootstrap';
 
 const services = [
     { id: 1, name: 'Diseño de Planos', description: '', image: Image1 },
@@ -18,39 +19,58 @@ function App() {
     if (selectedService) {
         return (
             <div className="container">
-                <h1>Solicitud para {selectedService.name}</h1>
-                <form className="d-flex justify-content-center flex-column">
-                    <div className="mb-1 col-md-6 mx-auto">
-                        <label htmlFor="phone" className="form-label">Teléfono de Contacto</label>
-                        <input type="tel" className="form-control form-control-sm" id="phone" required />
-                    </div>
-                    <div className="mb-1 col-md-6 mx-auto">
-                        <label htmlFor="description" className="form-label">Descripción Detallada de la Solicitud</label>
-                        <textarea className="form-control form-control-sm" id="description" rows="3" required></textarea> <br /><br />
-                    </div>
-                    <button type="submit" className="btn btn-primary mx-auto">Enviar solicitud</button>
-                </form>
+                <h1 className="text-center my-4">Solicitud para {selectedService.name}</h1>
+                <Card className="mb-4">
+                    <Card.Img variant="top" src={selectedService.image} />
+                    <Card.Body>
+                        <Card.Title>{selectedService.name}</Card.Title>
+                        <Card.Text>{selectedService.description}</Card.Text>
+                    </Card.Body>
+                </Card>
+                <Form>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Nombre</Form.Label>
+                                <Form.Control type="text" placeholder="Ingrese su nombre" />
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                        <Form.Group controlId="formBasicPhone">
+                              <Form.Label>Número de teléfono</Form.Label>
+                              <Form.Control type="tel" placeholder="Ingrese su número de teléfono" />
+                      </Form.Group>
+                        </Col>
+                    </Row>
+                    <Form.Group controlId="formBasicMessage">
+                        <Form.Label>Mensaje</Form.Label>
+                        <Form.Control as="textarea" rows={3} placeholder="Ingrese su mensaje" />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Enviar Solicitud
+                    </Button>
+                </Form>
             </div>
         );
     }
 
     return (
         <div className="container">
-            <h1>Selecciona un servicio</h1>
-            <div className="row">
-                {services.map((service) => (
-                    <div key={service.id} className="col-4 d-flex align-items-stretch">
-                        <div className="card h-100 d-flex flex-column" onClick={() => handleServiceClick(service)}>
-                            <img src={service.image} className="card-img-top" alt={service.name} />
-                            <div className="card-body">
-                                <h5 className="card-title">{service.name}</h5>
-                                <p className="card-text">{service.description}</p>
-                                <button className="btn btn-primary mt-auto">Seleccionar</button>
-                            </div>
-                        </div>
-                    </div>
+            <h1 className="text-center my-4">Seleccione un servicio</h1>
+            <Row>
+                {services.map(service => (
+                    <Col sm={6} md={4} lg={3} key={service.id}>
+                        <Card className="mb-4" onClick={() => handleServiceClick(service)}>
+                            <Card.Img variant="top" src={service.image} />
+                            <Card.Body>
+                                <Card.Title>{service.name}</Card.Title>
+                                <Card.Text>{service.description}</Card.Text>
+                                <Button variant="primary">Seleccionar</Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 ))}
-            </div>
+            </Row>
         </div>
     );
 }
