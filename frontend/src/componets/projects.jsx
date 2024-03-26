@@ -3,7 +3,6 @@ import axios from 'axios';
 import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
 import { FaStar} from 'react-icons/fa'
 import {Carousel, Button, Spinner, Modal, Container } from 'react-bootstrap';
-import ReactStars from "react-rating-stars-component";
 
 //estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
@@ -16,8 +15,8 @@ export default function Projects(params) {
     //variables de estado
     let [Servicios,setServicios] = useState([]); //aqui se guardaran las categorias de servicios
     let [Proyectos, setProyectos] = useState([]);//aqui se guardaran todos los proyectos
-
-
+    
+    
     //variable booleana que servira para indicar si esta cargando, esto cuando no le lleguen datos desde el server
     const [mostrarCargando, setMostrarCargando] = useState(true); 
 
@@ -61,6 +60,29 @@ export default function Projects(params) {
         }
         Projew();
     }, []);
+    useEffect(()=>{
+        //let NuevoProyecto = [];
+        Proyectos.map(
+            proyecto=>{
+                const Calificacion = async() =>{
+                    try {
+                        const response = await axios.get(URICalificacion+proyecto.id);
+                        const Promedio = response.data;
+                        var X = Promedio.promedio_calificacion;
+                        if (!X) {X='0.00'}else{
+                            let ca = X.substring(0, 4);
+                            X = ca;
+                        }
+                        proyecto.calificacion=X
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                Calificacion()
+                return null
+            }
+        )
+    },[Proyectos])
     
     //contador
     useEffect(() => {
@@ -117,8 +139,8 @@ function Cont(ServiceId, ServiceName, ServiceUrl,LSProyectos) {
 
     return (
         <div className='my-2 py-3 '>
-            <div className='text-center h5 ps-4 ms-2'><span className='h4'>{ServiceName}</span></div>
-            <div className='row d-flex justify-content-center align-items-center'>
+            <div className='text-start h5 ps-4 ms-2'><span className='h4'>{ServiceName}</span></div>
+            <div className='row'>
                 {qwerty === 0 ? 
                     (<div><span className='h6'>No hay proyectos de {ServiceName}</span></div>) : 
                     (<>
@@ -137,6 +159,7 @@ function Cont(ServiceId, ServiceName, ServiceUrl,LSProyectos) {
                                     </div>
                                     
                                     ))}
+                            <div className='col-sm-3'>{More(ServiceId, ServiceUrl)}</div>
                         </>)}
                     </>)}
             </div>
@@ -152,22 +175,6 @@ function Project({PROYECTTO}) {
     const handleShow = () => setShow(true);
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
     const [listaimgxproyecto, setListaImgxProyecto] = useState([]);
-    const [rating, setRating] = useState(0);
-    const [review, setReview] = useState("");
-
-    const submitReview = async () => {
-        try {
-            await axios.post(URICalificacion, {
-                projectId: PROYECTTO.id,
-                rating,
-                review
-            });
-            setReview(""); // Limpiar el campo de texto
-
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
    useEffect(()=>{
         const lista = async () => {
@@ -196,59 +203,65 @@ function Project({PROYECTTO}) {
             <div className='p-2'>
                 <span className='h6'>{PROYECTTO.nombreProyecto}</span>
             </div>
+            <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
+                <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
+                    <FaStar className='me-1 text-primary'/>
+                    <span>{PROYECTTO.calificacion}</span>
+                </span>
+            </div>
             <div className='px-3'>
                 <img src={PROYECTTO.imageUrl ? PROYECTTO.imageUrl:IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
-            </div> <br />
-            <Button variant="primary" onClick={handleShow}>
-                    Detalles
-            </Button>
-
-            <div className="d-flex justify-content-center">
-                    <ReactStars
-                        count={5}
-                        onChange={setRating}
-                        size={24}
-                        activeColor="#ffd700"
-                    />
             </div>
-                <div className="form-group">
-                    <textarea className="form-control" value={review} onChange={e => setReview(e.target.value)} />
-                    <button className="btn btn-secondary mt-2 w-30" onClick={submitReview}>Enviar reseña</button>
-                </div>
-
+            <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
+                Detalles
+            </Button>
             <Modal
-    show={show}
-    onHide={handleClose}
-    backdrop="static"
-    keyboard={false}
->
-    <Modal.Header closeButton>
-        <Modal.Title>{PROYECTTO.nombreProyecto}</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        {listaimgxproyecto.length > 0 ? (
-            <Carousel activeIndex={index} onSelect={handleSelect}>
-                {listaimgxproyecto.map((Q , index) => (
-                    <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                        <img alt='img' src={Q.imageUrl} style={{ height: '300px', width: '100%' }}/>
-                    </Carousel.Item>
-                ))}
-            </Carousel>
-        ) : (
-            <Carousel activeIndex={index} onSelect={handleSelect}>
-                <Carousel.Item>
-                    <img alt='img' src={IMGPrueba} style={{ height: '300px', width: '100%' }}/>
-                </Carousel.Item>
-            </Carousel>
-        )}
-        <div><p>{PROYECTTO.descripcion_proyecto}</p></div>
-    </Modal.Body>
-    <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>
-            Close
-        </Button>
-    </Modal.Footer>
-</Modal>
-</div>
-);
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>{PROYECTTO.nombreProyecto}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {listaimgxproyecto.length>0 ? 
+                    (<Carousel activeIndex={index} onSelect={handleSelect}>
+                        {listaimgxproyecto.map((Q , index)=>(
+                            <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
+                                <img alt='img' src={Q.imageUrl} style={{ height: '300px', width: '100%' }}/>
+                            </Carousel.Item>
+                        ))}
+                    </Carousel>):
+                    (<Carousel activeIndex={index} onSelect={handleSelect}>
+                        <Carousel.Item >
+                            <img alt='img' src={IMGPrueba} style={{ height: '300px', width: '100%' }}/>
+                        </Carousel.Item>
+                    </Carousel>)}
+                    <div><p>{PROYECTTO.descripcion_proyecto}</p></div>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="primary" onClick={handleClose} >
+                    Close
+                </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    );
 }
+
+function More(id,url) {
+    return (
+        <div style={{ height: '500px',backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 py-2 my-2 d-flex align-items-center'>
+            <a href={url+id} className='mx-auto'>
+                <div className='shadow-lg border rounded-4' style={{ width: '100px', height: '100px' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    );
+}
+
+
