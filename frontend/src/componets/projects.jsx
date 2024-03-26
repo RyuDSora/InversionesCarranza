@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
-import { FaStar} from 'react-icons/fa'
-import {Carousel, Button, Spinner, Modal, Container } from 'react-bootstrap';
-
-//estas son imagenes estaticas, luego pasaran a ser llamadas desde servidor.
-import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
+import {Project} from './proye.jsx'
+import {Spinner, Container } from 'react-bootstrap';
 
 //urls para el pedido al servidor
-import { URIServicios,URIProyectos,URIPRXIMG,URICalificacion } from "./Urls.jsx";
+import { URIServicios,URIProyectos,URICalificacion } from "./Urls.jsx";
 
 //funcion principal
 export default function Projects(params) {
@@ -168,87 +165,6 @@ function Cont(ServiceId, ServiceName, ServiceUrl,LSProyectos) {
     
 }
 
-function Project({PROYECTTO}) {
-    const [show, setShow] = useState(false);
-    const [index, setIndex] = useState(0);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const handleSelect = (selectedIndex) => setIndex(selectedIndex);
-    const [listaimgxproyecto, setListaImgxProyecto] = useState([]);
-
-   useEffect(()=>{
-        const lista = async () => {
-            try {
-                const response = await axios.get(URIPRXIMG);
-                const imgsss = response.data.filter(I => I.idproyecto === PROYECTTO.id);
-                
-                const proyectoWithImages = 
-                      await Promise.all(imgsss.map(
-                        async (p) =>{
-                            const imageUrl = 
-                                await fetchImageUrl(p.idimagen);
-                      return {...p, imageUrl};
-                }));
-                setListaImgxProyecto(proyectoWithImages);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    
-        lista();
-    },[PROYECTTO])
-    
-    return (
-        <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
-            <div className='p-2'>
-                <span className='h6'>{PROYECTTO.nombreProyecto}</span>
-            </div>
-            <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
-                <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
-                    <FaStar className='me-1 text-primary'/>
-                    <span>{PROYECTTO.calificacion}</span>
-                </span>
-            </div>
-            <div className='px-3'>
-                <img src={PROYECTTO.imageUrl ? PROYECTTO.imageUrl:IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
-            </div>
-            <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
-                Detalles
-            </Button>
-            <Modal
-                show={show}
-                onHide={handleClose}
-                backdrop="static"
-                keyboard={false}
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>{PROYECTTO.nombreProyecto}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {listaimgxproyecto.length>0 ? 
-                    (<Carousel activeIndex={index} onSelect={handleSelect}>
-                        {listaimgxproyecto.map((Q , index)=>(
-                            <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                                <img alt='img' src={Q.imageUrl} style={{ height: '300px', width: '100%' }}/>
-                            </Carousel.Item>
-                        ))}
-                    </Carousel>):
-                    (<Carousel activeIndex={index} onSelect={handleSelect}>
-                        <Carousel.Item >
-                            <img alt='img' src={IMGPrueba} style={{ height: '300px', width: '100%' }}/>
-                        </Carousel.Item>
-                    </Carousel>)}
-                    <div><p>{PROYECTTO.descripcion_proyecto}</p></div>
-                </Modal.Body>
-                <Modal.Footer>
-                <Button variant="primary" onClick={handleClose} >
-                    Close
-                </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-    );
-}
 
 function More(id,url) {
     return (

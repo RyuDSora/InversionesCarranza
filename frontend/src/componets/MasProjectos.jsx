@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 //import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import {Container,Carousel, Button,Modal } from 'react-bootstrap';
+import {Container} from 'react-bootstrap';
 import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
-import { FaStar} from 'react-icons/fa'
-import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png';
-import { URIServicios,URIProyectos,URIPRXIMG,URICalificacion } from "./Urls.jsx";
+import { URIServicios,URIProyectos,URICalificacion } from "./Urls.jsx";
+import {Project} from './proye.jsx'
 
 
 export default function MasProyectos() {
@@ -91,93 +90,12 @@ export default function MasProyectos() {
                     <div className='d-flex flex-wrap px-3 justify-content-around'>
                         {proyectos.map((proyecto, index) => (
                             <div key={'PR:'+proyecto.nombreProyecto+'/'+index} className='col-sm-3 mx-2'>
-                                <Project proyecto={proyecto} />
+                                <Project PROYECTTO={proyecto} />
                             </div>
                         ))}
                     </div>
                 </div>    
             </div>
         </Container>
-    );
-}
-
-function Project({ proyecto }) {
-    const [show, setShow] = useState(false);
-    const [index, setIndex] = useState(0);
-    const [listaimgxproyecto, setListaImgxProyecto] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(URIPRXIMG);
-                const imgsss = response.data.filter(I => I.idproyecto === proyecto.id);
-                
-                const proyectoWithImages = 
-                      await Promise.all(imgsss.map(
-                        async (p) =>{
-                            const imageUrl = 
-                                await fetchImageUrl(p.idimagen);
-                      return {...p, imageUrl};
-                }));
-                setListaImgxProyecto(proyectoWithImages);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-    
-        fetchData();
-    }, [proyecto.id]);
-    
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const handleSelect = (selectedIndex) => setIndex(selectedIndex);
-
-    return (
-        <div style={{ backgroundColor: 'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
-            <div className='p-2'><span className='h6'>{proyecto.nombreProyecto}</span></div>
-            <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
-                <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
-                    <FaStar className='me-1 text-primary'/>
-                    <span>{proyecto.calificacion}</span>
-                </span>
-            </div>
-            <div className='px-3'>
-                <img src={proyecto.imageUrl ? proyecto.imageUrl:IMGPrueba} alt="img" className='w-100 border rounded-3' style={{ height:'385px' }}/>
-            </div>
-            <Button variant="primary" onClick={handleShow} className='mt-2 pt-2'>
-                Detalles
-            </Button>
-            <Modal
-                show={show}
-                onHide={handleClose}
-                backdrop="static"
-                keyboard={false}
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>{proyecto.nombreProyecto}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {listaimgxproyecto.length > 0 ? 
-                    (<Carousel activeIndex={index} onSelect={handleSelect}>
-                        {listaimgxproyecto.map((Q , index) => (
-                            <Carousel.Item key={'P'+Q.idproyecto+'I'+Q.idimagen+'index'+index}>
-                                <img alt='img' src={Q.imageUrl} style={{ height: '300px', width: '100%' }}/>
-                            </Carousel.Item>
-                        ))}
-                    </Carousel>):
-                    (<Carousel activeIndex={index} onSelect={handleSelect}>
-                        <Carousel.Item >
-                            <img alt='img' src={IMGPrueba} style={{ height: '300px', width: '100%' }}/>
-                        </Carousel.Item>
-                    </Carousel>)}
-                    <div><p>{proyecto.descripcion_proyecto}</p></div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={handleClose} >
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
     );
 }
