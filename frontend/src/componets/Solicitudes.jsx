@@ -4,7 +4,6 @@ import axios from 'axios';
 import { URISolicitudes, URIServicios } from './Urls'; // Importa la URI para las solicitudes y los servicios
 
 function Solicitud({ userId }) {
-    const [showModal, setShowModal] = useState(false); // Estado para controlar la visibilidad de la modal
     const [servicios, setServicios] = useState([]);
     const [servicioSeleccionado, setServicioSeleccionado] = useState('');
     const [descripcionSolicitud, setDescripcionSolicitud] = useState('');
@@ -43,7 +42,6 @@ function Solicitud({ userId }) {
             // Mostrar mensaje de éxito
             alert('La solicitud se ha realizado con éxito.');
             // Cerrar la modal
-            setShowModal(false);
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
         }
@@ -80,16 +78,7 @@ function Solicitud({ userId }) {
                     </div>
                 </Form>
             </Modal.Body>
-            {/* Modal de éxito */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} backdrop="static" keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Éxito</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    La solicitud se ha realizado con éxito.
-                </Modal.Body>
-            </Modal>
-        </>
+    </>
     );
 }
 
