@@ -1,8 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import React from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
 
 import "./App.css";
 import {Polices, Term, WeAre} from './componets/Extras.jsx'
@@ -24,11 +22,20 @@ import Usuarios             from "./componets/Usuarios.jsx";
 import MasServicios      from "./componets/MasServicios.jsx";
 import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
 import Solicitudes      from  "./componets/Solicitudes.jsx";
-import SolicitudesAdmin      from  "./componets/SolicitudesAdmin.jsx";
-
 import EditServiciosCliente from './componets/EditServiciosCliente.jsx';
 
 function App() {
+  const [solicitudes, setSolicitudes] = useState([]);
+
+  useEffect(() => {
+      const fetchSolicitudes = async () => {
+          const response = await fetch(`http://${window.location.hostname}:8000/solicitudes/`);
+          const data = await response.json();
+          setSolicitudes(data);
+      };
+
+      fetchSolicitudes();
+  }, []);
 
   return (
     <div className="fondo-difuminado">
@@ -71,10 +78,9 @@ function App() {
                 <Route path="/Term" element={ <Term/>} />
                 <Route path="/WeAre" element={ <WeAre/>} />
                 <Route path="/Solicitudes" element={ <Solicitudes/>} />
-               <Route path="/SolicitudesAdmin" element={ <SolicitudesAdmin/>} />
 
                 {/**Aquí se muestra la tabla de las solicitudes que ha hecho el cliente*/}
-                <Route path="/EditServiciosCliente/" element={ <EditServiciosCliente/>} />
+                <Route path="/EditServiciosCliente/" element={ <EditServiciosCliente solicitudes={solicitudes}/>} />
 
               </Routes>
             </div>
@@ -88,6 +94,3 @@ function App() {
 }
 
 export default App;
-
-
-
