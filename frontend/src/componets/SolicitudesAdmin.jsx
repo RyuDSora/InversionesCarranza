@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
+import { BsArrowRight, BsCheck, BsX  } from 'react-icons/bs'; // Importar íconos
 
-import { URISolicitudes, URIEstados, URIUsuarios, URIServicios } from './Urls';
+// Importa las URLs correctamente desde el archivo de URLs
+import { URISolicitudes, URIEstados ,URIUsuarios,URIServicios } from './Urls';
 
 function SolicitudesAdmin() {
     const [requests, setRequests] = useState([]);
@@ -124,21 +126,15 @@ function SolicitudesAdmin() {
                                     <td>{request.descripcion_solicitud}</td>
                                     <td>{estados.find(estado => estado.id === request.id_estado)?.nombre_estado}</td>
                                     <td>
-                                        {/* Botón para el estado 1 */}
+                                        {/* Botón para el ecccstado 1 */}
                                         {request.id_estado === 1 && (
-                                            <Button variant="warning" onClick={() => handleStatusChange(request.id, 2)}>
-                                                {estados.find(estado => estado.id === 2)?.nombre_estado}
-                                            </Button>
+                                            <BsArrowRight title={estados.find(estado => estado.id === 2)?.nombre_estado} onClick={() => handleStatusChange(request.id, 2)} size={30} color="yellow" />
                                         )}
                                         {/* Botón para el estado 2 */}
                                         {request.id_estado === 2 && (
                                             <>
-                                                <Button variant="success" onClick={() => handleStatusChange(request.id, 3)}>
-                                                    {estados.find(estado => estado.id === 3)?.nombre_estado}
-                                                </Button>
-                                                <Button variant="danger" onClick={() => handleStatusChange(request.id, 4)}>
-                                                    {estados.find(estado => estado.id === 4)?.nombre_estado}
-                                                </Button>
+                                                <BsCheck title={estados.find(estado => estado.id === 3)?.nombre_estado} onClick={() => handleStatusChange(request.id, 3)} size={30} color="green" />
+                                                <BsX title={estados.find(estado => estado.id === 4)?.nombre_estado} onClick={() => handleStatusChange(request.id, 4)} size={30} color="red" />
                                             </>
                                         )}
                                     </td>
