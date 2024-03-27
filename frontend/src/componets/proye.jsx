@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaStar} from 'react-icons/fa'
 import {Carousel, Button, Modal, Form } from 'react-bootstrap';
-import { URIPRXIMG, URIResenias } from "./Urls.jsx";
+import { URICalificacion, URIPRXIMG, URIResenias } from "./Urls.jsx";
 import { fetchImageUrl } from './fetchImageUrl'; // Importa la función fetchImageUrl
 import { encryptionKey,decryptValue } from "./hashes.jsx";
 
@@ -11,12 +11,13 @@ import Cookies from 'js-cookie';
 import IMGPrueba from '../imgs/Imagen-no-disponible-282x300.png'
 export const Project = ({PROYECTTO}) => {
     const [show, setShow] = useState(false);
+    const [showCalifica, setShowCalifica] = useState(false);
     const [index, setIndex] = useState(0);
     const handleClose = () => setShow(false);
     const [Admin,setAdmin] = useState(false);
     const [user,setUser] = useState(false);
-    const [UserL,setUserL] = useState('');
     const [UserId,setUserId] = useState('');
+    const [value, setValue] = useState(0);
 
     const handleShow = () => setShow(true);
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
@@ -27,9 +28,34 @@ export const Project = ({PROYECTTO}) => {
     const [cresenia,setCresenia]=useState(false);
 
 
-    
+    const OpenCalifica = () => setShowCalifica(true)
+    const handleCloseCalifica = () => setShowCalifica(false)
     const handleReseniaTrue = () => setAddResenia(true);
     const handleCancel = () => setAddResenia(false);
+    const enviarCalification = () => {
+        const verifica = async()=>{
+            try {
+                const response = await axios.get(URICalificacion)
+                const IfCalifica = response.data.filter(C => C.idProyecto ===PROYECTTO.id && C.idUsuario===UserId)
+                const Nueva = {
+                    "idProyecto":PROYECTTO.id,
+                    "idUsuario": UserId,
+                    "calificacion":value
+                }
+                if (IfCalifica.length===0) {
+                    axios.post(URICalificacion,Nueva)
+                }
+                else{
+                    axios.put(URICalificacion+IfCalifica[0].id,Nueva)
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        verifica();
+        handleCloseCalifica();
+        window.location.reload()
+    }
     const handleSubmit = () =>{
         const AgregarResenia = () => {
             const reseña = {
@@ -37,15 +63,30 @@ export const Project = ({PROYECTTO}) => {
                 "idUsuario":UserId,
                 "resenia_proyecto":NuevaResenia
             }
-            console.log(UserId);
-            console.log(PROYECTTO.id);
-            console.log(NuevaResenia);
             axios.post(URIResenias,reseña);
         }
-        AgregarResenia()
+        AgregarResenia();
+        setNuevaResenia('');
         setAddResenia(false);
         setCresenia(true);
-    }
+    }  
+    useEffect(()=>{
+        const Calificacion = async() =>{
+                    try {
+                        const response = await axios.get(URICalificacion+PROYECTTO.id);
+                        const Promedio = response.data;
+                        var X = Promedio.promedio_calificacion;
+                        if (!X) {X='0.00'}else{
+                            let ca = X.substring(0, 4);
+                            X = ca;
+                        }
+                        PROYECTTO.calificacion=X
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                Calificacion()
+    },[PROYECTTO]) 
    useEffect(()=>{
         const lista = async () => {
             try {
@@ -66,20 +107,17 @@ export const Project = ({PROYECTTO}) => {
         }
         if(Cookies.get('session')){
             setUser(true); 
-            setUserL(decryptValue(Cookies.get('User'), encryptionKey));
             setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
             if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===1){setAdmin(true)};
           }
         lista();
     },[PROYECTTO])
-
     useEffect(()=>{
         const rese = async () =>{
             try {
                 const response = await axios.get(URIResenias);
                 const reseniaProye=response.data.filter(I => I.idProyecto === PROYECTTO.id);
                 setResenias(reseniaProye);
-                console.log(reseniaProye);
             } catch (error) {
                 console.log(error);
             }
@@ -94,12 +132,27 @@ export const Project = ({PROYECTTO}) => {
             <div className='p-2'>
                 <span className='h6'>{PROYECTTO.nombreProyecto}</span>
             </div>
+            {user ? 
+            (Admin ? 
+            (<div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
+                <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
+                    <FaStar className='me-1 text-primary'/>
+                    <span>{PROYECTTO.calificacion}</span>
+                </span>
+            </div>):
+            (<div className='text-start ps-4 mt-1' style={{position:'absolute'}} onClick={OpenCalifica}>
+            <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
+                <FaStar className='me-1 text-primary'/>
+                <span>{PROYECTTO.calificacion}</span>
+            </span>
+            </div>)):
+            (
             <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
                 <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
                     <FaStar className='me-1 text-primary'/>
                     <span>{PROYECTTO.calificacion}</span>
                 </span>
-            </div>
+            </div>)}
             <div className='px-3'>
                 <img src={PROYECTTO.imageUrl ? PROYECTTO.imageUrl:IMGPrueba} alt="img" className='w-100 border rounded-3' style={{height:'385px'}}/>
             </div>
@@ -170,6 +223,43 @@ export const Project = ({PROYECTTO}) => {
                 <Button variant="primary" onClick={handleClose} >
                     Close
                 </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal 
+                show={showCalifica}
+                onHide={handleCloseCalifica}
+                backdrop="static"
+                keyboard={false}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>{PROYECTTO.nombreProyecto}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div>Calificar este proyecto</div>
+                    <div>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <span>0<FaStar/></span><span>5<FaStar/></span><span>10<FaStar/></span>
+                    </div>
+                    <input
+                        type="range"
+                        className="form-range"
+                        min="0"
+                        max="10"
+                        step="0.05"
+                        value={value}
+                        onChange={(e)=>{setValue(e.target.value)}}
+                    />
+                    </div>
+                    <div className="col text-center">
+                    <p>Calificación: {value}</p>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant='success' onClick={enviarCalification}>
+                        Calificar
+                    </Button>
+                    <Button variant="danger" onClick={handleCloseCalifica} >
+                        Cerrar
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>

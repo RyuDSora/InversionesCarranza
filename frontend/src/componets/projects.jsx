@@ -57,29 +57,6 @@ export default function Projects(params) {
         }
         Projew();
     }, []);
-    useEffect(()=>{
-        //let NuevoProyecto = [];
-        Proyectos.map(
-            proyecto=>{
-                const Calificacion = async() =>{
-                    try {
-                        const response = await axios.get(URICalificacion+proyecto.id);
-                        const Promedio = response.data;
-                        var X = Promedio.promedio_calificacion;
-                        if (!X) {X='0.00'}else{
-                            let ca = X.substring(0, 4);
-                            X = ca;
-                        }
-                        proyecto.calificacion=X
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-                Calificacion()
-                return null
-            }
-        )
-    },[Proyectos])
     
     //contador
     useEffect(() => {
