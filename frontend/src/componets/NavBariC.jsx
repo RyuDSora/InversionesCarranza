@@ -91,6 +91,7 @@ export default function NavBarIC() {
                   {Admin ? /*comprobamos si es administrador: si lo es mostrara la siguiente lista*/ (<>
                     <Dropdown.Item onClick={() => { navigate(`/AgregarAdministrador`) }}>Agregar Admin</Dropdown.Item>
                     <Dropdown.Item onClick={() => { navigate(`/solicitudes`) }}>Solicitudes</Dropdown.Item>
+                    <Dropdown.Item onClick={() => { navigate(`/solicitudesAdmin`) }}>Administrador de Solicitudes</Dropdown.Item>
                     <Dropdown.Item onClick={() => { navigate(`/Users`) }}>Ver Usuarios</Dropdown.Item>
                     <Dropdown.Item onClick={() => { navigate(`/ServiciosAdmin`) }}>Editar Servicios</Dropdown.Item>
                     <Dropdown.Item onClick={() => { navigate(`/EditPr`) }}>Editar Proyectos</Dropdown.Item>
