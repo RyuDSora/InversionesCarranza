@@ -1,40 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container } from 'react-bootstrap';
+import Cookies from 'js-cookie';
+import { encryptionKey, decryptValue } from "./hashes.jsx";
+import { FaEdit, FaTrash} from 'react-icons/fa'
 import { URISolicitudes, URIEstados, URIServicios } from './Urls';
+import { useNavigate } from 'react-router-dom';
 
 function EditServiciosCliente() {
+    const navigate = useNavigate();
     const [solicitudes, setSolicitudes] = useState([]);
     const [estados, setEstados] = useState({});
     const [servicios, setServicios] = useState({});
-    const [usuarioId, setUsuarioId] = useState(null); // ID del usuario actual
+    const [userId, setUserId] = useState(null); // ID del usuario actual
     const [editandoSolicitud, setEditandoSolicitud] = useState(null); // Solicitud que se está editando
 
     useEffect(() => {
         // Obtener el ID del usuario actual al cargar el componente
         const usuarioId = obtenerUsuarioId();
-        setUsuarioId(usuarioId);
-    }, []);
+        if (usuarioId===0) {
+            navigate('/')
+        }
+        setUserId(usuarioId);
+    }, [navigate]);
 
     useEffect(() => {
-        if (usuarioId) {
-            fetchSolicitudesPorUsuario(usuarioId);
+        if (userId) {
+            fetchSolicitudesPorUsuario(userId);
         }
         fetchEstados();
         fetchServicios();
-    }, [usuarioId]);
+    }, [userId]);
 
     const obtenerUsuarioId = () => {
-        // Lógica para obtener el ID del usuario actual, por ejemplo, desde el token JWT
-        // Aquí se simula retornando un ID de usuario fijo
-        return 123; // Supongamos que el ID del usuario actual es 123
+        if (Cookies.get('session')) {
+            return +decryptValue(Cookies.get('UserId'), encryptionKey);//retornamos el usuario logueado
+          }else{
+            return 0; //sino retornamos 0
+          }
     };
 
     const fetchSolicitudesPorUsuario = async (userId) => {
         try {
-            const response = await axios.get(`${URISolicitudes}?id_usuario=${userId}`);
-            setSolicitudes(response.data);
-        } catch (error) {
+            const response = await axios.get(URISolicitudes);
+            const SolicitudesXusuarios = response.data.filter(
+                solicitud => solicitud.id_cliente===userId
+            )
+            console.log(SolicitudesXusuarios);
+            setSolicitudes(SolicitudesXusuarios);
+        } catch (error) { 
             console.error('Error fetching requests:', error);
         }
     };
@@ -74,7 +88,7 @@ function EditServiciosCliente() {
         e.preventDefault();
         try {
             await axios.put(`${URISolicitudes}/${editandoSolicitud.id}`, editandoSolicitud);
-            fetchSolicitudesPorUsuario(usuarioId); // Refrescar las solicitudes
+            fetchSolicitudesPorUsuario(userId); // Refrescar las solicitudes
             setEditandoSolicitud(null); // Salir del modo de edición
         } catch (error) {
             console.error('Error al actualizar la solicitud:', error);
@@ -84,7 +98,7 @@ function EditServiciosCliente() {
     const handleDeleteClick = async (solicitudId) => {
         try {
             await axios.delete(`${URISolicitudes}/${solicitudId}`);
-            fetchSolicitudesPorUsuario(usuarioId); // Refrescar las solicitudes
+            fetchSolicitudesPorUsuario(userId); // Refrescar las solicitudes
         } catch (error) {
             console.error('Error al eliminar la solicitud:', error);
         }
@@ -128,12 +142,15 @@ function EditServiciosCliente() {
                             <td>{solicitud.descripcion_solicitud}</td>
                             <td>{estados[solicitud.id_estado]}</td>
                             <td>
-                                <button className="btn btn-primary mr-2" onClick={() => handleEditClick(solicitud.id, solicitud.id_estado)} disabled={solicitud.id_estado !== 1}>
-                                    Editar
+                                {solicitud.id_estado !== 1 ? (<></>):(
+                                <div className='d-flex'>
+                                    <button title='Editar' className="btn btn-primary mr-2" onClick={() => handleEditClick(solicitud.id, solicitud.id_estado)}>
+                                    <FaEdit size={12}/>
                                 </button>
-                                <button className="btn btn-danger mx-2" onClick={() => handleDeleteClick(solicitud.id, solicitud.id_estado)} disabled={solicitud.id_estado !== 1}>
-                                    Borrar
+                                <button title='Borrar' className="btn btn-danger mx-2" onClick={() => handleDeleteClick(solicitud.id, solicitud.id_estado)} >
+                                    <FaTrash size={12}/>
                                 </button>
+                                </div>)}
                             </td>
                         </tr>
                     ))}
