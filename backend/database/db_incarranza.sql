@@ -273,3 +273,23 @@ CREATE TABLE IF NOT EXISTS `resenias` (
     ON UPDATE NO ACTION)
   
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Tabla `notificaciones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `notificaciones` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT NOT NULL,
+  `mensaje` VARCHAR(500) NOT NULL,
+  `leido` BOOLEAN NOT NULL DEFAULT FALSE,
+  `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_notificaciones_usuarios_idx` (`id_usuario` ASC) VISIBLE,
+  CONSTRAINT `fk_notificaciones_usuarios`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `usuarios` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+ENGINE = InnoDB;
