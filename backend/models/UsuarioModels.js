@@ -8,7 +8,9 @@ const UsuarioModel = db.define('usuarios', {
     correo: { type: DataTypes.STRING},
     telefono: { type: DataTypes.STRING},
     contasenia: { type: DataTypes.STRING},
-    fechaNacimiento: { type: DataTypes.DATEONLY}
+    fechaNacimiento: { type: DataTypes.DATEONLY},
+    perrfil:{type:DataTypes.INTEGER},
+    fondo:{type:DataTypes.INTEGER}
 });
 
 export default UsuarioModel;

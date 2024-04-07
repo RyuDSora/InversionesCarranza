@@ -112,8 +112,8 @@ export default function Perfil() {
         </div>
         <hr />
         <div id="foot_perfil" style={IsPerfil ? { display: 'block'}:{display:'none' }} >
+          <Link to={`/EditarFoto/${userId}`} className="btn btn-primary me-2">Editar Foto</Link>
           <Link to={`/EditarPerfil/${userId}`} className="btn btn-primary me-2">Editar Perfil</Link>
-
           <button onClick={handleCambiarContrasenia} className="btn btn-primary me-2">Cambiar Contraseña</button>
         </div>
 

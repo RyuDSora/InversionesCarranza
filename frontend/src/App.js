@@ -13,6 +13,7 @@ import RecuperarLanding   from './componets/RecuperarLanding.jsx'
 import CambiarContrasenia from "./componets/CambiarContrasenia.jsx";
 import Servicios          from './componets/Servicios.jsx'; 
 import Perfil             from './componets/Perfil.jsx';
+import EditFoto from "./componets/EditarFoto.jsx";
 import EditPerfil         from './componets/EditarPerfil.jsx';
 import Projects           from './componets/projects.jsx';
 import MasProyectos       from "./componets/MasProjectos.jsx";
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/Users" element={ <Usuarios/>} />
                 <Route path="/perfil/:userId" element={<Perfil />} />
                 <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
+                <Route path="/EditarFoto/:userId" element = {<EditFoto/>}/>
                 <Route path="/AgregarAdministrador" element={ <AgregarAdministrador/>} />
 
                 {/**Servicios */}
