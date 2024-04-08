@@ -24,6 +24,7 @@ import MasServicios      from "./componets/MasServicios.jsx";
 import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
 import SolicitudesAdmin      from  "./componets/SolicitudesAdmin.jsx";
 import EditServiciosCliente from './componets/EditServiciosCliente.jsx';
+import Notificaciones from './componets/Notificaciones.jsx';
 
 function App() {
   
@@ -52,6 +53,9 @@ function App() {
                 <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
                 <Route path="/EditarFoto/:userId" element = {<EditFoto/>}/>
                 <Route path="/AgregarAdministrador" element={ <AgregarAdministrador/>} />
+
+                {/**notificaciones */}
+                <Route path="/Notificaciones" element={ <Notificaciones/>} />
 
                 {/**Servicios */}
                 <Route path="/Servicios" element={ <Servicios /> } />
