@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import axios from 'axios';
-import { URIUsuarios } from './Urls';
+import { URIUsuarios, URISolicitudes } from './Urls';
 
 const AdminNotificar = () => {
   const [mensaje, setMensaje] = useState('');
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState('');
+  const [solicitudes, setSolicitudes] = useState([]);
 
   useEffect(() => {
     const obtenerUsuarios = async () => {
       try {
         const response = await axios.get(URIUsuarios);
         const usuariosFiltrados = response.data.filter(usuario => usuario.rol === 2);
-        setUsuarios(usuariosFiltrados); // Actualizar el estado con los usuarios filtrados
-      
+        setUsuarios(usuariosFiltrados);
       } catch (error) {
         console.error('Error al obtener los usuarios:', error);
       }
@@ -22,6 +22,17 @@ const AdminNotificar = () => {
     obtenerUsuarios();
   }, []);
 
+  useEffect(() => {
+    const obtenerSolicitudes = async () => {
+      try {
+        const response = await axios.get(URISolicitudes);
+        setSolicitudes(response.data);
+      } catch (error) {
+        console.error('Error al obtener las solicitudes:', error);
+      }
+    };
+    obtenerSolicitudes();
+  }, []);
 
   const handleUserSelect = (event) => {
     setSelectedUser(event.target.value);
@@ -61,6 +72,15 @@ const AdminNotificar = () => {
               <option value="">Seleccionar usuario...</option>
               {usuarios.map((usuario) => (
                 <option key={usuario.id} value={usuario.id}>{usuario.nombre} {usuario.apellido}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="solicitudes">Seleccionar solicitud:</label>
+            <select id="solicitudes" className="form-control">
+              <option value="">Seleccionar solicitud...</option>
+              {solicitudes.map((solicitud) => (
+                <option key={solicitud.id} value={solicitud.id} style={{ color: 'black' }}>{solicitud.nombre}</option>
               ))}
             </select>
           </div>
