@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Container, Nav, Dropdown, Modal, Badge } from "react-bootstrap";
+import { Navbar, Container, Nav, Dropdown, Modal, Badge, Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { encryptionKey, decryptValue } from "./hashes.jsx";
@@ -8,6 +8,7 @@ import perfil from '../imgs/perfil.png';
 import Solicitudes from './Solicitudes'; // Importa el componente de Solicitudes
 import Notificaciones from './Notificaciones'; // Importa el componente de Notificaciones
 import { BiBell } from "react-icons/bi"; // Importa el icono de la campanilla
+
 
 export default function NavBarIC() {
   const navigate = useNavigate();
@@ -55,6 +56,13 @@ export default function NavBarIC() {
   const handleClose = () => setModalShow(false);
   const handleShow = () => setModalShow(true);
 
+
+  const handleNotificar = () => {
+    console.log("Botón 'Notificar' clickeado");
+    navigate('/AdminNotificar');
+  };
+  
+
   return (
     <Navbar expand="lg" className="pt-0 bg-light ">
       <Container className="px-3 pb-3 pt-3 d-flex align-items-center">
@@ -91,27 +99,35 @@ export default function NavBarIC() {
           </div>
           {user ?
             (<>
-              <Dropdown>
-                <Dropdown.Toggle id="dropdown-basic" className="btn-light">
-                  <img src={perfil} alt="perfil-img" style={{ width: '30px', paddingRight: '5px' }} />
-                  {UserL}
-                </Dropdown.Toggle>
-                <Dropdown.Menu >
-                  <Dropdown.Item onClick={() => navigate(`/Perfil/${UserId}`)}>Mi Perfil</Dropdown.Item>
-                  {Admin ? (
-                    <>
-                      <Dropdown.Item onClick={() => navigate(`/AgregarAdministrador`)}>Agregar Admin</Dropdown.Item>
-                      <Dropdown.Item onClick={() => navigate(`/solicitudesAdmin`)}>Administrador de Solicitudes</Dropdown.Item>
-                      <Dropdown.Item onClick={() => navigate(`/Users`)}>Ver Usuarios</Dropdown.Item>
-                      <Dropdown.Item onClick={() => navigate(`/ServiciosAdmin`)}>Editar Servicios</Dropdown.Item>
-                      <Dropdown.Item onClick={() => navigate(`/EditPr`)}>Editar Proyectos</Dropdown.Item>
-                    </>
-                  ) : (
-                    <Dropdown.Item onClick={() => navigate(`/EditServiciosCliente`)}>Mis Solicitudes</Dropdown.Item>
-                  )}
-                  <Dropdown.Item onClick={handleLogout}>Cerrar Sesión</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+               <Dropdown>
+  <Dropdown.Toggle id="dropdown-basic" className="btn-light">
+    <img src={perfil} alt="perfil-img" style={{ width: '30px', paddingRight: '5px' }} />
+    {UserL}
+  </Dropdown.Toggle>
+  <Dropdown.Menu>
+    <div style={{ marginLeft: '-10px' }}>
+      <Dropdown.Item onClick={() => navigate(`/Perfil/${UserId}`)} className="mx-3">Mi Perfil</Dropdown.Item>
+      {Admin ? (
+        <>
+          <Dropdown.Item onClick={() => navigate(`/AgregarAdministrador`)} className="mx-3">Agregar Admin</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate(`/solicitudesAdmin`)} className="mx-3">Administrador de Solicitudes</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate(`/Users`)} className="mx-3">Ver Usuarios</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate(`/ServiciosAdmin`)} className="mx-3">Editar Servicios</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate(`/EditPr`)} className="mx-3">Editar Proyectos</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate(`/AdminNotificar`)} className="mx-3">Notificar</Dropdown.Item>
+          <div className="d-flex justify-content-between align-items-center mx-3">
+          </div>
+        </>
+      ) : (
+        <Dropdown.Item onClick={() => navigate(`/EditServiciosCliente`)} className="mx-3">Mis Solicitudes</Dropdown.Item>
+      )}
+      <Dropdown.Item onClick={handleLogout} className="mx-3">Cerrar Sesión</Dropdown.Item>
+    </div>
+  </Dropdown.Menu>
+</Dropdown>
+
+
+
             </>) :
             (<>
               <Nav.Link href="/login" className={Login ? 'text-success text-uppercase not-active mx-3 order-1' : "mx-3"}>
@@ -142,5 +158,4 @@ export default function NavBarIC() {
       </Modal>
     </Navbar>
   );
-  
-}
+} 

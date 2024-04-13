@@ -25,10 +25,10 @@ import ServiciosAdmin      from  "./componets/ServiciosAdmin.jsx";
 import SolicitudesAdmin      from  "./componets/SolicitudesAdmin.jsx";
 import EditServiciosCliente from './componets/EditServiciosCliente.jsx';
 import Notificaciones from './componets/Notificaciones.jsx';
+import AdminNotificar from './componets/AdminNotificar.jsx';
 
 function App() {
   
-
   return (
     <div className="fondo-difuminado">
     <div className="relativo">
@@ -53,15 +53,11 @@ function App() {
                 <Route path="/EditarPerfil/:userId" element = {<EditPerfil/>}/>
                 <Route path="/EditarFoto/:userId" element = {<EditFoto/>}/>
                 <Route path="/AgregarAdministrador" element={ <AgregarAdministrador/>} />
-
-                {/**notificaciones */}
-                <Route path="/Notificaciones" element={ <Notificaciones/>} />
-
+              
                 {/**Servicios */}
                 <Route path="/Servicios" element={ <Servicios /> } />
                 <Route path="/Mas-Servicios/:idServicioPadre" element={<MasServicios />} />
                 <Route path="/ServiciosAdmin" element={ <ServiciosAdmin/>} />
-                
 
                 {/**Proyectos */}
                 <Route path="/Proyectos" element={ <Projects/> } />
@@ -74,6 +70,10 @@ function App() {
                 <Route path="/Term" element={ <Term/>} />
                 <Route path="/WeAre" element={ <WeAre/>} />
                 <Route path="/SolicitudesAdmin" element={ <SolicitudesAdmin/>} />
+
+                {/**notificaciones */}
+                <Route path="/Notificaciones" element={ <Notificaciones/>} />
+                <Route path="/AdminNotificar" element={<AdminNotificar/>} />
 
                 {/**Aquí se muestra la tabla de las solicitudes que ha hecho el cliente*/}
                 <Route path="/EditServiciosCliente/" element={ <EditServiciosCliente />} />
