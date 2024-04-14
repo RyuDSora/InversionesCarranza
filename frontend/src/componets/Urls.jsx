@@ -16,3 +16,4 @@ export const URICalificacion = originS + PuertoBackend + '/calificaciones/'     
 export const URIEstados      = originS + PuertoBackend + '/estados/'              //url para los Estados de las solicitudes
 export const URIResenias     = originS + PuertoBackend + '/resenias/'             //url para las resenias de los proyectos
 export const URISolicitudes  = originS + PuertoBackend + '/solicitudes/'          //url para las solicitudes
+export const URICorreo = originS + PuertoBackend + '/send-email'

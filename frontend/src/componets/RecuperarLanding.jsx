@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import Candado from '../imgs/candado-abierto.png';
-import { URIUsuarios } from "./Urls.jsx";
+import { URIUsuarios, URICorreo } from "./Urls.jsx";
 import { useNavigate } from 'react-router-dom';
 
 export default function RecuperarLanding() {
@@ -10,16 +11,28 @@ export default function RecuperarLanding() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
 
+    const generateRandomCode = () => {
+        const code = Math.floor(100000 + Math.random() * 900000);
+        return code.toString().substring(0, 6); // Devuelve los primeros 6 dígitos del código generado
+    };
+
     const handleSolicitud = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(URIUsuarios+`?correo=${email}`);
+            const response = await axios.get(URIUsuarios + `?correo=${email}`);
             const usuarios = response.data;
             const usuarioExistente = usuarios.find(usuario => usuario.correo === email);
 
             if (usuarioExistente) {
-                // Redirigir al usuario a la página de cambio de contraseña, pasando el correo como parámetro
-                navigate(`/CambiarContrasenia?correo=${email}&nombre=${usuarioExistente.nombre}`);
+                const recoveryCode = generateRandomCode(); // Genera el código de recuperación de contraseña
+                const correoResponse = await axios.post(URICorreo, {
+                    to: email,
+                    subject: 'Recuperación de contraseña',
+                    text: `Tu código de recuperación de contraseña es: ${recoveryCode}. Por favor, sigue las instrucciones para restablecer tu contraseña.`
+                });
+                console.log(correoResponse);
+                // Redirigir al usuario a la página de cambio de contraseña, pasando el correo y el código de recuperación como parámetros
+                navigate(`/CodigoCorreo?correo=${email}&codigo=${recoveryCode}&nombre=${usuarioExistente.nombre}`);
             } else {
                 setError('El correo electrónico proporcionado no está registrado');
             }

@@ -26,6 +26,7 @@ import SolicitudesAdmin      from  "./componets/SolicitudesAdmin.jsx";
 import EditServiciosCliente from './componets/EditServiciosCliente.jsx';
 import Notificaciones from './componets/Notificaciones.jsx';
 import AdminNotificar from './componets/AdminNotificar.jsx';
+import CodigoCorreo from './componets/CodigoCorreo.jsx';
 
 function App() {
   
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/Signup" element={<CompRegistro />}/>
                 <Route path="/login" element={<Login />} />
                 <Route path="/Recuperar" element={<RecuperarLanding />} />
+                <Route path="/CodigoCorreo" element={<CodigoCorreo />} />
                 <Route path="/CambiarContrasenia" element={<CambiarContrasenia/>} />
                 <Route path="/Users" element={ <Usuarios/>} />
                 <Route path="/perfil/:userId" element={<Perfil />} />
