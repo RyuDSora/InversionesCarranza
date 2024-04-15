@@ -10,7 +10,7 @@ const Notificaciones = ({ idUsuario }) => {
     useEffect(() => {
         const obtenerNotificaciones = async () => {
             try {
-                const response = await axios.get(`/api/notificaciones/${idUsuario}`);
+                const response = await axios.get(`'/crear-notificacion'${idUsuario}`);
                 setNotificaciones(response.data);
             } catch (error) {
                 console.error('Error al obtener las notificaciones:', error);
@@ -20,9 +20,9 @@ const Notificaciones = ({ idUsuario }) => {
         obtenerNotificaciones();
     }, [idUsuario]);
 
-    const marcarComoLeido = async (idNotificacion) => {
+    const marcarComoLeido = async (idNotificacion, idUsuario) => {
         try {
-            await axios.put(`/api/notificaciones/${idNotificacion}`);
+            await axios.put(`'/crear-notificacion'${idNotificacion}`, { id_usuario: idUsuario });
             setNotificaciones(prevNotificaciones => prevNotificaciones.map(notif =>
                 notif.id === idNotificacion ? { ...notif, leido: true } : notif
             ));
@@ -44,8 +44,9 @@ const Notificaciones = ({ idUsuario }) => {
                 </Modal.Header>
                 <Modal.Body>
                     {notificaciones.map((notificacion) => (
-                        <Link key={notificacion.id} to="/solicitudes">
-                            <div onClick={() => marcarComoLeido(notificacion.id)}>
+                        <Link key={notificacion.id} to="/crear-notificacion">
+                            <div onClick={() => marcarComoLeido(notificacion.id, notificacion.id_usuario)}>
+                                <p>Usuario: {notificacion.id_usuario}</p>
                                 <p>{notificacion.mensaje}</p>
                                 <p>Leído: {notificacion.leido ? 'Sí' : 'No'}</p>
                                 <hr />
