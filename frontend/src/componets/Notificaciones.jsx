@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Importa el componente Link
+import { Link } from 'react-router-dom';
+import { URIgetNotification, URIgetNotificationRead } from './Urls';
 
 const Notificaciones = ({ idUsuario }) => {
     const [notificaciones, setNotificaciones] = useState([]);
@@ -10,7 +11,7 @@ const Notificaciones = ({ idUsuario }) => {
     useEffect(() => {
         const obtenerNotificaciones = async () => {
             try {
-                const response = await axios.get(`/api/notificaciones/${idUsuario}`);
+                const response = await axios.get(URIgetNotification + `/${idUsuario}`);
                 setNotificaciones(response.data);
             } catch (error) {
                 console.error('Error al obtener las notificaciones:', error);
@@ -22,10 +23,12 @@ const Notificaciones = ({ idUsuario }) => {
 
     const marcarComoLeido = async (idNotificacion) => {
         try {
-            await axios.put(`/api/notificaciones/${idNotificacion}`);
-            setNotificaciones(prevNotificaciones => prevNotificaciones.map(notif =>
-                notif.id === idNotificacion ? { ...notif, leido: true } : notif
-            ));
+            await axios.post(URIgetNotificationRead + `/${idNotificacion}`);
+            setNotificaciones(prevNotificaciones =>
+                prevNotificaciones.map(notif =>
+                    notif.id === idNotificacion ? { ...notif, leido: true } : notif
+                )
+            );
         } catch (error) {
             console.error('Error al marcar como leída la notificación:', error);
         }
@@ -44,13 +47,14 @@ const Notificaciones = ({ idUsuario }) => {
                 </Modal.Header>
                 <Modal.Body>
                     {notificaciones.map((notificacion) => (
-                        <Link key={notificacion.id} to="/solicitudes">
-                            <div onClick={() => marcarComoLeido(notificacion.id)}>
-                                <p>{notificacion.mensaje}</p>
-                                <p>Leído: {notificacion.leido ? 'Sí' : 'No'}</p>
-                                <hr />
-                            </div>
-                        </Link>
+                        <div key={notificacion.id} style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '10px', padding: '10px' }}>
+                            <Link to="/solicitudes" style={{ textDecoration: 'none' }}>
+                                <div onClick={() => marcarComoLeido(notificacion.id)}>
+                                    <p className="mb-0">{notificacion.mensaje}</p>
+                                    <p className="mb-0" style={{ color: 'black' }}>Leído: {notificacion.leido ? 'Sí' : 'No'}</p>
+                                </div>
+                            </Link>
+                        </div>
                     ))}
                 </Modal.Body>
                 <Modal.Footer>

@@ -11,6 +11,7 @@ import Estados from "./routes/EstadosRoutes.js";
 import Resenias from "./routes/ReseniasRoutes.js";
 import Solicitude from "./routes/SolicitudeRoutes.js";
 import routes from './routes/ImagenRoutes.js';
+import notification from './routes/AdminNotificarRoutes.js'
 import { sendEmail } from './controller/emailController.js';
 
 
@@ -28,6 +29,7 @@ app.use('/calificaciones', Calificaciones);
 app.use('/estados', Estados);
 app.use('/resenias', Resenias);
 app.use('/solicitudes', Solicitude);
+app.use('/AdminNotificar', notification);
 
 app.use(routes);
 
