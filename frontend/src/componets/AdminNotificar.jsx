@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
 import axios from 'axios';
 import { URIUsuarios, URISolicitudes } from './Urls';
 
@@ -7,7 +6,6 @@ const AdminNotificar = () => {
   const [mensaje, setMensaje] = useState('');
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState('');
-  const [solicitudes, setSolicitudes] = useState([]);
 
   useEffect(() => {
     const obtenerUsuarios = async () => {
@@ -22,18 +20,6 @@ const AdminNotificar = () => {
     obtenerUsuarios();
   }, []);
 
-  useEffect(() => {
-    const obtenerSolicitudes = async () => {
-      try {
-        const response = await axios.get(URISolicitudes);
-        setSolicitudes(response.data);
-      } catch (error) {
-        console.error('Error al obtener las solicitudes:', error);
-      }
-    };
-    obtenerSolicitudes();
-  }, []);
-
   const handleUserSelect = (event) => {
     setSelectedUser(event.target.value);
   };  
@@ -42,25 +28,6 @@ const AdminNotificar = () => {
     setMensaje(event.target.value);
   };
 
-  const handleCancelar = () => {
-    console.log('Notificación cancelada');
-  };
-
-  const handleEnviar = () => {
-    if (!selectedUser) {
-      alert('Favor selecciona un usuario.');
-      return;
-    }
-    if (!mensaje.trim()) {
-      alert('Favor escribe un mensaje.');
-      return;
-    }
-
-    alert('Notificación enviada exitosamente.');
-
-    setMensaje('');
-  };
-  
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -72,15 +39,6 @@ const AdminNotificar = () => {
               <option value="">Seleccionar usuario...</option>
               {usuarios.map((usuario) => (
                 <option key={usuario.id} value={usuario.id}>{usuario.nombre} {usuario.apellido}</option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="solicitudes">Seleccionar solicitud:</label>
-            <select id="solicitudes" className="form-control">
-              <option value="">Seleccionar solicitud...</option>
-              {solicitudes.map((solicitud) => (
-                <option key={solicitud.id} value={solicitud.id} style={{ color: 'black' }}>{solicitud.nombre}</option>
               ))}
             </select>
           </div>
@@ -111,6 +69,5 @@ const AdminNotificar = () => {
       </div>
     </div>
   );
-};
 
 export default AdminNotificar;
