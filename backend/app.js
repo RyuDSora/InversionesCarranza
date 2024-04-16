@@ -14,12 +14,19 @@ import routes from './routes/ImagenRoutes.js';
 import notification from './routes/AdminNotificarRoutes.js'
 import { sendEmail } from './controller/emailController.js';
 
+// Importa el enrutador para las notificaciones
+import notificacionRoutes from "./routes/NotificacionRoutes.js";
 
 const PORT = 8000;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Monta el enrutador para las notificaciones
+app.use('/notificaciones', notificacionRoutes);
+
+// Resto de las rutas
 app.use('/usuarios', usuarioRoutes);
 app.use('/proyectosrealizados', proyectosRealizados);
 app.use('/ServiciosOfrecidos', serviciosOfrecidos);
@@ -31,17 +38,18 @@ app.use('/resenias', Resenias);
 app.use('/solicitudes', Solicitude);
 app.use('/AdminNotificar', notification);
 
+
 app.use(routes);
 
 try {
     await db.authenticate();
-    console.log('Conexion exitosa a la DB');
+    console.log('Conexión exitosa a la DB');
 } catch (error) {
-    console.log(`El error de conexion es: ${error}`);
+    console.log(`El error de conexión es: ${error}`);
 }
 
 app.get('/', (req, res) => {
-    res.status(200).json('Welcome, your app is success');
+    res.status(200).json('Bienvenido, tu aplicación se ha ejecutado correctamente');
 });
 
 // Nueva ruta para manejar la solicitud de envío de correo electrónico
@@ -61,7 +69,6 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-
 app.listen(PORT, () => {
-    console.log('Server UP running in http://localhost:' + PORT);
+    console.log(`El servidor está corriendo en http://localhost:${PORT}`);
 });

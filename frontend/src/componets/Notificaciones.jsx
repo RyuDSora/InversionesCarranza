@@ -21,7 +21,7 @@ const Notificaciones = ({ idUsuario }) => {
         obtenerNotificaciones();
     }, [idUsuario]);
 
-    const marcarComoLeido = async (idNotificacion) => {
+    const marcarComoLeido = async (idNotificacion, idUsuario) => {
         try {
             await axios.post(URIgetNotificationRead + `/${idNotificacion}`);
             setNotificaciones(prevNotificaciones =>
