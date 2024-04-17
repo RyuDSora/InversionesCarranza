@@ -19,4 +19,5 @@ export const URISolicitudes  = originS + PuertoBackend + '/solicitudes/'        
 export const URIAdminNotificar = originS + PuertoBackend + '/AdminNotificar/SaveNotification'      //url para las notificaciones
 export const URIgetNotification = originS + PuertoBackend + '/AdminNotificar/getAll'      //url para las notificaciones
 export const URIgetNotificationRead = originS + PuertoBackend + '/AdminNotificar/Read'      //url para las notificaciones
+
 export const URICorreo = originS + PuertoBackend + '/send-email'
