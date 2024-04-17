@@ -48,7 +48,7 @@ const Notificaciones = ({ idUsuario }) => {
                 <Modal.Body>
                     {notificaciones.map((notificacion) => (
                         <div key={notificacion.id} style={{ border: '1px solid #ccc', borderRadius: '5px', marginBottom: '10px', padding: '10px' }}>
-                            <Link to="/solicitudes" style={{ textDecoration: 'none' }}>
+                            <Link to="/EditServiciosCliente" style={{ textDecoration: 'none' }}>
                                 <div onClick={() => marcarComoLeido(notificacion.id)}>
                                     <p className="mb-0">{notificacion.mensaje}</p>
                                     <p className="mb-0" style={{ color: 'black' }}>Leído: {notificacion.leido ? 'Sí' : 'No'}</p>

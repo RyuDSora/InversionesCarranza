@@ -41,7 +41,7 @@ function AdminNotificar ({userId}) {
 
       alert('La Notificación se ha realizado con éxito.');
 
-      window.location.href = `/Perfil`;
+      window.location.href = `/AdminNotificar`;
 
     } catch (error) {
       console.error('Error al enviar la notificación:', error);
