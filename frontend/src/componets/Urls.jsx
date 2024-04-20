@@ -1,8 +1,12 @@
-const PuertoBackend = ':8000'; //en caso de no usar puerto dejar esta constante vacia 
-//const PuertoBackend = ''; 
-var origin = window.location.origin;
-var partes = origin.split(":");
-var originS = partes[0] + ":" + partes[1];
+
+const PuertoBackend = ''; 
+//var origin = window.location.origin;
+//var partes = origin.split(":");
+var originS = 'https://server-xi-five-11.vercel.app';//partes[0] + ":" + partes[1];
+
+//const PuertoBackend = ':8000'; //en caso de no usar puerto dejar esta constante vacia 
+
+//var originS = partes[0] + ":" + partes[1];
 
 
 export const URIServicios    = originS + PuertoBackend + '/ServiciosOfrecidos/';  //url de servicios
