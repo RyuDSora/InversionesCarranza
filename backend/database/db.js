@@ -1,4 +1,4 @@
-import {Sequelize} from 'sequelize'
+/*import {Sequelize} from 'sequelize'
     const db = new Sequelize(
         'db_incarranza',           //Database
         'InCarranza',              //Username
@@ -7,10 +7,10 @@ import {Sequelize} from 'sequelize'
         host: 'localhost',          
         dialect: 'mysql'
     })
-export default db
+export default db*/
 //esta parte esta comentada, pero con esta se pueden conectar a 
 //la base de datos que hay en la nube de TiDB Cloud Vercel
-/**import { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { Sequelize } from 'sequelize';
 import { resolve } from 'path';
 import { dirname } from 'path';
@@ -41,6 +41,6 @@ const pemContent = readFileSync(pemPath);
           },
     })
 export default db 
-*/
+
 
 
