@@ -69,7 +69,7 @@ function SolicitudesAdmin() {
 
     const changeRequestStatus = async (requestId, newStatus) => {
         try {
-            await axios.put(`${URISolicitudes}/${requestId}`, { id_estado: newStatus });
+            await axios.put(URISolicitudes+requestId, { id_estado: newStatus });
             const updatedRequests = requests.map(request => {
                 if (request.id === requestId) {
                     return { ...request, id_estado: newStatus };
