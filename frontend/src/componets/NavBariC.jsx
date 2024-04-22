@@ -144,12 +144,12 @@ export default function NavBarIC() {
               <button className="btn btn-light mx-3" onClick={() => setShowNotifications(true)}>
                 
                 {
-  (() => {
-    for (let n of notification) {
+              (() => {
+    if(notification.length>0){for (let n of notification) {
       if (!n.leido) {
         return <Circle key={n.id}></Circle>;
       }
-    }
+    }}
     return null; // En caso de que no haya notificaciones no leídas
   })()
 }
