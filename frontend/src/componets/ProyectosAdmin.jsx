@@ -158,7 +158,7 @@ function ProyectosAdmin(params) {
    
 
     ///proyecto a editar
-    useEffect(()=>{
+    
         const resp = async () =>{
             try {
                 //llamamos todos los proyectos
@@ -196,21 +196,14 @@ function ProyectosAdmin(params) {
                 console.log(error);
             }
         }
-        resp();
         
         
-        setEp(false)
-    },[Ep,ProyId,EditLSImag,ImgLsPP])
-    useEffect(()=>{
-        Servicios.map(servicio => {
-            if(servicio.id===PP.categoria_servicio){setServicioSeleccionado(servicio.nombre_servicio)}
-            return null
-        }
-        )
-    },[PP,Servicios])
+   
+    
     const openModalEdit = (params) => {
         
         //setProyectoDescripcion(PP.descripcion_proyecto);
+        resp();
         setShowEdit(true);
         setProyId(params);
         setEp(true);

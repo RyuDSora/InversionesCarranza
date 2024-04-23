@@ -11,7 +11,7 @@ const Notificaciones = ({ idUsuario }) => {
     useEffect(() => {
         const obtenerNotificaciones = async () => {
             try {
-                const response = await axios.get(URIgetNotification + `/${idUsuario}`);
+                const response = await axios.get(URIgetNotification+'/'+idUsuario);
                 setNotificaciones(response.data);
             } catch (error) {
                 console.error('Error al obtener las notificaciones:', error);
@@ -23,7 +23,7 @@ const Notificaciones = ({ idUsuario }) => {
 
     const marcarComoLeido = async (idNotificacion, idUsuario) => {
         try {
-            await axios.post(URIgetNotificationRead + `/${idNotificacion}`);
+            await axios.post(URIgetNotificationRead + idNotificacion);
             setNotificaciones(prevNotificaciones =>
                 prevNotificaciones.map(notif =>
                     notif.id === idNotificacion ? { ...notif, leido: true } : notif
