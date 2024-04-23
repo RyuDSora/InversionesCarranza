@@ -87,7 +87,7 @@ function EditServiciosCliente() {
     const handleUpdateClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`${URISolicitudes}/${editandoSolicitud.id}`, editandoSolicitud);
+            await axios.put(URISolicitudes+editandoSolicitud.id, editandoSolicitud);
             fetchSolicitudesPorUsuario(userId); // Refrescar las solicitudes
             setEditandoSolicitud(null); // Salir del modo de edición
         } catch (error) {
@@ -97,7 +97,7 @@ function EditServiciosCliente() {
 
     const handleDeleteClick = async (solicitudId) => {
         try {
-            await axios.delete(`${URISolicitudes}/${solicitudId}`);
+            await axios.delete(URISolicitudes+solicitudId);
             fetchSolicitudesPorUsuario(userId); // Refrescar las solicitudes
         } catch (error) {
             console.error('Error al eliminar la solicitud:', error);

@@ -23,7 +23,7 @@ const Notificaciones = ({ idUsuario }) => {
 
     const marcarComoLeido = async (idNotificacion, idUsuario) => {
         try {
-            await axios.post(URIgetNotificationRead + idNotificacion);
+            await axios.post(URIgetNotificationRead+'/'+idNotificacion);
             setNotificaciones(prevNotificaciones =>
                 prevNotificaciones.map(notif =>
                     notif.id === idNotificacion ? { ...notif, leido: true } : notif
