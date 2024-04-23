@@ -18,6 +18,8 @@ export const Project = ({PROYECTTO}) => {
     const [user,setUser] = useState(false);
     const [UserId,setUserId] = useState('');
     const [value, setValue] = useState(0);
+    const [calificacion,setcalificacion]=useState('');
+    const [ccalif,setccalif]=useState(false);
 
     const handleShow = () => setShow(true);
     const handleSelect = (selectedIndex) => setIndex(selectedIndex);
@@ -32,13 +34,13 @@ export const Project = ({PROYECTTO}) => {
     const handleCloseCalifica = () => setShowCalifica(false)
     const handleReseniaTrue = () => setAddResenia(true);
     const handleCancel = () => setAddResenia(false);
-    const enviarCalification = () => {
-        const verifica = async()=>{
+    const enviarCalification = (id) => {
+        const verifica = async(pid)=>{
             try {
                 const response = await axios.get(URICalificacion)
-                const IfCalifica = response.data.filter(C => C.idProyecto ===PROYECTTO.id && C.idUsuario===UserId)
+                const IfCalifica = response.data.filter(C => C.idProyecto ===pid && C.idUsuario===UserId)
                 const Nueva = {
-                    "idProyecto":PROYECTTO.id,
+                    "idProyecto":pid,
                     "idUsuario": UserId,
                     "calificacion":value
                 }
@@ -48,13 +50,13 @@ export const Project = ({PROYECTTO}) => {
                 else{
                     axios.put(URICalificacion+IfCalifica[0].id,Nueva)
                 }
+                setccalif(true);
             } catch (error) {
                 console.log(error);
             }
         }
-        verifica();
+        verifica(id);
         handleCloseCalifica();
-        window.location.reload()
     }
     const handleSubmit = () =>{
         const AgregarResenia = () => {
@@ -70,47 +72,34 @@ export const Project = ({PROYECTTO}) => {
         setAddResenia(false);
         setCresenia(true);
     }  
-    useEffect(()=>{
-        const Calificacion = async() =>{
+    
+    
+    const lista = async () => {
                     try {
-                        const response = await axios.get(URICalificacion+PROYECTTO.id);
-                        const Promedio = response.data;
-                        var X = Promedio.promedio_calificacion;
-                        if (!X) {X='0.00'}else{
-                            let ca = X.substring(0, 4);
-                            X = ca;
-                        }
-                        PROYECTTO.calificacion=X
-                    } catch (error) {
-                        console.log(error);
+                        const response = await axios.get(URIPRXIMG);
+                        const imgsss = response.data.filter(I => I.idproyecto === PROYECTTO.id);
+                        
+                        const proyectoWithImages = 
+                              await Promise.all(imgsss.map(
+                                async (p) =>{
+                                    const imageUrl = 
+                                        await fetchImageUrl(p.idimagen);
+                              return {...p, imageUrl};
+                        }));
+                        setListaImgxProyecto(proyectoWithImages);
+                    } catch (err) {
+                        console.log(err);
                     }
                 }
-                Calificacion()
-    },[PROYECTTO]) 
    useEffect(()=>{
-        const lista = async () => {
-            try {
-                const response = await axios.get(URIPRXIMG);
-                const imgsss = response.data.filter(I => I.idproyecto === PROYECTTO.id);
-                
-                const proyectoWithImages = 
-                      await Promise.all(imgsss.map(
-                        async (p) =>{
-                            const imageUrl = 
-                                await fetchImageUrl(p.idimagen);
-                      return {...p, imageUrl};
-                }));
-                setListaImgxProyecto(proyectoWithImages);
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        
         if(Cookies.get('session')){
             setUser(true); 
             setUserId(+decryptValue(Cookies.get('UserId'), encryptionKey)); // Asignamos el ID del usuario
             if(+decryptValue(Cookies.get('UserRol'), encryptionKey)===1){setAdmin(true)};
           }
         lista();
+        
     },[PROYECTTO])
     useEffect(()=>{
         const rese = async () =>{
@@ -126,6 +115,24 @@ export const Project = ({PROYECTTO}) => {
         setCresenia(false);
 
     },[cresenia])
+    useEffect(()=>{
+        const Calificacion = async() =>{
+            try {
+                const response = await axios.get(URICalificacion+PROYECTTO.id);
+                const Promedio = response.data;
+                var X = Promedio.promedio_calificacion;
+                if (!X) {X='0.00'}else{
+                    let ca = X.substring(0, 4);
+                    X = ca;
+                }
+                setcalificacion(X);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        Calificacion();
+        setccalif(false);
+    },[ccalif])
     
     return (
         <div style={{ backgroundColor:'rgb(255,255,255,0.7)' }} className='shadow-lg rounded-3 pt-2 pb-3 my-2'>
@@ -137,20 +144,20 @@ export const Project = ({PROYECTTO}) => {
             (<div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
                 <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
                     <FaStar className='me-1 text-primary'/>
-                    <span>{PROYECTTO.calificacion}</span>
+                    <span>{calificacion}</span>
                 </span>
             </div>):
             (<div className='text-start ps-4 mt-1' style={{position:'absolute'}} onClick={OpenCalifica}>
             <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
                 <FaStar className='me-1 text-primary'/>
-                <span>{PROYECTTO.calificacion}</span>
+                <span>{calificacion}</span>
             </span>
             </div>)):
             (
             <div className='text-start ps-4 mt-1' style={{position:'absolute'}}>
                 <span className='bg-light px-1 rounded-3 d-flex align-items-center'>
                     <FaStar className='me-1 text-primary'/>
-                    <span>{PROYECTTO.calificacion}</span>
+                    <span>{calificacion}</span>
                 </span>
             </div>)}
             <div className='px-3'>
@@ -254,7 +261,7 @@ export const Project = ({PROYECTTO}) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant='success' onClick={enviarCalification}>
+                    <Button variant='success' onClick={()=>{enviarCalification(PROYECTTO.id)}}>
                         Calificar
                     </Button>
                     <Button variant="danger" onClick={handleCloseCalifica} >
