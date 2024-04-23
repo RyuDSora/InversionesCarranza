@@ -159,22 +159,22 @@ function ProyectosAdmin(params) {
 
     ///proyecto a editar
     
-        const resp = async () =>{
+        const resp = async (params) =>{
             try {
                 //llamamos todos los proyectos
                 const p = await axios.get(URIProyectos);
                 //comprobamos que el proyecto a editar si exista
-                const esta = p.data.filter(proye => proye.id === ProyId)
+                const esta = p.data.filter(proye => proye.id === params)
                 const SS = async () =>{
                     if (esta.length!==0) {
                         try {
-                            const response = await axios.get(URIProyectos+ProyId);
+                            const response = await axios.get(URIProyectos+params);
                             const ProyeData=response.data;
                             const imageUrl = await fetchImageUrl(ProyeData.img_principal);
                             setPP({ ...ProyeData, imageUrl }); // Actualizar el estado con el elemento actualizado
 
                             const response1 = await axios.get(URIPRXIMG);
-                            const data = response1.data.filter(proye => proye.idproyecto === ProyId);
+                            const data = response1.data.filter(proye => proye.idproyecto === params);
                             const proyectoWithImages = 
                                   await Promise.all(data.map(
                                     async (p) =>{
@@ -203,7 +203,7 @@ function ProyectosAdmin(params) {
     const openModalEdit = (params) => {
         
         //setProyectoDescripcion(PP.descripcion_proyecto);
-        resp();
+        resp(params);
         setShowEdit(true);
         setProyId(params);
         setEp(true);
